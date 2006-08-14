@@ -1,3 +1,13 @@
+2006-08-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/Makefile.am, +datrie/darray.c, +datrie/fileutils.h:
+	Added darray.c for double-array structure implementation, and 
+	fileutils.h declarations for keeping file manipulation functions.
+
+	* datrie/triedefs.h: Added TRIE_CHAR_MAX constant for alphabet
+	enumeration. Changed TRIE_INDEX_ERROR to 0, as negative number has its
+	own meaning.
+
 2006-08-12  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* === First import the project ===
