@@ -170,13 +170,13 @@ da_open (const char *path, const char *name, TrieIOMode mode)
         d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
         if (!d->cells)
             goto exit2;
-        d->cells[0].base = file_read_int16 (d->file);
-        d->cells[0].check = file_read_int16 (d->file);
+        file_read_int16 (d->file, &d->cells[0].base);
+        file_read_int16 (d->file, &d->cells[0].check);
         if (DA_SIGNATURE != (uint16) d->cells[0].base)
             goto exit3;
         for (i = 1; i < d->num_cells; i++) {
-            d->cells[i].base  = file_read_int16 (d->file);
-            d->cells[i].check = file_read_int16 (d->file);
+            file_read_int16 (d->file, &d->cells[i].base);
+            file_read_int16 (d->file, &d->cells[i].check);
         }
         d->is_dirty  = FALSE;
     }
