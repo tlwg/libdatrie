@@ -14,6 +14,7 @@ libdatrie_la_SOURCES =	\
 	darray.h	\
 	darray.c	\
 	tail.h		\
+	tail.c		\
 	trie.h		\
 	trie.c
 

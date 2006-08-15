@@ -1,3 +1,12 @@
+2006-08-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/Makefile.am, +datrie/tail.c, datrie/tail.h: Added tail.c for
+	trie suffix implementation. Adjusted some API to not require size_t.
+
+	* datrile/fileutils.h: Added more functions required by tail.c.
+
+	* datrie/trie.c (trie_branch_in_tail): Added check for null suffix.
+
 2006-08-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/Makefile.am, +datrie/darray.c, +datrie/fileutils.h:
