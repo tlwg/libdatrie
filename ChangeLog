@@ -1,5 +1,13 @@
 2006-08-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/Makefile.am, +datrie/fileutils.c: Added fileutils.c for
+	implementation of file utility functions.
+
+	* datrie/fileutils.{c,h}, datrie/darray.c (da_open), datrie/tail.c
+	(tail_open): Adjusted file_read_int{8,16} API so error can be checked.
+
+2006-08-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/Makefile.am, +datrie/tail.c, datrie/tail.h: Added tail.c for
 	trie suffix implementation. Adjusted some API to not require size_t.
 

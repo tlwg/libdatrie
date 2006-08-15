@@ -12,15 +12,15 @@
 
 #include "triedefs.h"
 
-FILE * file_open (const char *path, const char *name, const char *ext,
+FILE * file_open (const char *dir, const char *name, const char *ext,
                   TrieIOMode mode);
 
 long   file_length (FILE *file);
 
-int16  file_read_int16 (FILE *file);
+Bool   file_read_int16 (FILE *file, int16 *o_val);
 Bool   file_write_int16 (FILE *file, int16 val);
 
-int8   file_read_int8 (FILE *file);
+Bool   file_read_int8 (FILE *file, int8 *o_val);
 Bool   file_write_int8 (FILE *file, int8 val);
 
 Bool   file_read_chars (FILE *file, char *buff, int len);

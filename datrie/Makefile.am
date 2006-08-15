@@ -11,6 +11,7 @@ libdatrie_la_SOURCES =	\
 	typedefs.h	\
 	triedefs.h	\
 	fileutils.h	\
+	fileutils.c	\
 	darray.h	\
 	darray.c	\
 	tail.h		\

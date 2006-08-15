@@ -59,6 +59,8 @@ tail_open (const char *path, const char *name, TrieIOMode mode)
 {
     Tail       *t;
     TrieIndex   i;
+    uint16      sig;
+    long        file_size;
 
     t = (Tail *) malloc (sizeof (Tail));
 
@@ -66,28 +68,32 @@ tail_open (const char *path, const char *name, TrieIOMode mode)
     if (!t->file)
         goto exit1;
 
-    if ((uint16) file_read_int16 (t->file) != TAIL_SIGNATURE)
+    file_size = file_length (t->file);
+    if (file_size != 0 && file_read_int16 (t->file, (int16 *) &sig)
+        && sig != TAIL_SIGNATURE)
+    {
         goto exit2;
+    }
 
     /* init tails data */
-    if (file_length (t->file) == 0) {
+    if (file_size == 0) {
         t->first_free = 0;
         t->num_tails  = 0;
         t->tails      = NULL;
         t->is_dirty   = TRUE;
     } else {
-        t->first_free = file_read_int16 (t->file);
-        t->num_tails = file_read_int16 (t->file);
+        file_read_int16 (t->file, &t->first_free);
+        file_read_int16 (t->file, &t->num_tails);
         t->tails = (TailBlock *) malloc (t->num_tails * sizeof (TailBlock));
         if (!t->tails)
             goto exit2;
         for (i = 0; i < t->num_tails; i++) {
             int8    length;
 
-            t->tails[i].next_free = file_read_int16 (t->file);
-            t->tails[i].data      = file_read_int16 (t->file);
+            file_read_int16 (t->file, &t->tails[i].next_free);
+            file_read_int16 (t->file, &t->tails[i].data);
 
-            length = file_read_int8 (t->file);
+            file_read_int8 (t->file, &length);
             t->tails[i].suffix    = (TrieChar *) malloc (length + 1);
             if (length > 0)
                 file_read_chars (t->file, t->tails[i].suffix, length);
