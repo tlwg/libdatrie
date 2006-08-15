@@ -202,6 +202,8 @@ trie_branch_in_tail   (Trie           *trie,
     /* adjust separate point in old path */
     old_tail = trie_da_get_tail_index (trie->da, sep_node);
     old_suffix = tail_get_suffix (trie->tail, old_tail);
+    if (!old_suffix)
+        return FALSE;
 
     for (p = old_suffix; *p == *suffix; p++, suffix++)
         sep_node = da_insert_branch (trie->da, sep_node, *p);

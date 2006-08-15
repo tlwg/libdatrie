@@ -20,6 +20,12 @@ long   file_length (FILE *file);
 int16  file_read_int16 (FILE *file);
 Bool   file_write_int16 (FILE *file, int16 val);
 
+int8   file_read_int8 (FILE *file);
+Bool   file_write_int8 (FILE *file, int8 val);
+
+Bool   file_read_chars (FILE *file, char *buff, int len);
+Bool   file_write_chars (FILE *file, const char *buff, int len);
+
 #endif /* __FILEUTILS_H */
 
 /*

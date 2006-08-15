@@ -135,11 +135,11 @@ Bool     tail_set_data (Tail *t, TrieIndex index, TrieData data);
  * @a *suffix_idx is updated to the position after the last successful walk,
  * and the function returns the total number of character succesfully walked.
  */
-size_t   tail_walk_str  (Tail            *t,
+int      tail_walk_str  (Tail            *t,
                          TrieIndex        s,
                          short           *suffix_idx,
                          const TrieChar  *str,
-                         size_t           len);
+                         int              len);
 
 /**
  * @brief Walk in tail with a character
