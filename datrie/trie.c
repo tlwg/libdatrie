@@ -66,10 +66,18 @@ trie_open (const char *path, const char *name, TrieIOMode mode)
     if (!trie)
         return NULL;
 
-    trie->da   = da_open (path, name, mode);
-    trie->tail = tail_open (path, name, mode);
+    if (NULL == (trie->da   = da_open (path, name, mode)))
+        goto exit1;
+    if (NULL == (trie->tail = tail_open (path, name, mode)))
+        goto exit2;
 
     return trie;
+
+exit2:
+    da_close (trie->da);
+exit1:
+    free (trie);
+    return NULL;
 }
 
 int
@@ -196,8 +204,8 @@ trie_branch_in_tail   (Trie           *trie,
                        const TrieChar *suffix,
                        TrieData        data)
 {
-    TrieIndex   old_tail, old_da;
-    TrieChar   *old_suffix, *p;
+    TrieIndex       old_tail, old_da;
+    const TrieChar *old_suffix, *p;
 
     /* adjust separate point in old path */
     old_tail = trie_da_get_tail_index (trie->da, sep_node);

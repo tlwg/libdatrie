@@ -35,7 +35,7 @@ static void         symbols_add (Symbols *syms, TrieChar c);
  *    PRIVATE METHODS DECLARATIONS   *
  *-----------------------------------*/
 
-#define da_get_freelist(d)      (1)
+#define da_get_free_list(d)      (1)
 
 static Bool         da_check_free_cell (DArray         *d,
                                         TrieIndex       s);
@@ -195,10 +195,16 @@ exit1:
 int
 da_close (DArray *d)
 {
-    da_save (d);
-    fclose (d->file);
+    int ret;
+
+    if (0 != (ret = da_save (d)))
+        return ret;
+    if (0 != (ret = fclose (d->file)))
+        return ret;
     free (d->cells);
     free (d);
+
+    return 0;
 }
 
 int
@@ -211,8 +217,11 @@ da_save (DArray *d)
 
     rewind (d->file);
     for (i = 0; i < d->num_cells; i++) {
-        file_write_int16 (d->file, d->cells[i].base);
-        file_write_int16 (d->file, d->cells[i].check);
+        if (!file_write_int16 (d->file, d->cells[i].base) ||
+            !file_write_int16 (d->file, d->cells[i].check))
+        {
+            return -1;
+        }
     }
     d->is_dirty = FALSE;
 
@@ -418,6 +427,7 @@ static void
 da_extend_pool     (DArray         *d,
                     TrieIndex       to_index)
 {
+    TrieIndex   new_begin;
     TrieIndex   i;
     TrieIndex   free_tail;
 
@@ -425,21 +435,21 @@ da_extend_pool     (DArray         *d,
         return;
 
     d->cells = (DACell *) realloc (d->cells, (to_index + 1) * sizeof (DACell));
+    new_begin = d->num_cells;
+    d->num_cells = to_index + 1;
 
     /* initialize new free list */
-    for (i = d->num_cells; i < to_index; i++) {
+    for (i = new_begin; i < to_index; i++) {
         da_set_check (d, i, -(i + 1));
         da_set_base (d, i + 1, -i);
     }
 
     /* merge the new circular list to the old */
     free_tail = -da_get_base (d, da_get_free_list (d));
-    da_set_check (d, free_tail, -d->num_cells);
-    da_set_base (d, d->num_cells, -free_tail);
+    da_set_check (d, free_tail, -new_begin);
+    da_set_base (d, new_begin, -free_tail);
     da_set_check (d, to_index, -da_get_free_list (d));
     da_set_base (d, da_get_free_list (d), -to_index);
-
-    d->num_cells = to_index + 1;
 }
 
 static void

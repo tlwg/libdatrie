@@ -52,7 +52,8 @@ struct _Tail {
  *    METHODS IMPLEMENTAIONS   *
  *-----------------------------*/
 
-#define TAIL_SIGNATURE  0xDFFD
+#define TAIL_SIGNATURE      0xDFFD
+#define TAIL_START_BLOCKNO  1
 
 Tail *
 tail_open (const char *path, const char *name, TrieIOMode mode)
@@ -114,10 +115,13 @@ exit1:
 int
 tail_close (Tail *t)
 {
-    TrieIndex i;
+    int         ret;
+    TrieIndex   i;
 
-    tail_save (t);
-    fclose (t->file);
+    if (0 != (ret = tail_save (t)))
+        return ret;
+    if (0 != (ret = fclose (t->file)))
+        return ret;
     if (t->tails) {
         for (i = 0; i < t->num_tails; i++)
             if (t->tails[i].suffix)
@@ -125,6 +129,8 @@ tail_close (Tail *t)
         free (t->tails);
     }
     free (t);
+
+    return 0;
 }
 
 int
@@ -136,19 +142,29 @@ tail_save (Tail *t)
         return 0;
 
     rewind (t->file);
-    file_write_int16 (t->file, TAIL_SIGNATURE);
-    file_write_int16 (t->file, t->first_free);
-    file_write_int16 (t->file, t->num_tails);
+    if (!file_write_int16 (t->file, TAIL_SIGNATURE) ||
+        !file_write_int16 (t->file, t->first_free)  ||
+        !file_write_int16 (t->file, t->num_tails))
+    {
+        return -1;
+    }
     for (i = 0; i < t->num_tails; i++) {
         int8    length;
 
-        file_write_int16 (t->file, t->tails[i].next_free);
-        file_write_int16 (t->file, t->tails[i].data);
+        if (!file_write_int16 (t->file, t->tails[i].next_free) ||
+            !file_write_int16 (t->file, t->tails[i].data))
+        {
+            return -1;
+        }
 
         length = strlen ((const char *) t->tails[i].suffix);
-        file_write_int8 (t->file, length);
-        if (length > 0)
-            file_write_chars (t->file, t->tails[i].suffix, length);
+        if (!file_write_int8 (t->file, length))
+            return -1;
+        if (length > 0 &&
+            !file_write_chars (t->file, t->tails[i].suffix, length))
+        {
+            return -1;
+        }
     }
     t->is_dirty = FALSE;
 
@@ -156,15 +172,17 @@ tail_save (Tail *t)
 }
 
 
-TrieChar *
+const TrieChar *
 tail_get_suffix (const Tail *t, TrieIndex index)
 {
+    index -= TAIL_START_BLOCKNO;
     return (index < t->num_tails) ? t->tails[index].suffix : NULL;
 }
 
 Bool
 tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix)
 {
+    index -= TAIL_START_BLOCKNO;
     if (index < t->num_tails) {
         t->tails[index].suffix = (TrieChar *) realloc (t->tails[index].suffix,
                                                        strlen (suffix) + 1);
@@ -203,13 +221,15 @@ tail_alloc_block (Tail *t)
     t->tails[block].data = TRIE_DATA_ERROR;
     t->tails[block].suffix = NULL;
     
-    return block;
+    return block + TAIL_START_BLOCKNO;
 }
 
 static void
 tail_free_block (Tail *t, TrieIndex block)
 {
     TrieIndex   i, j;
+
+    block -= TAIL_START_BLOCKNO;
 
     if (block >= t->num_tails)
         return;
@@ -238,12 +258,14 @@ tail_free_block (Tail *t, TrieIndex block)
 TrieData
 tail_get_data (Tail *t, TrieIndex index)
 {
+    index -= TAIL_START_BLOCKNO;
     return (index < t->num_tails) ? t->tails[index].data : TRIE_DATA_ERROR;
 }
 
 Bool
 tail_set_data (Tail *t, TrieIndex index, TrieData data)
 {
+    index -= TAIL_START_BLOCKNO;
     if (index < t->num_tails) {
         t->tails[index].data = data;
         t->is_dirty = TRUE;
@@ -263,7 +285,10 @@ tail_walk_str  (Tail            *t,
     int             i;
     short           j;
 
-    suffix = t->tails[s].suffix;
+    suffix = tail_get_suffix (t, s);
+    if (!suffix)
+        return FALSE;
+
     i = 0; j = *suffix_idx;
     while (i < len) {
         if (str[i] != suffix[j])
@@ -284,9 +309,14 @@ tail_walk_char (Tail            *t,
                 short           *suffix_idx,
                 const TrieChar   c)
 {
-    TrieChar    suffix_char;
+    const TrieChar *suffix;
+    TrieChar        suffix_char;
 
-    suffix_char = t->tails[s].suffix[*suffix_idx];
+    suffix = tail_get_suffix (t, s);
+    if (!suffix)
+        return FALSE;
+
+    suffix_char = suffix[*suffix_idx];
     if (suffix_char == c) {
         if (0 != suffix_char)
             ++*suffix_idx;

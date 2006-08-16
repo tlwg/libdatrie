@@ -1,3 +1,28 @@
+2006-08-16  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configure.ac, Makefile.am, +tools/Makefile.am, +tools/trietool.c:
+	Added trietool utility.
+
+	* datrie/darray.c (da_get_free_list): Fixed typo in macro name.
+
+	* datrie/datrie.c (da_extend_pool): Updated num_cells immediately 
+	after realloc(), to let the cell accesses pass boundary checks.
+
+	* datrie/tail.c (tail_get_suffix, tail_set_suffix, tail_alloc_block,
+	tail_free_block, tail_get_data, tail_set_data, tail_walk_str,
+	tail_walk_char): Started tail blocks indexing from 1 (defined as
+	TAIL_START_BLOCKNO macro) rather than 0, because we use signed values
+	to distinguish pointers in darray.
+
+	* datrie/tail.{c,h} (tail_get_suffix), datrie/trie.c
+	(trie_branch_in_tail): Made tail_get_suffix return const pointer.
+
+	* datrie/darray.c (da_close, da_save), datrie/tail.c (tail_close,
+	tail_save): Checked errors and returned appropriate codes.
+
+	* datrie/trie.c (trie_open): Checked errors on files openning and
+	resumed appropriately.
+
 2006-08-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/Makefile.am, +datrie/fileutils.c: Added fileutils.c for
