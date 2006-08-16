@@ -69,7 +69,7 @@ int      tail_save (Tail *t);
  * Get suffix from tail with given @a index. The returned string is allocated.
  * The caller should free it with free().
  */
-TrieChar * tail_get_suffix (const Tail *t, TrieIndex index);
+const TrieChar *    tail_get_suffix (const Tail *t, TrieIndex index);
 
 /**
  * @brief Set suffix of existing entry

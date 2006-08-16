@@ -26,5 +26,6 @@ AC_TYPE_SIZE_T
 AC_FUNC_MALLOC
 
 AC_CONFIG_FILES([Makefile
-                 datrie/Makefile])
+                 datrie/Makefile
+                 tools/Makefile])
 AC_OUTPUT

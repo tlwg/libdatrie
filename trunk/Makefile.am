@@ -1,1 +1,1 @@
-SUBDIRS = datrie
+SUBDIRS = datrie tools
