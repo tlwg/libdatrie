@@ -1,5 +1,20 @@
 2006-08-16  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/fileutils.c (file_open): Created new file only if it does not
+	exist.
+
+	* datrie/trie.c (trie_branch_in_branch): Also set data for tail block.
+
+	* datrie/trie.c (trie_branch_in_tail): Do not free the const suffix
+	block, fixing double free bug.
+
+	* datrie/darray.c (da_insert_branch): Covered the case of negative
+	base, for branching from a separate node.
+
+	* tools/trietool.c (command_add): Removed debug message.
+
+2006-08-16  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* configure.ac, Makefile.am, +tools/Makefile.am, +tools/trietool.c:
 	Added trietool utility.
 

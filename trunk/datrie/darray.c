@@ -284,24 +284,40 @@ da_walk (DArray *d, TrieIndex *s, TrieChar c)
 TrieIndex
 da_insert_branch (DArray *d, TrieIndex s, TrieChar c)
 {
-    TrieIndex   next;
+    TrieIndex   base, next;
 
-    next = da_get_base (d, s) + c;
+    base = da_get_base (d, s);
 
-    /* if already there, do not actually insert */
-    if (da_get_check (d, next) == s)
-        return next;
+    if (base > 0) {
+        next = da_get_base (d, s) + c;
 
-    if (!da_check_free_cell (d, next)) {
+        /* if already there, do not actually insert */
+        if (da_get_check (d, next) == s)
+            return next;
+
+        if (!da_check_free_cell (d, next)) {
+            Symbols    *symbols;
+            TrieIndex   new_base;
+
+            /* relocate BASE[s] */
+            symbols = da_output_symbols (d, s);
+            symbols_add (symbols, c);
+            new_base = da_find_free_base (d, symbols);
+            symbols_free (symbols);
+
+            da_relocate_base (d, s, new_base);
+            next = new_base + c;
+        }
+    } else {
         Symbols    *symbols;
         TrieIndex   new_base;
 
-        /* relocate BASE[s] */
-        symbols = da_output_symbols (d, s);
+        symbols = symbols_new ();
         symbols_add (symbols, c);
         new_base = da_find_free_base (d, symbols);
         symbols_free (symbols);
-        da_relocate_base (d, s, new_base);
+
+        da_set_base (d, s, new_base);
         next = new_base + c;
     }
     da_alloc_cell (d, next);

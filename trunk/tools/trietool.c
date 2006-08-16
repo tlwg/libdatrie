@@ -134,8 +134,6 @@ command_add (int argc, char *argv[], ProgEnv *env)
         key = (const TrieChar *) argv[opt_idx++];
         data = (opt_idx < argc) ? atoi (argv[opt_idx++]) : TRIE_DATA_ERROR;
 
-/* DEBUG */
-fprintf (stderr, "Adding key '%s' with data %d\n", key, data);
         if (!trie_store (env->trie, key, data)) {
             fprintf (stderr, "Failed to add entry '%s' with data %d\n",
                      key, data);

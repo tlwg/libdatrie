@@ -43,15 +43,15 @@ file_open (const char *dir, const char *name, const char *ext, TrieIOMode mode)
     char       *full_path;
     FILE       *file;
 
-    if (mode & TRIE_IO_CREATE)
-        std_mode = "w+";
-    else if (mode & TRIE_IO_WRITE)
+    if (mode & TRIE_IO_WRITE)
         std_mode = "r+";
     else
         std_mode = "r";
 
     full_path = make_full_path (dir, name, ext);
-    file = fopen (make_full_path (dir, name, ext), std_mode);
+    file = fopen (full_path, std_mode);
+    if (!file && mode & TRIE_IO_CREATE)
+        file = fopen (full_path, "w+");
     free (full_path);
 
     return file;
