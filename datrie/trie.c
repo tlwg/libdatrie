@@ -193,6 +193,7 @@ trie_branch_in_branch (Trie           *trie,
         ++suffix;
 
     new_tail = tail_add_suffix (trie->tail, suffix);
+    tail_set_data (trie->tail, new_tail, data);
     trie_da_set_tail_index (trie->da, new_da, new_tail);
 
     return TRUE;
@@ -221,8 +222,6 @@ trie_branch_in_tail   (Trie           *trie,
         ++p;
     tail_set_suffix (trie->tail, old_tail, p);
     trie_da_set_tail_index (trie->da, old_da, old_tail);
-
-    free (old_suffix);
 
     /* insert the new branch at the new separate point */
     return trie_branch_in_branch (trie, sep_node, suffix, data);
