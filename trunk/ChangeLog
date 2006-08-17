@@ -1,5 +1,11 @@
 2006-08-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/darray.c (da_prune, da_num_children -> da_has_children):
+	Just checked whether a node has at least one child, instead of
+	counting children and comparing with zero, as a small optimization.
+
+2006-08-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* tools/trietool.c (command_add_list, command_delete_list):
 	Implemented.
 
