@@ -155,10 +155,13 @@ command_add_list (int argc, char *argv[], ProgEnv *env)
 static int
 command_delete (int argc, char *argv[], ProgEnv *env)
 {
-    /* TODO: implement it */
-    fprintf (stderr, "delete: Function not implemnted.\n");
+    int opt_idx;
 
-    return argc;
+    for (opt_idx = 0; opt_idx < argc; opt_idx++)
+        if (!trie_delete (env->trie, (const TrieChar *) argv[opt_idx]))
+            fprintf (stderr, "No entry '%s'. Not deleted.\n", argv[opt_idx]);
+
+    return opt_idx;
 }
 
 static int

@@ -157,7 +157,7 @@ tail_save (Tail *t)
             return -1;
         }
 
-        length = strlen ((const char *) t->tails[i].suffix);
+        length = t->tails[i].suffix ? strlen (t->tails[i].suffix) : 0;
         if (!file_write_int8 (t->file, length))
             return -1;
         if (length > 0 &&
@@ -272,6 +272,12 @@ tail_set_data (Tail *t, TrieIndex index, TrieData data)
         return TRUE;
     }
     return FALSE;
+}
+
+void
+tail_delete (Tail *t, TrieIndex index)
+{
+    tail_free_block (t, index);
 }
 
 int

@@ -1,5 +1,15 @@
 2006-08-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/trie.{h,c} (trie_delete), datrie/darray.{h,c} (da_prune,
+	da_num_children), datrie/tail.{h,c} (tail_delete): Added key deletion
+	method.
+
+	* datrie/tail.c (tail_save): Guarded against null suffix.
+
+	* tools/trietool.c (command_delete): Implemented.
+
+2006-08-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/darray.c (da_find_free_base): Made sure the free cell for 
 	first symbol is beyond header cells. Also repeatedly extended the pool
 	until a free cell is found, in case free list is restarted.

@@ -40,6 +40,9 @@ static void         symbols_add (Symbols *syms, TrieChar c);
 static Bool         da_check_free_cell (DArray         *d,
                                         TrieIndex       s);
 
+static int          da_num_children    (DArray         *d,
+                                        TrieIndex       s);
+
 static Symbols *    da_output_symbols  (DArray         *d,
                                         TrieIndex       s);
 
@@ -334,6 +337,27 @@ da_check_free_cell (DArray         *d,
     return (da_get_check (d, s) < 0);
 }
 
+static int
+da_num_children    (DArray         *d,
+                    TrieIndex       s)
+{
+    int         num_children;
+    TrieIndex   base;
+    uint16      c;
+
+    num_children = 0;
+
+    base = da_get_base (d, s);
+    if (TRIE_INDEX_ERROR == base || base < 0)
+        return 0;
+
+    for (c = 0; c < TRIE_CHAR_MAX; c++)
+        if (da_get_check (d, base + c) == s)
+            ++num_children;
+
+    return num_children;
+}
+
 static Symbols *
 da_output_symbols  (DArray         *d,
                     TrieIndex       s)
@@ -467,6 +491,18 @@ da_extend_pool     (DArray         *d,
     da_set_base (d, new_begin, -free_tail);
     da_set_check (d, to_index, -da_get_free_list (d));
     da_set_base (d, da_get_free_list (d), -to_index);
+}
+
+void
+da_prune (DArray *d, TrieIndex s)
+{
+    while (da_get_root (d) != s && 0 == da_num_children (d, s)) {
+        TrieIndex   parent;
+
+        parent = da_get_check (d, s);
+        da_free_cell (d, s);
+        s = parent;
+    }
 }
 
 static void

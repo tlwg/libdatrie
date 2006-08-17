@@ -120,6 +120,16 @@ TrieData tail_get_data (Tail *t, TrieIndex index);
 Bool     tail_set_data (Tail *t, TrieIndex index, TrieData data);
 
 /**
+ * @brief Delete suffix entry
+ *
+ * @param t      : the tail data
+ * @param index  : the index of the suffix to delete
+ *
+ * Delete suffix entry from the tail data.
+ */
+void     tail_delete (Tail *t, TrieIndex index);
+
+/**
  * @brief Walk in tail with a string
  *
  * @param t          : the tail data
