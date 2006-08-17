@@ -1,5 +1,13 @@
 2006-08-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/trie.{h,c} (trie_enumerate), datrie/darray.{h,c}
+	(da_enumerate, da_enumerate_recursive, da_get_state_key): Added key
+	enumeration method.
+
+	* tools/trietool.c (command_list): Implemented.
+
+2006-08-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/trie.{h,c} (trie_delete), datrie/darray.{h,c} (da_prune,
 	da_num_children), datrie/tail.{h,c} (tail_delete): Added key deletion
 	method.

@@ -180,39 +180,6 @@ trie_store (Trie *trie, const TrieChar *key, TrieData data)
     return TRUE;
 }
 
-Bool
-trie_delete (Trie *trie, const TrieChar *key)
-{
-    TrieIndex        s, t;
-    short            suffix_idx;
-    const TrieChar  *p;
-    size_t           len;
-
-    /* walk through branches */
-    s = da_get_root (trie->da);
-    for (p = key; !trie_da_is_separate (trie->da, s); p++) {
-        if (!da_walk (trie->da, &s, *p))
-            return FALSE;
-        if ('\0' == *p)
-            break;
-    }
-
-    /* walk through tail */
-    t = trie_da_get_tail_index (trie->da, s);
-    if ('\0' != *p) {
-        suffix_idx = 0;
-        len = strlen ((const char *) p) + 1;    /* including null-terminator */
-        if (tail_walk_str (trie->tail, t, &suffix_idx, p, len) != len)
-            return FALSE;
-    }
-
-    tail_delete (trie->tail, t);
-    da_set_base (trie->da, s, TRIE_INDEX_ERROR);
-    da_prune (trie->da, s);
-
-    return TRUE;
-}
-
 static Bool
 trie_branch_in_branch (Trie           *trie,
                        TrieIndex       sep_node,
@@ -259,6 +226,83 @@ trie_branch_in_tail   (Trie           *trie,
     /* insert the new branch at the new separate point */
     return trie_branch_in_branch (trie, sep_node, suffix, data);
 }
+
+Bool
+trie_delete (Trie *trie, const TrieChar *key)
+{
+    TrieIndex        s, t;
+    short            suffix_idx;
+    const TrieChar  *p;
+    size_t           len;
+
+    /* walk through branches */
+    s = da_get_root (trie->da);
+    for (p = key; !trie_da_is_separate (trie->da, s); p++) {
+        if (!da_walk (trie->da, &s, *p))
+            return FALSE;
+        if ('\0' == *p)
+            break;
+    }
+
+    /* walk through tail */
+    t = trie_da_get_tail_index (trie->da, s);
+    if ('\0' != *p) {
+        suffix_idx = 0;
+        len = strlen ((const char *) p) + 1;    /* including null-terminator */
+        if (tail_walk_str (trie->tail, t, &suffix_idx, p, len) != len)
+            return FALSE;
+    }
+
+    tail_delete (trie->tail, t);
+    da_set_base (trie->da, s, TRIE_INDEX_ERROR);
+    da_prune (trie->da, s);
+
+    return TRUE;
+}
+
+typedef struct {
+    Trie           *trie;
+    TrieEnumFunc    enum_func;
+    void           *user_data;
+} _TrieEnumData;
+
+static Bool
+trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
+{
+    _TrieEnumData  *enum_data;
+    TrieIndex       t;
+    const TrieChar *suffix;
+    TrieChar       *full_key;
+    Bool            ret;
+
+    enum_data = (_TrieEnumData *) user_data;
+
+    t = trie_da_get_tail_index (enum_data->trie->da, sep_node);
+    suffix = tail_get_suffix (enum_data->trie->tail, t);
+
+    full_key = (char *) malloc (strlen (key) + strlen (suffix) + 1);
+    strcat (strcpy (full_key, key), suffix);
+
+    ret = (*enum_data->enum_func) (full_key,
+                                   tail_get_data (enum_data->trie->tail, t),
+                                   enum_data->user_data);
+
+    free (full_key);
+    return ret;
+}
+
+Bool
+trie_enumerate (Trie *trie, TrieEnumFunc enum_func, void *user_data)
+{
+    _TrieEnumData   enum_data;
+
+    enum_data.trie      = trie;
+    enum_data.enum_func = enum_func;
+    enum_data.user_data = user_data;
+
+    return da_enumerate (trie->da, trie_da_enum_func, &enum_data);
+}
+
 
 /*-------------------------------*
  *   STEPWISE QUERY OPERATIONS   *

@@ -21,6 +21,18 @@
 typedef struct _Trie   Trie;
 
 /**
+ * @brief Trie enumeration function
+ *
+ * @param key  : the key of the entry
+ * @param data : the data of the entry
+ *
+ * @return TRUE to continue enumeration, FALSE to stop
+ */
+typedef Bool (*TrieEnumFunc) (const TrieChar   *key,
+                              TrieData          key_data,
+                              void             *user_data);
+
+/**
  * @brief Trie walking state
  */
 typedef struct _TrieState TrieState;
@@ -111,6 +123,21 @@ Bool    trie_store (Trie *trie, const TrieChar *key, TrieData data);
  * Delete an entry for the given @a key from @a trie.
  */
 Bool    trie_delete (Trie *trie, const TrieChar *key);
+
+/**
+ * @brief Enumerate entries in trie
+ *
+ * @param trie       : the trie
+ * @param enum_func  : the callback function to be called on each key
+ * @param user_data  : user-supplied data to send as an argument to @a enum_func
+ *
+ * @return boolean value indicating whether all the keys are visited
+ *
+ * Enumerate all entries in trie. For each entry, the user-supplied 
+ * @a enum_func callback function is called, with the entry key and data.
+ * Returning FALSE from such callback will stop enumeration and return FALSE.
+ */
+Bool    trie_enumerate (Trie *trie, TrieEnumFunc enum_func, void *user_data);
 
 
 /*-------------------------------*

@@ -192,12 +192,16 @@ command_query (int argc, char *argv[], ProgEnv *env)
     return 1;
 }
 
+static Bool
+list_enum_func (const TrieChar *key, TrieData key_data, void *user_data)
+{
+    printf ("%s\t%6d\n", key, key_data);
+}
+
 static int
 command_list (int argc, char *argv[], ProgEnv *env)
 {
-    /* TODO: implement it */
-    fprintf (stderr, "list: Function not implemented.\n");
-
+    trie_enumerate (env->trie, list_enum_func, (void *) 0);
     return 0;
 }
 
