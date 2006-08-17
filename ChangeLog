@@ -1,4 +1,9 @@
 2006-08-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+	
+	* configure.ac, Makefile.am, +doc/Makefile.am, +doc/Doxyfile.in:
+	Generated document using doxygen.
+
+2006-08-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/darray.c (da_prune, da_num_children -> da_has_children):
 	Just checked whether a node has at least one child, instead of

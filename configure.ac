@@ -22,10 +22,34 @@ AC_CHECK_HEADERS([limits.h stdlib.h stdio.h string.h])
 AC_C_CONST
 AC_TYPE_SIZE_T
 
+dnl Disable doc generation with doxygen option
+AC_ARG_ENABLE(doxygen-doc,
+              [AC_HELP_STRING([--disable-doxygen-doc],
+                              [disable document generation with doxygen])],
+              , enable_doxygen_doc="yes")
+
+if test "x$enable_doxygen_doc" = "xyes"; then
+  AC_CHECK_PROG(DOXYGEN,doxygen,doxygen,no)
+  if test "x$DOXYGEN" = "xno"; then
+    enable_doxygen_doc="no"
+  fi
+fi
+
+dnl where to install the doxygen-generated HTML doc
+AC_ARG_WITH(html-docdir,
+            [AC_HELP_STRING([--with-html-docdir=DIR],
+                            [where to install the doxyten-generated HTML doc [PREFIX/share/doc/datrie/html]])],
+            [htmldocdir="$withval"], [htmldocdir=\$\{prefix\}/share/doc/datrie/html])
+AC_SUBST(htmldocdir)
+
+AM_CONDITIONAL(ENABLE_DOXYGEN_DOC,test "x$enable_doxygen_doc" = "xyes")
+
 # Checks for library functions.
 AC_FUNC_MALLOC
 
 AC_CONFIG_FILES([Makefile
                  datrie/Makefile
-                 tools/Makefile])
+                 tools/Makefile
+                 doc/Makefile
+                 doc/Doxyfile])
 AC_OUTPUT
