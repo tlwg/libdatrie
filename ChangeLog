@@ -1,3 +1,9 @@
+2006-08-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/darray.c (da_find_free_base): Made sure the free cell for 
+	first symbol is beyond header cells. Also repeatedly extended the pool
+	until a free cell is found, in case free list is restarted.
+
 2006-08-16  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/fileutils.c (file_open): Created new file only if it does not

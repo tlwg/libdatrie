@@ -364,11 +364,12 @@ da_find_free_base  (DArray         *d,
     /* find first free cell that is beyond the first symbol */
     first_sym = symbols_get (symbols, 0);
     s = -da_get_check (d, da_get_free_list (d));
-    while (s != da_get_free_list (d) && s < (TrieIndex) first_sym)
+    while (s != da_get_free_list (d) && s < (TrieIndex) first_sym + 3)
         s = -da_get_check (d, s);
     if (s == da_get_free_list (d)) {
         s = first_sym + 3;
-        da_extend_pool (d, s);
+        while (da_extend_pool (d, s), da_get_check (d, s) > 0)
+            ++s;
     }
 
     /* search for next free cell that fits the symbols set */
