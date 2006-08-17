@@ -46,6 +46,9 @@ static int          da_num_children    (DArray         *d,
 static Symbols *    da_output_symbols  (DArray         *d,
                                         TrieIndex       s);
 
+static TrieChar *   da_get_state_key   (DArray         *d,
+                                        TrieIndex       state);
+
 static TrieIndex    da_find_free_base  (DArray         *d,
                                         const Symbols  *symbols);
 
@@ -66,6 +69,10 @@ static void         da_alloc_cell      (DArray         *d,
 static void         da_free_cell       (DArray         *d,
                                         TrieIndex       cell);
 
+static Bool         da_enumerate_recursive (DArray     *d,
+                                            TrieIndex   state,
+                                            DAEnumFunc  enum_func,
+                                            void       *user_data);
 
 /* ==================== BEGIN IMPLEMENTATION PART ====================  */
 
@@ -376,6 +383,44 @@ da_output_symbols  (DArray         *d,
     return syms;
 }
 
+static TrieChar *
+da_get_state_key   (DArray         *d,
+                    TrieIndex       state)
+{
+    TrieChar   *key;
+    int         key_size, key_length;
+    int         i;
+
+    key_size = 20;
+    key_length = 0;
+    key = (TrieChar *) malloc (key_size);
+
+    /* trace back to root */
+    while (da_get_root (d) != state) {
+        TrieIndex   parent;
+
+        if (key_length + 1 >= key_size) {
+            key_size += 20;
+            key = (TrieChar *) realloc (key, key_size);
+        }
+        parent = da_get_check (d, state);
+        key[key_length++] = (TrieChar) (state - da_get_base (d, parent));
+        state = parent;
+    }
+    key[key_length] = '\0';
+
+    /* reverse the string */
+    for (i = 0; i < --key_length; i++) {
+        TrieChar temp;
+
+        temp = key[i];
+        key[i] = key[key_length];
+        key[key_length] = temp;
+    }
+
+    return key;
+}
+
 #define DA_EXTENDING_STEPS 16
 
 static TrieIndex
@@ -537,6 +582,46 @@ da_free_cell       (DArray         *d,
     da_set_base (d, cell, -prev);
     da_set_check (d, prev, -cell);
     da_set_base (d, i, -cell);
+}
+
+Bool
+da_enumerate (DArray *d, DAEnumFunc enum_func, void *user_data)
+{
+    return da_enumerate_recursive (d, da_get_root (d), enum_func, user_data);
+}
+
+static Bool
+da_enumerate_recursive (DArray     *d,
+                        TrieIndex   state,
+                        DAEnumFunc  enum_func,
+                        void       *user_data)
+{
+    Bool        ret;
+    TrieIndex   base;
+
+    base = da_get_base (d, state);
+
+    if (base < 0) {
+        TrieChar   *key;
+
+        key = da_get_state_key (d, state);
+        ret = (*enum_func) (key, state, user_data);
+        free (key);
+    } else {
+        Symbols *symbols;
+        int      i;
+
+        ret = TRUE;
+        symbols = da_output_symbols (d, state);
+        for (i = 0; ret && i < symbols_num (symbols); i++) {
+            ret = da_enumerate_recursive (d, base + symbols_get (symbols, i),
+                                          enum_func, user_data);
+        }
+
+        symbols_free (symbols);
+    }
+
+    return ret;
 }
 
 /*

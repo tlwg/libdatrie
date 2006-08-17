@@ -20,6 +20,19 @@
  */
 typedef struct _DArray  DArray;
 
+/**
+ * @brief Double-array entry enumeration function
+ *
+ * @param key       : the key of the entry, up to @a sep_node
+ * @param sep_node  : the separate node of the entry
+ * @param user_data : user-supplied data
+ *
+ * @return TRUE to continue enumeration, FALSE to stop
+ */
+typedef Bool (*DAEnumFunc) (const TrieChar   *key,
+                            TrieIndex         sep_node,
+                            void             *user_data);
+
 
 /**
  * @brief Open double-array from file
@@ -162,6 +175,22 @@ TrieIndex  da_insert_branch (DArray *d, TrieIndex s, TrieChar c);
  * it deletes the node and all its parents which become non-separate.
  */
 void       da_prune (DArray *d, TrieIndex s);
+
+/**
+ * @brief Enumerate entries stored in double-array structure
+ *
+ * @param d          : the double-array structure
+ * @param enum_func  : the callback function to be called on each separate node
+ * @param user_data  : user-supplied data to send as an argument to @a enum_func
+ *
+ * @return boolean value indicating whether all the keys are visited
+ *
+ * Enumerate all keys stored in double-array structure. For each entry, the 
+ * user-supplied @a enum_func callback function is called, with the entry key,
+ * the separate node, and user-supplied data. Returning FALSE from such
+ * callback will stop enumeration and return FALSE.
+ */
+Bool    da_enumerate (DArray *d, DAEnumFunc enum_func, void *user_data);
 
 #endif  /* __DARRAY_H */
 
