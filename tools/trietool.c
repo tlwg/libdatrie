@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #include <config.h>
 #include <datrie/trie.h>
@@ -29,6 +30,8 @@ static int  command_query       (int argc, char *argv[], ProgEnv *env);
 static int  command_list        (int argc, char *argv[], ProgEnv *env);
 
 static void usage               (const char *prog_name, int exit_status);
+
+static char *string_trim        (char *s);
 
 int
 main (int argc, char *argv[])
@@ -146,8 +149,49 @@ command_add (int argc, char *argv[], ProgEnv *env)
 static int
 command_add_list (int argc, char *argv[], ProgEnv *env)
 {
-    /* TODO: implement it */
-    fprintf (stderr, "add-list: Function not implemented.\n");
+    FILE   *input;
+    char    line[256];
+
+    input = fopen (argv[0], "r");
+    if (!input) {
+        fprintf (stderr, "add-list: Cannot open input file '%s'\n", argv[0]);
+        return 1;
+    }
+
+    while (fgets (line, sizeof line, input)) {
+        char       *key, *data;
+        TrieData    data_val;
+
+        key = string_trim (line);
+        if ('\0' != *key) {
+            /* find key boundary */
+            for (data = key; *data && !isspace (*data); ++data)
+                ;
+            /* mark key ending and find data begin */
+            if ('\0' != *data) {
+                *data++ = '\0';
+                while (isspace (*data))
+                    ++data;
+            }
+            /* decode data */
+            if ('\0' != *data) {
+                data_val = atoi (data);
+            } else {
+                data_val = TRIE_DATA_ERROR;
+                fprintf (stderr, "add-list: WARNING: No data for key '%s'.\n",
+                         key);
+            }
+
+            /* store the key */
+            if (!trie_store (env->trie, (const TrieChar *) key, data_val))
+                fprintf (stderr, "Failed to add key '%s' with data %d.\n",
+                         key, data_val);
+        }
+    }
+
+    fclose (input);
+
+    return 1;
 
     return 1;
 }
@@ -167,8 +211,25 @@ command_delete (int argc, char *argv[], ProgEnv *env)
 static int
 command_delete_list (int argc, char *argv[], ProgEnv *env)
 {
-    /* TODO: implement it */
-    fprintf (stderr, "delete-list: Function not implemented.\n");
+    FILE   *input;
+    char    line[256];
+
+    input = fopen (argv[0], "r");
+    if (!input) {
+        fprintf (stderr, "delete-list: Cannot open input file '%s'\n", argv[0]);
+        return 1;
+    }
+
+    while (fgets (line, sizeof line, input)) {
+        char   *p;
+
+        p = string_trim (line);
+        if ('\0' != *p)
+            if (!trie_delete (env->trie, (const TrieChar *) p))
+                fprintf (stderr, "No entry '%s'. Not deleted.\n", p);
+    }
+
+    fclose (input);
 
     return 1;
 }
@@ -227,6 +288,24 @@ usage (const char *prog_name, int exit_status)
     );
 
     exit (exit_status);
+}
+
+static char *
+string_trim (char *s)
+{
+    char   *p;
+
+    /* skip leading white spaces */
+    while (*s && isspace (*s))
+        ++s;
+
+    /* trim trailing white spaces */
+    p = s + strlen (s) - 1;
+    while (isspace (*p))
+        --p;
+    *++p = '\0';
+
+    return s;
 }
 
 /*
