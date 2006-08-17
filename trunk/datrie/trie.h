@@ -100,6 +100,18 @@ Bool    trie_retrieve (Trie *trie, const TrieChar *key, TrieData *o_data);
  */
 Bool    trie_store (Trie *trie, const TrieChar *key, TrieData data);
 
+/**
+ * @brief Delete an entry from trie
+ *
+ * @param trie  : the trie
+ * @param key   : the key for the entry to delete
+ *
+ * @return boolean value indicating whether the key exists and is removed
+ *
+ * Delete an entry for the given @a key from @a trie.
+ */
+Bool    trie_delete (Trie *trie, const TrieChar *key);
+
 
 /*-------------------------------*
  *   STEPWISE QUERY OPERATIONS   *

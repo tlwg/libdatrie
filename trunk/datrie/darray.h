@@ -151,6 +151,18 @@ Bool       da_walk (DArray *d, TrieIndex *s, TrieChar c);
  */
 TrieIndex  da_insert_branch (DArray *d, TrieIndex s, TrieChar c);
 
+/**
+ * @brief Prune the single branch
+ *
+ * @param d : the double-array structure
+ * @param s : the dangling state to prune off
+ *
+ * Prune off a non-separate path up from the final state @a s.
+ * If @a s still has some children states, it does nothing. Otherwise, 
+ * it deletes the node and all its parents which become non-separate.
+ */
+void       da_prune (DArray *d, TrieIndex s);
+
 #endif  /* __DARRAY_H */
 
 /*

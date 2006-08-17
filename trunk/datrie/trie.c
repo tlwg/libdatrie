@@ -180,6 +180,39 @@ trie_store (Trie *trie, const TrieChar *key, TrieData data)
     return TRUE;
 }
 
+Bool
+trie_delete (Trie *trie, const TrieChar *key)
+{
+    TrieIndex        s, t;
+    short            suffix_idx;
+    const TrieChar  *p;
+    size_t           len;
+
+    /* walk through branches */
+    s = da_get_root (trie->da);
+    for (p = key; !trie_da_is_separate (trie->da, s); p++) {
+        if (!da_walk (trie->da, &s, *p))
+            return FALSE;
+        if ('\0' == *p)
+            break;
+    }
+
+    /* walk through tail */
+    t = trie_da_get_tail_index (trie->da, s);
+    if ('\0' != *p) {
+        suffix_idx = 0;
+        len = strlen ((const char *) p) + 1;    /* including null-terminator */
+        if (tail_walk_str (trie->tail, t, &suffix_idx, p, len) != len)
+            return FALSE;
+    }
+
+    tail_delete (trie->tail, t);
+    da_set_base (trie->da, s, TRIE_INDEX_ERROR);
+    da_prune (trie->da, s);
+
+    return TRUE;
+}
+
 static Bool
 trie_branch_in_branch (Trie           *trie,
                        TrieIndex       sep_node,
