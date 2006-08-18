@@ -1,3 +1,14 @@
+2006-08-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/darray.c (find_free_base): Extended pool before getting
+	exhausted.
+
+	* tools/trietool.c (command_add_list): Let tab and comma be field
+	delimitors, rather than white spaces in general.
+
+	* tools/trietool.c (list_enum_func): Do not pad space when printing
+	key data.
+
 2006-08-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 	
 	* configure.ac, Makefile.am, +doc/Makefile.am, +doc/Doxyfile.in:
