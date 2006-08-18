@@ -136,12 +136,10 @@ trie_retrieve (Trie *trie, const TrieChar *key, TrieData *o_data)
 
     /* walk through tail */
     s = trie_da_get_tail_index (trie->da, s);
-    if ('\0' != *p) {
-        suffix_idx = 0;
-        len = strlen ((const char *) p) + 1;    /* including null-terminator */
-        if (tail_walk_str (trie->tail, s, &suffix_idx, p, len) != len)
-            return FALSE;
-    }
+    suffix_idx = 0;
+    len = strlen ((const char *) p) + 1;    /* including null-terminator */
+    if (tail_walk_str (trie->tail, s, &suffix_idx, p, len) != len)
+        return FALSE;
 
     /* found, set the val and return */
     if (o_data)
@@ -168,12 +166,10 @@ trie_store (Trie *trie, const TrieChar *key, TrieData data)
 
     /* walk through tail */
     t = trie_da_get_tail_index (trie->da, s);
-    if ('\0' != *p) {
-        suffix_idx = 0;
-        len = strlen ((const char *) p) + 1;    /* including null-terminator */
-        if (tail_walk_str (trie->tail, t, &suffix_idx, p, len) != len)
-            return trie_branch_in_tail (trie, s, p, data);
-    }
+    suffix_idx = 0;
+    len = strlen ((const char *) p) + 1;    /* including null-terminator */
+    if (tail_walk_str (trie->tail, t, &suffix_idx, p, len) != len)
+        return trie_branch_in_tail (trie, s, p, data);
 
     /* duplicated key, overwrite val */
     tail_set_data (trie->tail, t, data);
@@ -246,12 +242,10 @@ trie_delete (Trie *trie, const TrieChar *key)
 
     /* walk through tail */
     t = trie_da_get_tail_index (trie->da, s);
-    if ('\0' != *p) {
-        suffix_idx = 0;
-        len = strlen ((const char *) p) + 1;    /* including null-terminator */
-        if (tail_walk_str (trie->tail, t, &suffix_idx, p, len) != len)
-            return FALSE;
-    }
+    suffix_idx = 0;
+    len = strlen ((const char *) p) + 1;    /* including null-terminator */
+    if (tail_walk_str (trie->tail, t, &suffix_idx, p, len) != len)
+        return FALSE;
 
     tail_delete (trie->tail, t);
     da_set_base (trie->da, s, TRIE_INDEX_ERROR);

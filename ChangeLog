@@ -1,5 +1,11 @@
 2006-08-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/trie.c (trie_retrieve, trie_store, trie_delete): Always walk
+	the null-terminator in tail. Otherwise, comparison with shorter key 
+	will terminate at separate node.
+
+2006-08-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/darray.c (find_free_base): Extended pool before getting
 	exhausted.
 
