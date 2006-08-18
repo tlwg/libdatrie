@@ -439,8 +439,13 @@ da_find_free_base  (DArray         *d,
     }
 
     /* search for next free cell that fits the symbols set */
-    while (!da_fit_symbols (d, s - first_sym, symbols))
+    while (!da_fit_symbols (d, s - first_sym, symbols)) {
+        /* extend pool before getting exhausted */
+        if (-da_get_check (d, s) == da_get_free_list (d))
+            da_extend_pool (d, d->num_cells);
+
         s = -da_get_check (d, s);
+    }
 
     return s - first_sym;
 }

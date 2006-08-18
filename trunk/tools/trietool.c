@@ -165,7 +165,7 @@ command_add_list (int argc, char *argv[], ProgEnv *env)
         key = string_trim (line);
         if ('\0' != *key) {
             /* find key boundary */
-            for (data = key; *data && !isspace (*data); ++data)
+            for (data = key; *data && !strchr ("\t,", *data); ++data)
                 ;
             /* mark key ending and find data begin */
             if ('\0' != *data) {
@@ -256,7 +256,7 @@ command_query (int argc, char *argv[], ProgEnv *env)
 static Bool
 list_enum_func (const TrieChar *key, TrieData key_data, void *user_data)
 {
-    printf ("%s\t%6d\n", key, key_data);
+    printf ("%s\t%d\n", key, key_data);
 }
 
 static int
