@@ -7,7 +7,6 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <arpa/inet.h>
 
 #include "fileutils.h"
 
@@ -76,8 +75,10 @@ file_length (FILE *file)
 Bool
 file_read_int16 (FILE *file, int16 *o_val)
 {
-    if (fread (o_val, sizeof (int16), 1, file) == 1) {
-        *o_val = ntohs (*o_val);
+    char    buff[2];
+
+    if (fread (buff, 2, 1, file) == 1) {
+        *o_val = (buff[0] << 8) | buff[1];
         return TRUE;
     }
 
@@ -87,8 +88,12 @@ file_read_int16 (FILE *file, int16 *o_val)
 Bool
 file_write_int16 (FILE *file, int16 val)
 {
-    val = htons (val);
-    return (fwrite (&val, sizeof (int16), 1, file) == 1);
+    char    buff[2];
+
+    buff[0] = val >> 8;
+    buff[1] = val & 0xff;
+
+    return (fwrite (buff, 2, 1, file) == 1);
 }
 
 Bool
