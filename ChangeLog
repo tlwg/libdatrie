@@ -1,3 +1,9 @@
+2006-08-19  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/fileutils.c (file_read_int16, file_write_int16): Used shift
+	operations to serialize int, eliminating dependency on <arpa/inet.h>.
+	Thanks Vee Satayamas for the suggestion.
+
 2006-08-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/trie.c (trie_retrieve, trie_store, trie_delete): Always walk
