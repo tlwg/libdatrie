@@ -3,7 +3,8 @@ pkgincludedir = $(includedir)/datrie
 pkginclude_HEADERS =	\
 	typedefs.h	\
 	triedefs.h	\
-	trie.h
+	trie.h		\
+	sb-trie.h
 
 lib_LTLIBRARIES = libdatrie.la
 
