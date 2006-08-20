@@ -342,7 +342,7 @@ trie_state_free (TrieState *s)
 }
 
 Bool
-trie_state_walk (TrieState *s, const TrieChar c)
+trie_state_walk (TrieState *s, TrieChar c)
 {
     if (!s->is_suffix) {
         Bool ret;
