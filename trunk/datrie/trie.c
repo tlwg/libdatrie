@@ -362,7 +362,7 @@ trie_state_walk (TrieState *s, TrieChar c)
 }
 
 Bool
-trie_state_is_leaf (const TrieState *s)
+trie_state_is_terminal (const TrieState *s)
 {
     TrieState *t;
     Bool       ret;
@@ -374,6 +374,12 @@ trie_state_is_leaf (const TrieState *s)
     trie_state_free (t);
 
     return ret;
+}
+
+Bool
+trie_state_is_leaf (const TrieState *s)
+{
+    return s->is_suffix && trie_state_is_terminal (s);
 }
 
 TrieData

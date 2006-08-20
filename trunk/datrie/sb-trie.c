@@ -249,6 +249,12 @@ sb_trie_state_walk (SBTrieState *s, SBChar c)
 }
 
 Bool
+sb_trie_state_is_terminal (const SBTrieState *s)
+{
+    return trie_state_is_terminal (s->trie_state);
+}
+
+Bool
 sb_trie_state_is_leaf (const SBTrieState *s)
 {
     return trie_state_is_leaf (s->trie_state);
