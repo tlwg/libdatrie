@@ -11,7 +11,7 @@
 #include "triedefs.h"
 
 /**
- * @file trie.h
+ * @file sb-trie.h
  * @brief Trie data type and functions
  */
 
