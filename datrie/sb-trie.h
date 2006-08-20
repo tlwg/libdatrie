@@ -209,14 +209,26 @@ void     sb_trie_state_free (SBTrieState *s);
 Bool     sb_trie_state_walk (SBTrieState *s, SBChar c);
 
 /**
+ * @breif Check for terminal state
+ *
+ * @param s    : the state to check
+ *
+ * @return boolean value indicating whether it is a terminal state
+ *
+ * Check if the given state is a terminal state. A leaf state is a trie state 
+ * that terminates a key, and stores a value associated with the key.
+ */
+Bool     sb_trie_state_is_terminal (const SBTrieState *s);
+
+/**
  * @breif Check for leaf state
  *
  * @param s    : the state to check
  *
  * @return boolean value indicating whether it is a leaf state
  *
- * Check if the given state is a leaf state. A leaf state is a trie state 
- * that terminates a key, and stores a value associated with the key.
+ * Check if the given state is a leaf state. A leaf state is a terminal state 
+ * that has no other branch.
  */
 Bool     sb_trie_state_is_leaf (const SBTrieState *s);
 

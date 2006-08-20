@@ -1,5 +1,13 @@
 2006-08-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/sb-trie.{h,c} (sb_trie_state_is_terminal),
+	datrie/trie.{h,c} (trie_state_is_terminal, trie_state_is_leaf):
+	Added API for terminal node check and distinguish it from leaf node.
+	(Terminal node can be in either branch or tail, while leaf can only
+	be in tail.)
+
+2006-08-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/Makefile.am (pkginclude_HEADERS): Installed sb-trie.h.
 
 	* datrie/sb-trie.h: Fixed file name in doxygen tag.
