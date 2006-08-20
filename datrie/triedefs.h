@@ -32,7 +32,7 @@ typedef unsigned char  TrieChar;
  * @brief Trie terminator character
  */
 #define TRIE_CHAR_TERM    '\0'
-#define TRIE_CHAR_MAX     256
+#define TRIE_CHAR_MAX     255
 
 /**
  * @brief Type of Trie index

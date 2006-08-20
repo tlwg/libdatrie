@@ -17,5 +17,9 @@ libdatrie_la_SOURCES =	\
 	tail.h		\
 	tail.c		\
 	trie.h		\
-	trie.c
+	trie.c		\
+	alpha-map.h	\
+	alpha-map.c	\
+	sb-trie.h	\
+	sb-trie.c
 

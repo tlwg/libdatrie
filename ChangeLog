@@ -1,5 +1,18 @@
 2006-08-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/Makefile.am, +datrie/alpha-map.{h,c}, +datrie/sb-trie.{h,c}:
+	Added alphabet map to map between character set and trie alphabet
+	codes. Also added SBTrie wrapper for 8-bit character sets.
+
+	* datrie/triedefs.h (TRIE_CHAR_MAX): Changed to 255, to fit char type.
+
+	* datrie/trie.{h,c} (trie_state_walk): Removed unnecessary const in
+	character argument.
+
+	* tools/trietool.c: Used SBTrie instead of plain Trie.
+
+2006-08-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/fileutils.c (file_read_int16): Fixed bitwise calculation. The
 	second byte should be masked to get rid of possible sign bits
 	introduced by type conversion.
