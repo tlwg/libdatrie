@@ -78,7 +78,7 @@ file_read_int16 (FILE *file, int16 *o_val)
     char    buff[2];
 
     if (fread (buff, 2, 1, file) == 1) {
-        *o_val = (buff[0] << 8) | buff[1];
+        *o_val = (buff[0] << 8) | (buff[1] & 0xff);
         return TRUE;
     }
 

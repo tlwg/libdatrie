@@ -1,3 +1,9 @@
+2006-08-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/fileutils.c (file_read_int16): Fixed bitwise calculation. The
+	second byte should be masked to get rid of possible sign bits
+	introduced by type conversion.
+
 2006-08-19  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/fileutils.c (file_read_int16, file_write_int16): Used shift
