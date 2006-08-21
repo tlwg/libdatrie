@@ -48,6 +48,7 @@ AM_CONDITIONAL(ENABLE_DOXYGEN_DOC,test "x$enable_doxygen_doc" = "xyes")
 AC_FUNC_MALLOC
 
 AC_CONFIG_FILES([Makefile
+                 datrie.pc
                  datrie/Makefile
                  tools/Makefile
                  doc/Makefile
