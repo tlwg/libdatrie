@@ -240,6 +240,12 @@ sb_trie_state_free (SBTrieState *s)
     free (s);
 }
 
+void
+sb_trie_state_rewind (SBTrieState *s)
+{
+    trie_state_rewind (s->trie_state);
+}
+
 Bool
 sb_trie_state_walk (SBTrieState *s, SBChar c)
 {

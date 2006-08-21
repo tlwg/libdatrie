@@ -181,10 +181,17 @@ TrieState * trie_state_clone (const TrieState *s);
  * @param s    : the state to free
  *
  * Free the trie state.
- *
- * The returned state is allocated and must be freed with trie_state_free()
  */
 void      trie_state_free (TrieState *s);
+
+/**
+ * @brief Rewind a trie state
+ *
+ * @param s    : the state to rewind
+ *
+ * Put the state at root.
+ */
+void      trie_state_rewind (TrieState *s);
 
 /**
  * @brief Walk the trie from the state

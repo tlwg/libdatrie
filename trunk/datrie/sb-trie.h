@@ -190,10 +190,17 @@ SBTrieState * sb_trie_state_clone (const SBTrieState *s);
  * @param s    : the state to free
  *
  * Free the trie state.
- *
- * The returned state is allocated and must be freed with trie_state_free()
  */
 void     sb_trie_state_free (SBTrieState *s);
+
+/**
+ * @brief Rewind a single-byte trie state
+ *
+ * @param s    : the state to rewind
+ *
+ * Put the state at root.
+ */
+void     sb_trie_state_rewind (SBTrieState *s);
 
 /**
  * @brief Walk the single-byte domain trie from the state
