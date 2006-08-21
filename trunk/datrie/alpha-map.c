@@ -48,6 +48,7 @@ alpha_map_open (const char *path, const char *name, const char *ext)
     alpha_map = (AlphaMap *) malloc (sizeof (AlphaMap));
     if (!alpha_map)
         goto exit1;
+    alpha_map->first_range = alpha_map->last_range = NULL;
 
     /* read character ranges */
     while (fgets (line, sizeof line, file)) {
@@ -60,9 +61,8 @@ alpha_map_open (const char *path, const char *name, const char *ext)
          * format: [b,e]
          * where: b = begin char, e = end char; both in hex values
          */ 
-        if (sscanf (line, " [ %x , %x ] ", &b, &e) != 2) {
-            fprintf (stderr, "Error parsing alphabet map: %s", line);
-        }
+        if (sscanf (line, " [ %x , %x ] ", &b, &e) != 2)
+            continue;
         if (b > e) {
             fprintf (stderr, "Range begin (%x) > range end (%x)\n", b, e);
             free (range);

@@ -1,5 +1,12 @@
 2006-08-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/alpha-map.c (alpha_map_open): Initialized map list before
+	using. Also skipped mal-formed lines.
+
+	* tools/trietool.c (command_add_list): Removed duplicated return.
+
+2006-08-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* configure.ac, Makefile.am, +datrie.pc.in: Added pkgconfig file.
 
 2006-08-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>

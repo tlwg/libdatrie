@@ -192,8 +192,6 @@ command_add_list (int argc, char *argv[], ProgEnv *env)
     fclose (input);
 
     return 1;
-
-    return 1;
 }
 
 static int
