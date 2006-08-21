@@ -1,5 +1,11 @@
 2006-08-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/trie.{h,c} (trie_state_rewind),
+	datrie/sb-trie.{h,c} (sb_trie_state_rewind): Added API to rewind a
+	trie state to root, so users do not need to reallocate to do so.
+
+2006-08-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/alpha-map.c (alpha_map_open, alpha_map_new): Better used a
 	dedicated function to initialize the map.
 

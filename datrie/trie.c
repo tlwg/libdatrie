@@ -341,6 +341,13 @@ trie_state_free (TrieState *s)
     free (s);
 }
 
+void
+trie_state_rewind (TrieState *s)
+{
+    s->index      = da_get_root (s->trie->da);
+    s->is_suffix  = FALSE;
+}
+
 Bool
 trie_state_walk (TrieState *s, TrieChar c)
 {
