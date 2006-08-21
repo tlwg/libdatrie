@@ -13,6 +13,11 @@
 #include "alpha-map.h"
 #include "fileutils.h"
 
+/*-----------------------------------*
+ *    PRIVATE METHODS DECLARATIONS   *
+ *-----------------------------------*/
+static AlphaMap * alpha_map_new ();
+
 /*------------------------------*
  *    PRIVATE DATA DEFINITONS   *
  *------------------------------*/
@@ -45,10 +50,9 @@ alpha_map_open (const char *path, const char *name, const char *ext)
         return NULL;
 
     /* prepare data */
-    alpha_map = (AlphaMap *) malloc (sizeof (AlphaMap));
+    alpha_map = alpha_map_new ();
     if (!alpha_map)
         goto exit1;
-    alpha_map->first_range = alpha_map->last_range = NULL;
 
     /* read character ranges */
     while (fgets (line, sizeof line, file)) {
@@ -86,6 +90,20 @@ alpha_map_open (const char *path, const char *name, const char *ext)
 exit1:
     fclose (file);
     return NULL;
+}
+
+static AlphaMap *
+alpha_map_new ()
+{
+    AlphaMap   *alpha_map;
+
+    alpha_map = (AlphaMap *) malloc (sizeof (AlphaMap));
+    if (!alpha_map)
+        return NULL;
+
+    alpha_map->first_range = alpha_map->last_range = NULL;
+
+    return alpha_map;
 }
 
 void

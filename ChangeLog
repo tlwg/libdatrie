@@ -1,5 +1,10 @@
 2006-08-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/alpha-map.c (alpha_map_open, alpha_map_new): Better used a
+	dedicated function to initialize the map.
+
+2006-08-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/alpha-map.c (alpha_map_open): Initialized map list before
 	using. Also skipped mal-formed input lines.
 
