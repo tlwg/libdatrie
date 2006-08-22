@@ -119,9 +119,11 @@ decode_command (int argc, char *argv[], ProgEnv *env)
             opt_idx += command_list (argc - opt_idx, argv + opt_idx, env);
         } else {
             fprintf (stderr, "Unknown command: %s\n", argv[opt_idx]);
-            exit (EXIT_FAILURE);
+            return EXIT_FAILURE;
         }
     }
+
+    return EXIT_SUCCESS;
 }
 
 static int
@@ -174,13 +176,7 @@ command_add_list (int argc, char *argv[], ProgEnv *env)
                     ++data;
             }
             /* decode data */
-            if ('\0' != *data) {
-                data_val = atoi (data);
-            } else {
-                data_val = TRIE_DATA_ERROR;
-                fprintf (stderr, "add-list: WARNING: No data for key '%s'.\n",
-                         key);
-            }
+            data_val = ('\0' != *data) ? atoi (data) : TRIE_DATA_ERROR;
 
             /* store the key */
             if (!sb_trie_store (env->sb_trie, (const TrieChar *) key, data_val))

@@ -1,3 +1,10 @@
+2006-08-22  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* tools/trietool.c (decode_command): Exited with proper return values.
+
+	* tools/trietool.c (command_add_list): Removed warning on missing data
+	for keys. This would be normal for data-less dictionaries.
+
 2006-08-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/trie.{h,c} (trie_state_rewind),
