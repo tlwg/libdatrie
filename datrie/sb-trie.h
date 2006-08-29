@@ -10,6 +10,10 @@
 
 #include "triedefs.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file sb-trie.h
  * @brief Trie data type and functions
@@ -251,6 +255,10 @@ Bool     sb_trie_state_is_leaf (const SBTrieState *s);
  * will result in TRIE_DATA_ERROR.
  */
 TrieData sb_trie_state_get_data (const SBTrieState *s);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* __SB_TRIE_H */
 

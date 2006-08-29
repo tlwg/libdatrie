@@ -1,3 +1,8 @@
+2006-08-29  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/trie.h, datrie/sb-trie.h: Wrapped extern "C" in public
+	headers for compiling with C++ code.
+
 2006-08-22  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* tools/trietool.c (decode_command): Exited with proper return values.
