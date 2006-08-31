@@ -291,6 +291,12 @@ da_walk (DArray *d, TrieIndex *s, TrieChar c)
     return FALSE;
 }
 
+Bool
+da_is_walkable (DArray *d, TrieIndex s, TrieChar c)
+{
+    return da_get_check (d, da_get_base (d, s) + c) == s;
+}
+
 TrieIndex
 da_insert_branch (DArray *d, TrieIndex s, TrieChar c)
 {

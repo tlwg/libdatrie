@@ -313,7 +313,7 @@ Bool
 tail_walk_char (Tail            *t,
                 TrieIndex        s,
                 short           *suffix_idx,
-                const TrieChar   c)
+                TrieChar         c)
 {
     const TrieChar *suffix;
     TrieChar        suffix_char;
@@ -329,6 +329,21 @@ tail_walk_char (Tail            *t,
         return TRUE;
     }
     return FALSE;
+}
+
+Bool
+tail_is_walkable_char (Tail            *t,
+                       TrieIndex        s,
+                       short            suffix_idx,
+                       TrieChar         c)
+{
+    const TrieChar *suffix;
+
+    suffix = tail_get_suffix (t, s);
+    if (!suffix)
+        return FALSE;
+
+    return suffix[suffix_idx] == c;
 }
 
 /*

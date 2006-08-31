@@ -371,16 +371,11 @@ trie_state_walk (TrieState *s, TrieChar c)
 Bool
 trie_state_is_terminal (const TrieState *s)
 {
-    TrieState *t;
-    Bool       ret;
-
-    t = trie_state_clone (s);
-
-    ret = trie_state_walk (t, TRIE_CHAR_TERM);
-
-    trie_state_free (t);
-
-    return ret;
+    if (!s->is_suffix)
+        return da_is_walkable (s->trie->da, s->index, TRIE_CHAR_TERM);
+    else 
+        return tail_is_walkable_char (s->trie->tail, s->index, s->suffix_idx,
+                                      TRIE_CHAR_TERM);
 }
 
 Bool

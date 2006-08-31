@@ -169,8 +169,25 @@ int      tail_walk_str  (Tail            *t,
 Bool     tail_walk_char (Tail            *t,
                          TrieIndex        s,
                          short           *suffix_idx,
-                         const TrieChar   c);
+                         TrieChar         c);
 
+/**
+ * @brief Test walkability in tail with a character
+ *
+ * @param t          : the tail data
+ * @param s          : the tail data index
+ * @param suffix_idx : current character index in suffix
+ * @param c          : the character to test walkability
+ *
+ * @return boolean indicating walkability
+ *
+ * Test if the character @a c can be used to walk from given character 
+ * position @a suffix_idx of entry @a s of the tail data @a t.
+ */
+Bool     tail_is_walkable_char (Tail            *t,
+                                TrieIndex        s,
+                                short            suffix_idx,
+                                const TrieChar   c);
 
 #endif  /* __TAIL_H */
 
