@@ -1,3 +1,13 @@
+2006-08-31  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/darray.{h,c} (+da_is_walkable),
+	datrie/tail.{h,c} (+tail_is_walkable_char),
+	datrie/trie.c (tail_state_is_terminal): <Optimization> Tested
+	walkability by peeking, instead of trying with a cloned state.
+
+	* datrie/tail.{h,c} (tail_walk_char): Removed redundant const in
+	parameter.
+
 2006-08-29  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/trie.h, datrie/sb-trie.h: Wrapped extern "C" in public

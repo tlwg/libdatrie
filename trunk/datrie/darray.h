@@ -150,6 +150,19 @@ void       da_set_check (DArray *d, TrieIndex s, TrieIndex val);
 Bool       da_walk (DArray *d, TrieIndex *s, TrieChar c);
 
 /**
+ * @brief Test walkability in double-array structure
+ *
+ * @param d : the double-array structure
+ * @param s : current state
+ * @param c : the input character
+ *
+ * @return boolean indicating walkability
+ *
+ * Test if there is a transition from state @a s with input character @a c.
+ */
+Bool       da_is_walkable (DArray *d, TrieIndex s, TrieChar c);
+
+/**
  * @brief Insert a branch from trie node
  *
  * @param d : the double-array structure
