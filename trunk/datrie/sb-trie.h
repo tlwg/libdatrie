@@ -8,7 +8,7 @@
 #ifndef __SB_TRIE_H
 #define __SB_TRIE_H
 
-#include "triedefs.h"
+#include <datrie/triedefs.h>
 
 #ifdef __cplusplus
 extern "C" {

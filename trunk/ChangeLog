@@ -1,5 +1,13 @@
 2006-09-02  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/triedefs.h, datrie/trie.h, datrie/sb-trie.h: Included headers
+	using system header forms in installed headers.
+
+	* datrie/Makefile.am (INCLUDES): Added include flag to ensure it
+	compiles without prior installation.
+
+2006-09-02  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/alpha-map.c (alpha_map_char_to_alphabet,
 	alpha_map_alphabet_to_char): Made sure terminator is always mapped
 	with character 0.

@@ -6,6 +6,8 @@ pkginclude_HEADERS =	\
 	trie.h		\
 	sb-trie.h
 
+INCLUDES = -I$(top_srcdir)
+
 lib_LTLIBRARIES = libdatrie.la
 
 libdatrie_la_SOURCES =	\
