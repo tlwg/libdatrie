@@ -255,6 +255,15 @@ sb_trie_state_walk (SBTrieState *s, SBChar c)
 }
 
 Bool
+sb_trie_state_is_walkable (const SBTrieState *s, SBChar c)
+{
+    return trie_state_is_walkable (
+               s->trie_state,
+               alpha_map_char_to_alphabet (s->sb_trie->alpha_map, (UniChar) c)
+           );
+}
+
+Bool
 sb_trie_state_is_terminal (const SBTrieState *s)
 {
     return trie_state_is_terminal (s->trie_state);

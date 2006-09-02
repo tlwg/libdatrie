@@ -220,7 +220,19 @@ void     sb_trie_state_rewind (SBTrieState *s);
 Bool     sb_trie_state_walk (SBTrieState *s, SBChar c);
 
 /**
- * @breif Check for terminal state
+ * @brief Test walkability of character from state
+ *
+ * @param s    : the state to check
+ * @param c    : the input character
+ *
+ * @return boolean indicating walkability
+ *
+ * Test if there is a transition from state @a s with input character @a c.
+ */
+Bool     sb_trie_state_is_walkable (const SBTrieState *s, SBChar c);
+
+/**
+ * @brief Check for terminal state
  *
  * @param s    : the state to check
  *
@@ -232,7 +244,7 @@ Bool     sb_trie_state_walk (SBTrieState *s, SBChar c);
 Bool     sb_trie_state_is_terminal (const SBTrieState *s);
 
 /**
- * @breif Check for leaf state
+ * @brief Check for leaf state
  *
  * @param s    : the state to check
  *
