@@ -211,6 +211,18 @@ void      trie_state_rewind (TrieState *s);
 Bool      trie_state_walk (TrieState *s, TrieChar c);
 
 /**
+ * @brief Test walkability of character from state
+ *
+ * @param s    : the state to check
+ * @param c    : the input character
+ *
+ * @return boolean indicating walkability
+ *
+ * Test if there is a transition from state @a s with input character @a c.
+ */
+Bool      trie_state_is_walkable (const TrieState *s, TrieChar c);
+
+/**
  * @breif Check for terminal state
  *
  * @param s    : the state to check
@@ -220,7 +232,7 @@ Bool      trie_state_walk (TrieState *s, TrieChar c);
  * Check if the given state is a terminal state. A leaf state is a trie state 
  * that terminates a key, and stores a value associated with the key.
  */
-Bool      trie_state_is_terminal (const TrieState *s);
+#define   trie_state_is_terminal(s) trie_state_is_walkable((s),TRIE_CHAR_TERM)
 
 /**
  * @breif Check for leaf state
