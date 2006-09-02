@@ -184,10 +184,14 @@ Bool     tail_walk_char (Tail            *t,
  * Test if the character @a c can be used to walk from given character 
  * position @a suffix_idx of entry @a s of the tail data @a t.
  */
+/*
 Bool     tail_is_walkable_char (Tail            *t,
                                 TrieIndex        s,
                                 short            suffix_idx,
                                 const TrieChar   c);
+*/
+#define  tail_is_walkable_char(t,s,suffix_idx,c) \
+    (tail_get_suffix ((t), (s)) [suffix_idx] == (c))
 
 #endif  /* __TAIL_H */
 

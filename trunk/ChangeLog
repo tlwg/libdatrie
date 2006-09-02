@@ -1,5 +1,11 @@
 2006-09-02  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/darray.{h,c} (da_is_walkable),
+	datrie/tail.{h,c} (tail_is_walkable_char): Made the tiny functions
+	inline (i.e. macros), for tiny performance gain.
+
+2006-09-02  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/sb-trie.{h,c} (+sb_trie_state_is_walkable): Added walkability
 	test wrapper.
 
