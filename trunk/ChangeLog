@@ -1,3 +1,9 @@
+2006-09-02  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/trie.{h,c} (trie_state_is_terminal, +trie_state_is_walkable):
+	Changed trie_state_is_terminal() into a generic walkability test, and
+	made itself a specialized macro calling the function.
+
 2006-08-31  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/darray.{h,c} (+da_is_walkable),

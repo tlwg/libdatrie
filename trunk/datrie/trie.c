@@ -369,13 +369,13 @@ trie_state_walk (TrieState *s, TrieChar c)
 }
 
 Bool
-trie_state_is_terminal (const TrieState *s)
+trie_state_is_walkable (const TrieState *s, TrieChar c)
 {
     if (!s->is_suffix)
-        return da_is_walkable (s->trie->da, s->index, TRIE_CHAR_TERM);
+        return da_is_walkable (s->trie->da, s->index, c);
     else 
         return tail_is_walkable_char (s->trie->tail, s->index, s->suffix_idx,
-                                      TRIE_CHAR_TERM);
+                                      c);
 }
 
 Bool
