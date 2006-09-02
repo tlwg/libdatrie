@@ -1,5 +1,14 @@
 2006-09-02  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/sb-trie.{h,c} (+sb_trie_state_is_walkable): Added walkability
+	test wrapper.
+
+	* datrie/sb-trie.h (sb_trie_state_is_terminal, sb_trie_state_is_leaf),
+	datrie/trie.h (trie_state_is_terminal, trie_state_is_leaf): Fixed typo
+	for "\brief" doxygen tag.
+
+2006-09-02  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/trie.{h,c} (trie_state_is_terminal, +trie_state_is_walkable):
 	Changed trie_state_is_terminal() into a generic walkability test, and
 	made itself a specialized macro calling the function.

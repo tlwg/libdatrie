@@ -223,7 +223,7 @@ Bool      trie_state_walk (TrieState *s, TrieChar c);
 Bool      trie_state_is_walkable (const TrieState *s, TrieChar c);
 
 /**
- * @breif Check for terminal state
+ * @brief Check for terminal state
  *
  * @param s    : the state to check
  *
@@ -235,7 +235,7 @@ Bool      trie_state_is_walkable (const TrieState *s, TrieChar c);
 #define   trie_state_is_terminal(s) trie_state_is_walkable((s),TRIE_CHAR_TERM)
 
 /**
- * @breif Check for leaf state
+ * @brief Check for leaf state
  *
  * @param s    : the state to check
  *
