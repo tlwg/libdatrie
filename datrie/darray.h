@@ -160,7 +160,11 @@ Bool       da_walk (DArray *d, TrieIndex *s, TrieChar c);
  *
  * Test if there is a transition from state @a s with input character @a c.
  */
+/*
 Bool       da_is_walkable (DArray *d, TrieIndex s, TrieChar c);
+*/
+#define    da_is_walkable(d,s,c) \
+    (da_get_check ((d), da_get_base ((d), (s)) + (c)) == (s))
 
 /**
  * @brief Insert a branch from trie node
