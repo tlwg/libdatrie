@@ -127,6 +127,9 @@ alpha_map_char_to_alphabet (const AlphaMap *alpha_map, UniChar uc)
     TrieChar    alpha_begin;
     AlphaRange *range;
 
+    if (uc == 0)
+        return 0;
+
     alpha_begin = 1;
     for (range = alpha_map->first_range;
          range && (uc < range->begin || range->end < uc);
@@ -145,6 +148,9 @@ alpha_map_alphabet_to_char (const AlphaMap *alpha_map, TrieChar tc)
 {
     TrieChar    alpha_begin;
     AlphaRange *range;
+
+    if (tc == 0)
+        return 0;
 
     alpha_begin = 1;
     for (range = alpha_map->first_range;
