@@ -1,3 +1,7 @@
+2006-09-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* README: Filled in.
+
 2006-09-02  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/triedefs.h, datrie/trie.h, datrie/sb-trie.h: Included headers
