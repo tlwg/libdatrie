@@ -1,0 +1,8 @@
+libdatrie
+
+0.1.0 (2006-09-18)
+=====
+- Initial release
+- BASE-TAIL Double-array trie structure
+- Single-byte character map support
+
