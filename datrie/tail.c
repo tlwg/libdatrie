@@ -97,7 +97,7 @@ tail_open (const char *path, const char *name, TrieIOMode mode)
             file_read_int8 (t->file, &length);
             t->tails[i].suffix    = (TrieChar *) malloc (length + 1);
             if (length > 0)
-                file_read_chars (t->file, t->tails[i].suffix, length);
+                file_read_chars (t->file, (char *)t->tails[i].suffix, length);
             t->tails[i].suffix[length] = '\0';
         }
         t->is_dirty = FALSE;
@@ -157,11 +157,12 @@ tail_save (Tail *t)
             return -1;
         }
 
-        length = t->tails[i].suffix ? strlen (t->tails[i].suffix) : 0;
+        length = t->tails[i].suffix ? strlen ((const char *)t->tails[i].suffix)
+                                    : 0;
         if (!file_write_int8 (t->file, length))
             return -1;
         if (length > 0 &&
-            !file_write_chars (t->file, t->tails[i].suffix, length))
+            !file_write_chars (t->file, (char *)t->tails[i].suffix, length))
         {
             return -1;
         }
@@ -184,8 +185,9 @@ tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix)
 {
     index -= TAIL_START_BLOCKNO;
     if (index < t->num_tails) {
-        t->tails[index].suffix = (TrieChar *) realloc (t->tails[index].suffix,
-                                                       strlen (suffix) + 1);
+        t->tails[index].suffix
+            = (TrieChar *) realloc (t->tails[index].suffix,
+                                    strlen ((const char *)suffix) + 1);
         strcpy ((char *) t->tails[index].suffix, (const char *) suffix);
         t->is_dirty = TRUE;
         return TRUE;

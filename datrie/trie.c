@@ -274,8 +274,9 @@ trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
     t = trie_da_get_tail_index (enum_data->trie->da, sep_node);
     suffix = tail_get_suffix (enum_data->trie->tail, t);
 
-    full_key = (char *) malloc (strlen (key) + strlen (suffix) + 1);
-    strcat (strcpy (full_key, key), suffix);
+    full_key = (TrieChar *) malloc (strlen ((const char *)key)
+                                    + strlen ((const char *)suffix) + 1);
+    strcat (strcpy ((char *)full_key, (const char *)key), (const char *)suffix);
 
     ret = (*enum_data->enum_func) (full_key,
                                    tail_get_data (enum_data->trie->tail, t),
