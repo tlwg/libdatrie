@@ -45,7 +45,7 @@ sb_map_alphabet_to_char_str (const AlphaMap *alpha_map, const TrieChar *str)
 {
     SBChar     *sb_str, *p;
 
-    sb_str = (SBChar *) malloc (strlen (str) + 1);
+    sb_str = (SBChar *) malloc (strlen ((const char *)str) + 1);
     for (p = sb_str; *str; p++, str++)
         *p = (SBChar) alpha_map_alphabet_to_char (alpha_map, *str);
     *p = '\0';

@@ -251,6 +251,7 @@ static Bool
 list_enum_func (const SBChar *key, TrieData key_data, void *user_data)
 {
     printf ("%s\t%d\n", key, key_data);
+    return TRUE;
 }
 
 static int

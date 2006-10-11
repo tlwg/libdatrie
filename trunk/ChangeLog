@@ -1,3 +1,14 @@
+2006-10-11  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Fixed compiler warnings.
+
+	* datrie/sb-trie.c (sb_map_alphabet_to_char_str):
+	* datrie/tail.c (tail_open, tail_save, tail_set_suffix):
+	* datrie/trie.c (trie_da_enum_func): Cast pointers to get rid of
+	compiler warnings about char signedness.
+
+	* tools/trietool.c (list_enum_func): Return value on exit.
+
 2006-09-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.ac: Post-release version bump.
