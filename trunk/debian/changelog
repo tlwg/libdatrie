@@ -1,6 +1,6 @@
-libdatrie (0.1.0-1) UNRELEASED; urgency=low
+libdatrie (0.1.1-1) unstable; urgency=low
 
   * Initial release (Closes: #392315)
 
- -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Wed, 11 Oct 2006 16:51:11 +0700
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Thu, 12 Oct 2006 15:27:50 +0700
 
