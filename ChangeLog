@@ -1,3 +1,8 @@
+2006-10-12  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configure.ac, Makefile.am, +man/Makefile.am, +man/trietool.1:
+	Add manpage for trietool (moved from debian/).
+
 2006-10-11  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Fixed compiler warnings.
