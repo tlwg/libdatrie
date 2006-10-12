@@ -51,6 +51,7 @@ AC_CONFIG_FILES([Makefile
                  datrie.pc
                  datrie/Makefile
                  tools/Makefile
+                 man/Makefile
                  doc/Makefile
                  doc/Doxyfile])
 AC_OUTPUT
