@@ -1,5 +1,10 @@
 libdatrie
 
+0.1.1 (2006-10-12)
+=====
+- Fix compiler warnings
+- Man page for trietool
+
 0.1.0 (2006-09-18)
 =====
 - Initial release
