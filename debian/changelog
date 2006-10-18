@@ -1,3 +1,10 @@
+libdatrie (0.1.1-2) unstable; urgency=low
+
+  * Split binary program to libdatrie-bin.
+  * Rename libdatrie-{dev,doc} to libdatrie0-{dev,doc}.
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Wed, 18 Oct 2006 00:17:08 +0700
+
 libdatrie (0.1.1-1) unstable; urgency=low
 
   * Initial release (Closes: #392315)

@@ -5,11 +5,13 @@ Build-Depends: dpkg-dev (>= 1.13.19), debhelper (>= 5), autotools-dev, doxygen
 Standards-Version: 3.7.2.2
 Section: libs
 
-Package: libdatrie-dev
+Package: libdatrie0-dev
 Section: libdevel
 Architecture: any
 Depends: libdatrie0 (= ${binary:Version})
-Suggests: libdatrie-doc (= ${source:Version})
+Suggests: libdatrie0-doc (= ${source:Version})
+Provides: libdatrie-dev
+Conflicts: libdatrie-dev
 Description: Development files for double-array trie library
  Trie is a kind of digital search tree, an efficient indexing method with
  O(1) time complexity for searching. Comparably as efficient as hashing,
@@ -23,6 +25,26 @@ Description: Development files for double-array trie library
  .
  This package contains the development libraries, header files and manpages
  you need to develop your programs using the datrie library.
+ .
+ Homepage: http://libthai.sourceforge.net/
+
+Package: libdatrie-bin
+Section: misc
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Programs for double-array trie library
+ Trie is a kind of digital search tree, an efficient indexing method with
+ O(1) time complexity for searching. Comparably as efficient as hashing,
+ trie also provides flexibility on incremental matching and key spelling
+ manipulation. This makes it ideal for lexical analyzers, as well as
+ spelling dictionaries.
+ .
+ This library is an implementation of double-array structure for representing 
+ trie, as proposed by Junichi Aoe. The details of the implementation can be 
+ found at http://linux.thai.net/~thep/datrie/datrie.html
+ .
+ This package contains the program files which is used with the library,
+ including trietool, the trie manipulation tool.
  .
  Homepage: http://libthai.sourceforge.net/
 
@@ -46,10 +68,12 @@ Description: Double-array trie library
  .
  Homepage: http://libthai.sourceforge.net/
 
-Package: libdatrie-doc
+Package: libdatrie0-doc
 Section: doc
 Architecture: all
 Depends: lynx | www-browser
+Provides: libdatrie-doc
+Conflicts: libdatrie-doc
 Description: Documentation files for double-array trie library
  Trie is a kind of digital search tree, an efficient indexing method with
  O(1) time complexity for searching. Comparably as efficient as hashing,
