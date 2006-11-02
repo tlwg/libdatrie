@@ -73,12 +73,38 @@ file_length (FILE *file)
 }
 
 Bool
+file_read_int32 (FILE *file, int32 *o_val)
+{
+    unsigned char   buff[4];
+
+    if (fread (buff, 4, 1, file) == 1) {
+        *o_val = (buff[0] << 24) | (buff[1] << 16) |  (buff[2] << 8) | buff[3];
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+Bool
+file_write_int32 (FILE *file, int32 val)
+{
+    unsigned char   buff[4];
+
+    buff[0] = (val >> 24) & 0xff;
+    buff[1] = (val >> 16) & 0xff;
+    buff[2] = (val >> 8) & 0xff;
+    buff[3] = val & 0xff;
+
+    return (fwrite (buff, 4, 1, file) == 1);
+}
+
+Bool
 file_read_int16 (FILE *file, int16 *o_val)
 {
-    char    buff[2];
+    unsigned char   buff[2];
 
     if (fread (buff, 2, 1, file) == 1) {
-        *o_val = (buff[0] << 8) | (buff[1] & 0xff);
+        *o_val = (buff[0] << 8) | buff[1];
         return TRUE;
     }
 
@@ -88,7 +114,7 @@ file_read_int16 (FILE *file, int16 *o_val)
 Bool
 file_write_int16 (FILE *file, int16 val)
 {
-    char    buff[2];
+    unsigned char   buff[2];
 
     buff[0] = val >> 8;
     buff[1] = val & 0xff;
