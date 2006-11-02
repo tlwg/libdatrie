@@ -1,3 +1,12 @@
+2006-11-02  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/fileutils.{c,h} (file_read_int32, file_write_int32): Add
+	int32 read/write functions.
+
+	* datrie/fileutils.c (file_read_int16, file_write_int16): Use unsigned
+	char buffer instead of and-ing with 0xff, in accordance with int32
+	functions. (Thanks to Vee Satayamas for suggestion).
+
 2006-10-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.ac: Post-release version bump.

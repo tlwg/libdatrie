@@ -17,6 +17,9 @@ FILE * file_open (const char *dir, const char *name, const char *ext,
 
 long   file_length (FILE *file);
 
+Bool   file_read_int32 (FILE *file, int32 *o_val);
+Bool   file_write_int32 (FILE *file, int32 val);
+
 Bool   file_read_int16 (FILE *file, int16 *o_val);
 Bool   file_write_int16 (FILE *file, int16 val);
 
