@@ -1,3 +1,18 @@
+libdatrie (0.1.1-3) unstable; urgency=low
+
+  * Package sponsored by Loïc Minier.
+  * Split arch and indep builds completely
+    - debian/control: move doxygen to Build-Depends-Indep.
+    - debian/rules: disable doxygen and manually call it on indep targets.
+  * debian/rules adjustments
+    - Remove unused shared library version info assignment.
+    - Pass --host=$(DEB_HOST_GNU_TYPE) to configure only when cross compiling.
+    - Add missing targets in .PHONY
+  * debian/*.dirs: Removed, not needed for debhelper compat level 5.
+  * debian/copyright: Change the download place to match that in watch file.
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Sun, 10 Dec 2006 17:02:24 +0700
+
 libdatrie (0.1.1-2) unstable; urgency=low
 
   * Split binary program to libdatrie-bin.
