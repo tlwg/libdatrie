@@ -30,19 +30,10 @@ else
 	CFLAGS += -O2
 endif
 
-# shared library versions, option 1
-#version=0.0.0
-#major=0
-# option 2, assuming the library is created as src/.libs/libfoo.so.2.0.5 or so
-#version=`ls src/.libs/lib*.so.* | \
-# awk '{if (match($$0,/[0-9]+\.[0-9]+\.[0-9]+$$/)) print substr($$0,RSTART)}'`
-#major=`ls src/.libs/lib*.so.* | \
-# awk '{if (match($$0,/\.so\.[0-9]+$$/)) print substr($$0,RSTART+4)}'`
-
 config.status: configure
 	dh_testdir
 	# Add here commands to configure the package.
-	./configure $(build_flags) --disable-doxygen-doc --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
+	./configure $(build_flags) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
 
 
 build-indep: build-indep-stamp
@@ -50,8 +41,7 @@ build-indep-stamp:  config.status
 	dh_testdir
 
 	# Add here commands to compile the package.
-	cd doc; /usr/bin/doxygen
-	rm -rf doc/man
+	cd doc; $(MAKE)
 
 	touch $@
 
@@ -73,7 +63,6 @@ clean:
 
 	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean
-	rm -rf doc/html
 ifneq "$(wildcard /usr/share/misc/config.sub)" ""
 	cp -f /usr/share/misc/config.sub config.sub
 endif
@@ -90,8 +79,7 @@ install-indep: build-indep
 	dh_installdirs --indep
 
 	# Add here commands to install the package into debian/tmp
-	mkdir -p $(CURDIR)/debian/tmp/usr/share/doc/datrie
-	cd doc; cp -r html $(CURDIR)/debian/tmp/usr/share/doc/datrie
+	cd doc; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
 
 install-arch: build-arch
 	dh_testdir
