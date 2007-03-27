@@ -1,3 +1,12 @@
+2007-03-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configure.ac (LT_CURRENT, LT_REVISION, LT_AGE),
+	datrie/Makefile.am (libdatrie_la_LDFLAGS), +datrie/libdatrie.def:
+	Add library version info. Limit exported symbols with -export-symbols
+	flag. Always pass -no-undefined flag.
+
+	* configure.ac: Add Win32 DLL building support.
+
 2006-11-02  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/fileutils.{c,h} (file_read_int32, file_write_int32): Add

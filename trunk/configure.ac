@@ -8,8 +8,22 @@ AC_CONFIG_HEADER([config.h])
 
 AM_INIT_AUTOMAKE
 
+# Library versioning
+# Library code modified:                    REVISION++
+# Interfaces added:              CURRENT++  REVISION=0  AGE++
+# Interfaces changed/removed:    CURRENT++  REVISION=0  AGE=0
+LT_CURRENT=0
+LT_REVISION=0
+LT_AGE=0
+AC_SUBST(LT_CURRENT)
+AC_SUBST(LT_REVISION)
+AC_SUBST(LT_AGE)
+
 # Checks for programs.
 AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 
 # Checks for libraries.
