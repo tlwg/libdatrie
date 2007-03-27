@@ -6,6 +6,8 @@ pkginclude_HEADERS =	\
 	trie.h		\
 	sb-trie.h
 
+EXTRA_DIST = libdatrie.def
+
 INCLUDES = -I$(top_srcdir)
 
 lib_LTLIBRARIES = libdatrie.la
@@ -25,4 +27,7 @@ libdatrie_la_SOURCES =	\
 	alpha-map.c	\
 	sb-trie.h	\
 	sb-trie.c
+libdatrie_la_LDFLAGS =	-no-undefined \
+	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+	-export-symbols $(srcdir)/libdatrie.def
 
