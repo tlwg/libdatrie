@@ -1,0 +1,36 @@
+NSIS installer for Windows
+==========================
+
+This directory contains scripts and resources for building installer for
+Windows based on NSIS (Nullsoft Scriptable Install System). The make script
+is provided for cross-compiling from a GNU/Linux system using mingw32 and nsis.
+
+Requirements
+------------
+
+In addition to normal build-essential tools, GNU autotools, and pkg-config,
+you will need the following packages to cross-build the installer from
+GNU//Linux:
+
+  - mingw32
+  - nsis
+  - tofrodos
+
+On Debian GNU/Linux, you can just apt-get the named packages.
+
+Building
+--------
+
+In this `installer' directory, just type:
+
+  $ ./make-nsis
+
+The generated installer will be libdatrie.v{version}.exe.
+
+The script is actually a make file. You can see build stages in the file,
+such as configure, build, install, binary.
+
+To clean everything, for example, you can type:
+
+  $ ./make-nsis distclean
+
