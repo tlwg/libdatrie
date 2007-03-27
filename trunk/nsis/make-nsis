@@ -42,7 +42,7 @@ install:
 	if [ ! -e $(CURDIR)/libdatrie/contrib ]; then \
 	  mkdir $(CURDIR)/libdatrie/contrib; \
 	fi
-	cp contrib/* $(CURDIR)/libdatrie/contrib
+	cp contrib/libdatrienv.sh $(CURDIR)/libdatrie/contrib
 
 binary: build install
 	makensis libdatrie.nsi
