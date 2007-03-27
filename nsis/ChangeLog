@@ -1,4 +1,10 @@
 2007-03-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* libdatrie.nsi:
+	Explicitly list files to copy from contrib, to prevent failure on
+	presence of the extra CVS directory.
+
+2007-03-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 	
 	First import NSIS-based installer by Taniya Supasin
 	<taniya.supasin@gmail.com>.
