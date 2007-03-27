@@ -1,0 +1,18 @@
+2007-03-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+	
+	First import NSIS-based installer by Taniya Supasin
+	<taniya.supasin@gmail.com>.
+
+	* libdatrie.nsi, SearchReplace.nsh, WriteEnvStr.nsh, WritePathStr.nsh:
+	Import Taniya's NSIS scripts.
+
+	* contrib/libdatrienv.sh:
+	Import Taniya's shell profile for building environment.
+
+	* make-nsis:
+	Write make rules for building the installer using mingw32
+	cross-compilation and nsis.
+
+	* README:
+	Document the build process.
+
