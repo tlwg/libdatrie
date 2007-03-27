@@ -1,6 +1,6 @@
 2007-03-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
-	* libdatrie.nsi:
+	* make-nsis:
 	Explicitly list files to copy from contrib, to prevent failure on
 	presence of the extra CVS directory.
 
