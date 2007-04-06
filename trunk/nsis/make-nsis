@@ -34,8 +34,8 @@ install:
 	  mkdir $(CURDIR)/libdatrie/doc; \
 	fi
 	for file in $(INSTALL_DOCS); do \
-	  cp $$file $(CURDIR)/libdatrie/doc; \
-	  todos $(CURDIR)/libdatrie/doc/$$file; \
+	  cp $$file $(CURDIR)/libdatrie/doc/`basename $$file`.txt; \
+	  todos $(CURDIR)/libdatrie/doc/$$file.txt; \
 	done
 
 	# install contrib files

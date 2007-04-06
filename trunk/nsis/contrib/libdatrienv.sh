@@ -30,4 +30,11 @@ if test -n "$DATRIE_BASEPATH"; then
 	APPEND=":$PKG_CONFIG_PATH"
   fi
   export PKG_CONFIG_PATH=$DATRIE_BASEPATH/lib/pkgconfig$APPEND
+
+  if test "x$MANPATH" = x; then
+	APPEND=
+  else
+	APPEND=":$MANPATH"
+  fi
+  export MANPATH=$DATRIE_BASEPATH/share/man$APPEND
 fi
