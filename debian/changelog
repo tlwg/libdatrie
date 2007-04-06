@@ -1,3 +1,12 @@
+libdatrie (0.1.1-5) UNRELEASED; urgency=low
+
+  * debian/libdatrie-bin.manpages:
+    - Install man pages from built directory, rather than from source.
+  * debian/libdatrie0-dev.manpages:
+    - Added to install doxygen-generated API man pages.
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Fri, 06 Apr 2007 14:41:25 +0700
+
 libdatrie (0.1.1-4) unstable; urgency=low
 
   * debian/rules: Revert manual calls to doxygen and rely on configure
