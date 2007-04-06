@@ -1,3 +1,16 @@
+2007-04-06  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Incorporate changes for componentized installation by Taniya Supasin
+	<taniya.supasin@gmail.com>.
+
+	* libdatrie.nsi: Split section into runtime, devel, doc components.
+	Handle component dependency in UI. Set default directory to
+	c:\libdatrie.
+
+	* contrib/libdatrienv.sh: Set $MANPAGE env.
+
+	* make-nsis: Append '.txt' extension to package docs.
+
 2007-03-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* make-nsis:
