@@ -1,3 +1,13 @@
+2007-05-12  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/sb-trie.c (sb_trie_close, sb_trie_save, sb_trie_retrieve,
+	sb_trie_store, sb_trie_enumerate, sb_trie_root, sb_trie_state_clone,
+	sb_trie_state_free, sb_trie_state_rewind, sb_trie_state_walk,
+	sb_trie_state_is_walkable, sb_trie_state_is_terminal,
+	sb_trie_state_is_leaf, sb_trie_state_get_data):
+	Guard against NULL pointers in functions. Thanks to Neutron Soutmun
+	for bug report and initial patch.
+
 2007-04-06  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* doc/Makefile.am: Add install-man target. Also install/uninstall

@@ -103,6 +103,9 @@ exit1:
 int
 sb_trie_close (SBTrie *sb_trie)
 {
+    if (!sb_trie)
+        return -1;
+
     alpha_map_free (sb_trie->alpha_map);
     return trie_close (sb_trie->trie);
 }
@@ -110,6 +113,9 @@ sb_trie_close (SBTrie *sb_trie)
 int
 sb_trie_save (SBTrie *sb_trie)
 {
+    if (!sb_trie)
+        return -1;
+
     return trie_save (sb_trie->trie);
 }
 
@@ -124,6 +130,9 @@ sb_trie_retrieve (SBTrie *sb_trie, const SBChar *key, TrieData *o_data)
     TrieChar   *trie_key;
     Bool        ret;
 
+    if (!sb_trie)
+        return FALSE;
+
     trie_key = sb_map_char_to_alphabet_str (sb_trie->alpha_map, key);
     ret = trie_retrieve (sb_trie->trie, trie_key, o_data);
     free (trie_key);
@@ -137,6 +146,9 @@ sb_trie_store (SBTrie *sb_trie, const SBChar *key, TrieData data)
     TrieChar   *trie_key;
     Bool        ret;
 
+    if (!sb_trie)
+        return FALSE;
+
     trie_key = sb_map_char_to_alphabet_str (sb_trie->alpha_map, key);
     ret = trie_store (sb_trie->trie, trie_key, data);
     free (trie_key);
@@ -149,6 +161,9 @@ sb_trie_delete (SBTrie *sb_trie, const SBChar *key)
 {
     TrieChar   *trie_key;
     Bool        ret;
+
+    if (!sb_trie)
+        return FALSE;
 
     trie_key = sb_map_char_to_alphabet_str (sb_trie->alpha_map, key);
     ret = trie_delete (sb_trie->trie, trie_key);
@@ -186,6 +201,9 @@ sb_trie_enumerate (SBTrie         *sb_trie,
 {
     _SBTrieEnumData enum_data;
 
+    if (!sb_trie)
+        return FALSE;
+
     enum_data.sb_trie   = sb_trie;
     enum_data.enum_func = enum_func;
     enum_data.user_data = user_data;
@@ -202,6 +220,9 @@ SBTrieState *
 sb_trie_root (SBTrie *sb_trie)
 {
     SBTrieState *sb_state;
+
+    if (!sb_trie)
+        return FALSE;
 
     sb_state = (SBTrieState *) malloc (sizeof (SBTrieState));
     if (!sb_state)
@@ -223,6 +244,9 @@ sb_trie_state_clone (const SBTrieState *s)
 {
     SBTrieState *new_state;
 
+    if (!s)
+        return NULL;
+
     new_state = (SBTrieState *) malloc (sizeof (SBTrieState));
     if (!new_state)
         return NULL;
@@ -236,6 +260,9 @@ sb_trie_state_clone (const SBTrieState *s)
 void
 sb_trie_state_free (SBTrieState *s)
 {
+    if (!s)
+        return;
+
     trie_state_free (s->trie_state);
     free (s);
 }
@@ -243,12 +270,18 @@ sb_trie_state_free (SBTrieState *s)
 void
 sb_trie_state_rewind (SBTrieState *s)
 {
+    if (!s)
+        return;
+
     trie_state_rewind (s->trie_state);
 }
 
 Bool
 sb_trie_state_walk (SBTrieState *s, SBChar c)
 {
+    if (!s)
+        return FALSE;
+
     return trie_state_walk (s->trie_state,
                             alpha_map_char_to_alphabet (s->sb_trie->alpha_map,
                                                         (UniChar) c));
@@ -257,6 +290,9 @@ sb_trie_state_walk (SBTrieState *s, SBChar c)
 Bool
 sb_trie_state_is_walkable (const SBTrieState *s, SBChar c)
 {
+    if (!s)
+        return FALSE;
+
     return trie_state_is_walkable (
                s->trie_state,
                alpha_map_char_to_alphabet (s->sb_trie->alpha_map, (UniChar) c)
@@ -266,18 +302,27 @@ sb_trie_state_is_walkable (const SBTrieState *s, SBChar c)
 Bool
 sb_trie_state_is_terminal (const SBTrieState *s)
 {
+    if (!s)
+        return FALSE;
+
     return trie_state_is_terminal (s->trie_state);
 }
 
 Bool
 sb_trie_state_is_leaf (const SBTrieState *s)
 {
+    if (!s)
+        return FALSE;
+
     return trie_state_is_leaf (s->trie_state);
 }
 
 TrieData
 sb_trie_state_get_data (const SBTrieState *s)
 {
+    if (!s)
+        return TRIE_DATA_ERROR;
+
     return trie_state_get_data (s->trie_state);
 }
 
