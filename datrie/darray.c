@@ -150,6 +150,14 @@ struct _DArray {
 
 #define DA_SIGNATURE 0xDAFD
 
+/* DA Header:
+ * - Cell 0: SIGNATURE, 1
+ * - Cell 1: free circular-list pointers
+ * - Cell 2: root node
+ * - Cell 3: DA pool begin
+ */
+#define DA_POOL_BEGIN 3
+
 DArray *
 da_open (const char *path, const char *name, TrieIOMode mode)
 {
@@ -165,7 +173,7 @@ da_open (const char *path, const char *name, TrieIOMode mode)
     /* init cells data */
     d->num_cells = file_length (d->file) / 4;
     if (0 == d->num_cells) {
-        d->num_cells = 3;
+        d->num_cells = DA_POOL_BEGIN;
         d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
         if (!d->cells)
             goto exit2;
@@ -173,7 +181,7 @@ da_open (const char *path, const char *name, TrieIOMode mode)
         d->cells[0].check = 1;
         d->cells[1].base = -1;
         d->cells[1].check = -1;
-        d->cells[2].base = 3;
+        d->cells[2].base = DA_POOL_BEGIN;
         d->cells[2].check = 0;
         d->is_dirty = TRUE;
     } else {
@@ -418,8 +426,6 @@ da_get_state_key   (DArray         *d,
     return key;
 }
 
-#define DA_EXTENDING_STEPS 16
-
 static TrieIndex
 da_find_free_base  (DArray         *d,
                     const Symbols  *symbols)
@@ -430,10 +436,13 @@ da_find_free_base  (DArray         *d,
     /* find first free cell that is beyond the first symbol */
     first_sym = symbols_get (symbols, 0);
     s = -da_get_check (d, da_get_free_list (d));
-    while (s != da_get_free_list (d) && s < (TrieIndex) first_sym + 3)
+    while (s != da_get_free_list (d)
+           && s < (TrieIndex) first_sym + DA_POOL_BEGIN)
+    {
         s = -da_get_check (d, s);
+    }
     if (s == da_get_free_list (d)) {
-        s = first_sym + 3;
+        s = first_sym + DA_POOL_BEGIN;
         while (da_extend_pool (d, s), da_get_check (d, s) > 0)
             ++s;
     }

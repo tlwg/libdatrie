@@ -1,3 +1,8 @@
+2007-08-16  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/darray.c (da_open, da_find_free_base): Use DA_POOL_BEGIN
+	macro instead of hard-coded number. Remove unused DA_EXTENDING_STEPS.
+
 2007-05-12  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/sb-trie.c (sb_trie_close, sb_trie_save, sb_trie_retrieve,
