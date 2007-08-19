@@ -185,6 +185,9 @@ trie_branch_in_branch (Trie           *trie,
     TrieIndex new_da, new_tail;
 
     new_da = da_insert_branch (trie->da, sep_node, *suffix);
+    if (TRIE_INDEX_ERROR == new_da)
+        return FALSE;
+
     if ('\0' != *suffix)
         ++suffix;
 
@@ -201,7 +204,7 @@ trie_branch_in_tail   (Trie           *trie,
                        const TrieChar *suffix,
                        TrieData        data)
 {
-    TrieIndex       old_tail, old_da;
+    TrieIndex       old_tail, old_da, s;
     const TrieChar *old_suffix, *p;
 
     /* adjust separate point in old path */
@@ -210,17 +213,30 @@ trie_branch_in_tail   (Trie           *trie,
     if (!old_suffix)
         return FALSE;
 
-    for (p = old_suffix; *p == *suffix; p++, suffix++)
-        sep_node = da_insert_branch (trie->da, sep_node, *p);
+    for (p = old_suffix, s = sep_node; *p == *suffix; p++, suffix++) {
+        TrieIndex t = da_insert_branch (trie->da, s, *p);
+        if (TRIE_INDEX_ERROR == t)
+            goto fail;
+        s = t;
+    }
 
-    old_da = da_insert_branch (trie->da, sep_node, *p);
+    old_da = da_insert_branch (trie->da, s, *p);
+    if (TRIE_INDEX_ERROR == old_da)
+        goto fail;
+
     if ('\0' != *p)
         ++p;
     tail_set_suffix (trie->tail, old_tail, p);
     trie_da_set_tail_index (trie->da, old_da, old_tail);
 
     /* insert the new branch at the new separate point */
-    return trie_branch_in_branch (trie, sep_node, suffix, data);
+    return trie_branch_in_branch (trie, s, suffix, data);
+
+fail:
+    /* failed, undo previous insertions and return error */
+    da_prune_upto (trie->da, sep_node, s);
+    trie_da_set_tail_index (trie->da, sep_node, old_tail);
+    return FALSE;
 }
 
 Bool

@@ -194,6 +194,19 @@ TrieIndex  da_insert_branch (DArray *d, TrieIndex s, TrieChar c);
 void       da_prune (DArray *d, TrieIndex s);
 
 /**
+ * @brief Prune the single branch up to given parent
+ *
+ * @param d : the double-array structure
+ * @param p : the parent up to which to be pruned
+ * @param s : the dangling state to prune off
+ *
+ * Prune off a non-separate path up from the final state @a s to the
+ * given parent @a p. The prunning stop when either the parent @a p
+ * is met, or a first non-separate node is found.
+ */
+void       da_prune_upto (DArray *d, TrieIndex p, TrieIndex s);
+
+/**
  * @brief Enumerate entries stored in double-array structure
  *
  * @param d          : the double-array structure

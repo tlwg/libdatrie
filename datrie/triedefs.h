@@ -42,6 +42,10 @@ typedef int16          TrieIndex;
  * @brief Trie error index
  */
 #define TRIE_INDEX_ERROR  0
+/**
+ * @brief Maximum trie index value
+ */
+#define TRIE_INDEX_MAX    32767
 
 /**
  * @brief Type of value associated to trie entries
