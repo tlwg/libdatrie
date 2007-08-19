@@ -1,3 +1,22 @@
+2007-08-19  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Handle double array index overflow.
+
+	* datrie/triedefs.h (TRIE_INDEX_MAX): Define maximum index value.
+	* datrie/darray.c (TrieIndexInt): Define type for immediate values, so
+	overflow can be detected.
+	* "-------------" (da_extend_pool): Return success/failure status.
+	Accept TrieIndexInt argument for overflow detection.
+	* "-------------" (da_check_free_cell): False when extending fails.
+	Accept TrieIndexInt argument for overflow detection.
+	* "-------------" (da_find_free_base): Return error on failure.
+	* "-------------" (da_insert_branch): Return error on failure.
+	* datrie/trie.c (trie_branch_in_branch, trie_branch_in_tail): Check
+	for failure from da_insert_branch() and return the status.
+	* datrie/darray.{c,h} (da_prune_upto, da_prune): Add da_prune_upto(),
+	for rolling back partial operation in trie_branch_in_branch().
+	Redefine da_prune() in terms of da_prune_upto().
+
 2007-08-16  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/darray.c (da_open, da_find_free_base): Use DA_POOL_BEGIN

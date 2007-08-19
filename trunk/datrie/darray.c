@@ -16,6 +16,12 @@
  *    INTERNAL TYPES DECLARATIONS   *
  *----------------------------------*/
 
+/*
+ * Type for keeping intermediate values of TrieIndex.
+ * Must be bigger than TrieIndex, so that overflow can be easily detected.
+ */
+typedef int32           TrieIndexInt;
+
 typedef struct _Symbols Symbols;
 
 struct _Symbols {
@@ -38,7 +44,7 @@ static void         symbols_add (Symbols *syms, TrieChar c);
 #define da_get_free_list(d)      (1)
 
 static Bool         da_check_free_cell (DArray         *d,
-                                        TrieIndex       s);
+                                        TrieIndexInt    s);
 
 static Bool         da_has_children    (DArray         *d,
                                         TrieIndex       s);
@@ -60,8 +66,8 @@ static void         da_relocate_base   (DArray         *d,
                                         TrieIndex       s,
                                         TrieIndex       new_base);
 
-static void         da_extend_pool     (DArray         *d,
-                                        TrieIndex       to_index);
+static Bool         da_extend_pool     (DArray         *d,
+                                        TrieIndexInt    to_index);
 
 static void         da_alloc_cell      (DArray         *d,
                                         TrieIndex       cell);
@@ -302,7 +308,7 @@ da_walk (DArray *d, TrieIndex *s, TrieChar c)
 TrieIndex
 da_insert_branch (DArray *d, TrieIndex s, TrieChar c)
 {
-    TrieIndex   base, next;
+    TrieIndexInt    base, next;
 
     base = da_get_base (d, s);
 
@@ -323,6 +329,9 @@ da_insert_branch (DArray *d, TrieIndex s, TrieChar c)
             new_base = da_find_free_base (d, symbols);
             symbols_free (symbols);
 
+            if (TRIE_INDEX_ERROR == new_base)
+                return TRIE_INDEX_ERROR;
+
             da_relocate_base (d, s, new_base);
             next = new_base + c;
         }
@@ -335,6 +344,9 @@ da_insert_branch (DArray *d, TrieIndex s, TrieChar c)
         new_base = da_find_free_base (d, symbols);
         symbols_free (symbols);
 
+        if (TRIE_INDEX_ERROR == new_base)
+            return TRIE_INDEX_ERROR;
+
         da_set_base (d, s, new_base);
         next = new_base + c;
     }
@@ -346,10 +358,9 @@ da_insert_branch (DArray *d, TrieIndex s, TrieChar c)
 
 static Bool
 da_check_free_cell (DArray         *d,
-                    TrieIndex       s)
+                    TrieIndexInt    s)
 {
-    da_extend_pool (d, s);
-    return (da_get_check (d, s) < 0);
+    return da_extend_pool (d, s) && da_get_check (d, s) < 0;
 }
 
 static Bool
@@ -430,8 +441,8 @@ static TrieIndex
 da_find_free_base  (DArray         *d,
                     const Symbols  *symbols)
 {
-    TrieChar    first_sym;
-    TrieIndex   s;
+    TrieChar        first_sym;
+    TrieIndexInt    s;
 
     /* find first free cell that is beyond the first symbol */
     first_sym = symbols_get (symbols, 0);
@@ -442,16 +453,21 @@ da_find_free_base  (DArray         *d,
         s = -da_get_check (d, s);
     }
     if (s == da_get_free_list (d)) {
-        s = first_sym + DA_POOL_BEGIN;
-        while (da_extend_pool (d, s), da_get_check (d, s) > 0)
-            ++s;
+        for (s = first_sym + DA_POOL_BEGIN; ; ++s) {
+            if (!da_extend_pool (d, s))
+                return TRIE_INDEX_ERROR;
+            if (da_get_check (d, s) < 0)
+                break;
+        }
     }
 
     /* search for next free cell that fits the symbols set */
     while (!da_fit_symbols (d, s - first_sym, symbols)) {
         /* extend pool before getting exhausted */
-        if (-da_get_check (d, s) == da_get_free_list (d))
-            da_extend_pool (d, d->num_cells);
+        if (-da_get_check (d, s) == da_get_free_list (d)) {
+            if (!da_extend_pool (d, d->num_cells))
+                return TRIE_INDEX_ERROR;
+        }
 
         s = -da_get_check (d, s);
     }
@@ -520,16 +536,19 @@ da_relocate_base   (DArray         *d,
     da_set_base (d, s, new_base);
 }
 
-static void
+static Bool
 da_extend_pool     (DArray         *d,
-                    TrieIndex       to_index)
+                    TrieIndexInt    to_index)
 {
     TrieIndex   new_begin;
     TrieIndex   i;
     TrieIndex   free_tail;
 
+    if (to_index <= 0 || TRIE_INDEX_MAX <= to_index)
+        return FALSE;
+
     if (to_index < d->num_cells)
-        return;
+        return TRUE;
 
     d->cells = (DACell *) realloc (d->cells, (to_index + 1) * sizeof (DACell));
     new_begin = d->num_cells;
@@ -547,12 +566,20 @@ da_extend_pool     (DArray         *d,
     da_set_base (d, new_begin, -free_tail);
     da_set_check (d, to_index, -da_get_free_list (d));
     da_set_base (d, da_get_free_list (d), -to_index);
+
+    return TRUE;
 }
 
 void
 da_prune (DArray *d, TrieIndex s)
 {
-    while (da_get_root (d) != s && !da_has_children (d, s)) {
+    da_prune_upto (d, da_get_root (d), s);
+}
+
+void
+da_prune_upto (DArray *d, TrieIndex p, TrieIndex s)
+{
+    while (p != s && !da_has_children (d, s)) {
         TrieIndex   parent;
 
         parent = da_get_check (d, s);
