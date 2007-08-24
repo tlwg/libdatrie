@@ -392,9 +392,10 @@ da_output_symbols  (DArray         *d,
     syms = symbols_new ();
 
     base = da_get_base (d, s);
-    for (c = 0; c < TRIE_CHAR_MAX; c++)
+    for (c = 0; c < TRIE_CHAR_MAX && base + c < TRIE_INDEX_MAX; c++) {
         if (da_get_check (d, base + c) == s)
             symbols_add_fast (syms, (TrieChar) c);
+    }
 
     return syms;
 }

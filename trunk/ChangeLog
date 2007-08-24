@@ -1,3 +1,8 @@
+2007-08-24  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/darray.c (da_output_symbols): Do not try to test symbols
+	beyond trie index range. Fixes segfault for trietool list command.
+
 2007-08-19  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Handle double array index overflow.
