@@ -1,3 +1,11 @@
+libdatrie (0.1.2-2) unstable; urgency=low
+
+  * Do not install functions man pages for now, to avoid messing man
+    directories with plenty of doxygen-generated pages, and to avoid conflicts
+    with other packages.
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Sat, 25 Aug 2007 17:11:23 +0700
+
 libdatrie (0.1.2-1) unstable; urgency=low
 
   * debian/libdatrie-bin.manpages:
