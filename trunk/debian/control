@@ -5,6 +5,8 @@ Build-Depends: dpkg-dev (>= 1.13.19), debhelper (>= 5), autotools-dev
 Build-Depends-Indep: doxygen
 Standards-Version: 3.7.2.2
 Section: libs
+XS-Vcs-Cvs: pserver:anonymous@linux.thai.net:/home/cvs software/datrie
+XS-Vcs-Browser: http://linux.thai.net/viewvc/viewvc.cgi/software/datrie/
 
 Package: libdatrie0-dev
 Section: libdevel

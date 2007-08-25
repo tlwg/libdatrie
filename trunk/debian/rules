@@ -30,6 +30,9 @@ else
 	CFLAGS += -O2
 endif
 
+SHARED_PKG := libdatrie0
+SHLIB_VER := 0.1.2
+
 config.status: configure
 	dh_testdir
 	# Add here commands to configure the package.
@@ -62,7 +65,7 @@ clean:
 	rm -f build-indep-stamp build-arch-stamp
 
 	# Add here commands to clean up after the build process.
-	-$(MAKE) distclean
+	[ ! -f Makefile ] || $(MAKE) distclean
 ifneq "$(wildcard /usr/share/misc/config.sub)" ""
 	cp -f /usr/share/misc/config.sub config.sub
 endif
@@ -117,7 +120,7 @@ binary-arch: build-arch install-arch
 	dh_strip --arch
 	dh_compress --arch
 	dh_fixperms --arch
-	dh_makeshlibs --arch
+	dh_makeshlibs --arch -p$(SHARED_PKG) -V'$(SHARED_PKG) (>= $(SHLIB_VER))'
 	dh_installdeb --arch
 	dh_shlibdeps --arch
 	dh_gencontrol --arch
