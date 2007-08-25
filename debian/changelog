@@ -1,11 +1,18 @@
-libdatrie (0.1.1-5) UNRELEASED; urgency=low
+libdatrie (0.1.2-1) unstable; urgency=low
 
   * debian/libdatrie-bin.manpages:
     - Install man pages from built directory, rather than from source.
   * debian/libdatrie0-dev.manpages:
     - Added to install doxygen-generated API man pages.
+  * New upstream release
+    - Limited symbols export, to avoid name clashing
+    - Improved error handling for edge cases
+    - Fix crashes
+  * Set shlibs to >= 0.1.2.
+  * Add XS-Vcs-Cvs and XS-Vcs-Browser info.
+  * Do not ignore 'make clean' error.
 
- -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Fri, 06 Apr 2007 14:41:25 +0700
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Sat, 25 Aug 2007 14:56:20 +0700
 
 libdatrie (0.1.1-4) unstable; urgency=low
 
