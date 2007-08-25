@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "trie-private.h"
 #include "darray.h"
 #include "fileutils.h"
 
@@ -368,15 +369,17 @@ da_has_children    (DArray         *d,
                     TrieIndex       s)
 {
     TrieIndex   base;
-    uint16      c;
+    uint16      c, max_c;
 
     base = da_get_base (d, s);
     if (TRIE_INDEX_ERROR == base || base < 0)
         return FALSE;
 
-    for (c = 0; c < TRIE_CHAR_MAX; c++)
+    max_c = MIN_VAL (TRIE_CHAR_MAX, TRIE_INDEX_MAX - base);
+    for (c = 0; c < max_c; c++) {
         if (da_get_check (d, base + c) == s)
             return TRUE;
+    }
 
     return FALSE;
 }
@@ -387,12 +390,13 @@ da_output_symbols  (DArray         *d,
 {
     Symbols    *syms;
     TrieIndex   base;
-    uint16      c;
+    uint16      c, max_c;
 
     syms = symbols_new ();
 
     base = da_get_base (d, s);
-    for (c = 0; c < TRIE_CHAR_MAX && base + c < TRIE_INDEX_MAX; c++) {
+    max_c = MIN_VAL (TRIE_CHAR_MAX, TRIE_INDEX_MAX - base);
+    for (c = 0; c < max_c; c++) {
         if (da_get_check (d, base + c) == s)
             symbols_add_fast (syms, (TrieChar) c);
     }
@@ -520,11 +524,13 @@ da_relocate_base   (DArray         *d,
          */
         /* preventing the case of TAIL pointer */
         if (old_next_base > 0) {
-            uint16      c;
+            uint16      c, max_c;
 
-            for  (c = 0; c < TRIE_CHAR_MAX; c++)
+            max_c = MIN_VAL (TRIE_CHAR_MAX, TRIE_INDEX_MAX - old_next_base);
+            for  (c = 0; c < max_c; c++) {
                 if (da_get_check (d, old_next_base + c) == old_next)
                     da_set_check (d, old_next_base + c, new_next);
+            }
         }
 
         /* free old_next node */

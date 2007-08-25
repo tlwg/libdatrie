@@ -15,6 +15,7 @@ lib_LTLIBRARIES = libdatrie.la
 libdatrie_la_SOURCES =	\
 	typedefs.h	\
 	triedefs.h	\
+	trie-private.h	\
 	fileutils.h	\
 	fileutils.c	\
 	darray.h	\

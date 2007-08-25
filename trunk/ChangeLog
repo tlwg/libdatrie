@@ -1,3 +1,12 @@
+2007-08-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/Makefile.am, +datrie/trie-private.h (MIN_VAL, MAX_VAL):
+	Add utility macros.
+	* datrie/darray.c (da_output_symbols): Adjust loop boundary to be more
+	overflow-safe.
+	* "-------------" (da_has_children, da_relocate_base): Apply the same
+	loop pattern to prevent out-of-range accesses.
+
 2007-08-24  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/darray.c (da_output_symbols): Do not try to test symbols
