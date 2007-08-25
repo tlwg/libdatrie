@@ -1,5 +1,11 @@
 libdatrie
 
+0.1.2 (2007-08-25)
+=====
+- Limited symbols export, to avoid name clashing
+- Improved error handling for edge cases
+- Fix crashes
+
 0.1.1 (2006-10-12)
 =====
 - Fix compiler warnings

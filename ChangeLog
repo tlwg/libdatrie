@@ -1,5 +1,11 @@
 2007-08-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* configure.ac: Bump lib revision.
+	* NEWS:
+	=== Version 0.1.2 ===
+
+2007-08-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/Makefile.am, +datrie/trie-private.h (MIN_VAL, MAX_VAL):
 	Add utility macros.
 	* datrie/darray.c (da_output_symbols): Adjust loop boundary to be more
