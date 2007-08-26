@@ -1,5 +1,10 @@
 2007-08-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* man/trietool.1: Escape some minus signs. Mark a variable italic.
+	Thanks debian's lintian.
+
+2007-08-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* configure.ac: Post-release version bump.
 
 2007-08-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>

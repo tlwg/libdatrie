@@ -35,7 +35,7 @@ will be treated as \fIword\fP, and the second as \fIdata\fP.
 Add words with associated data listed in \fIlist-file\fP to trie.  The 
 \fIlist-file\fP must be a text file listing one word per line.  The associated
 data can be put after the word in the same line, separated with tab (`\\t')
-character.  If the data field is omitted, a default value (-1) will be used
+character.  If the data field is omitted, a default value (\-1) will be used
 instead.
 .TP
 \fBdelete\fP \fIword\fP ...
@@ -56,11 +56,11 @@ per line, separated with tab (`\\t') character, the format appropriate for
 being \fIlist-file\fP for the \fBadd-list\fP command.
 .SH OPTIONS
 This program follows the usual GNU command line syntax, with long
-options starting with two dashes (`--').
+options starting with two dashes (`\-\-').
 A summary of options is included below.
 .TP
-.B \-p, \-\-path "dir"
-Set trie directory to "dir" [default=.]
+.B \-p, \-\-path \fIdir\fP
+Set trie directory to \fIdir\fP [default=`.']
 .TP
 .B \-h, \-\-help
 Show summary of options.
