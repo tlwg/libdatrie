@@ -1,3 +1,7 @@
+2007-08-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configure.ac: Post-release version bump.
+
 2007-08-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.ac: Bump lib revision.
