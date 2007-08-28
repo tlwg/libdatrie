@@ -1,5 +1,9 @@
 2007-08-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* doc/Doxyfile.in: Only generate doc for public API.
+
+2007-08-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* doc/Makefile.am, doc/Doxyfile.in: Revert API man pages generation
 	and installation. Update Doxyfile format to doxygen 1.5.3.
 
