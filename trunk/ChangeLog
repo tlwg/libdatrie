@@ -1,3 +1,8 @@
+2007-08-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* doc/Makefile.am, doc/Doxyfile.in: Revert API man pages generation
+	and installation. Update Doxyfile format to doxygen 1.5.3.
+
 2007-08-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* man/trietool.1: Escape some minus signs. Mark a variable italic.
