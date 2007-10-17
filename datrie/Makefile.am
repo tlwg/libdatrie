@@ -31,4 +31,5 @@ libdatrie_la_SOURCES =	\
 libdatrie_la_LDFLAGS =	-no-undefined \
 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 	-export-symbols $(srcdir)/libdatrie.def
+libdatrie_la_DEPENDENCIES = libdatrie.def
 

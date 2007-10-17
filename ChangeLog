@@ -1,3 +1,10 @@
+2007-10-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/libdatrie.def: List only symbols in plain format, for Mac
+	build. Thanks Vee Satayamas for the report.
+
+	* datrie/Makefile.am: Add libdatrie.def as libdatrie_la_DEPENDENCIES.
+
 2007-08-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* doc/Doxyfile.in: Only generate doc for public API.
