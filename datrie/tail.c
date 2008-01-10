@@ -185,10 +185,16 @@ tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix)
 {
     index -= TAIL_START_BLOCKNO;
     if (index < t->num_tails) {
-        t->tails[index].suffix
-            = (TrieChar *) realloc (t->tails[index].suffix,
-                                    strlen ((const char *)suffix) + 1);
-        strcpy ((char *) t->tails[index].suffix, (const char *) suffix);
+        /* suffix and t->tails[index].suffix may overlap;
+         * so, dup it before it's overwritten
+         */
+        TrieChar *tmp = NULL;
+        if (suffix)
+            tmp = strdup (suffix);
+        if (t->tails[index].suffix)
+            free (t->tails[index].suffix);
+        t->tails[index].suffix = tmp;
+
         t->is_dirty = TRUE;
         return TRUE;
     }
