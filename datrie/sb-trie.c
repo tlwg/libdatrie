@@ -222,7 +222,7 @@ sb_trie_root (SBTrie *sb_trie)
     SBTrieState *sb_state;
 
     if (!sb_trie)
-        return FALSE;
+        return NULL;
 
     sb_state = (SBTrieState *) malloc (sizeof (SBTrieState));
     if (!sb_state)
