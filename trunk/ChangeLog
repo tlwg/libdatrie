@@ -1,3 +1,8 @@
+2008-01-10  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/sb-trie.c (sb_trie_root): Return NULL pointer, rather than
+	FALSE. Bug reported by shepmaster in http://linux.thai.net/node/101.
+
 2007-10-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/libdatrie.def: List only symbols in plain format, for Mac
