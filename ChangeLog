@@ -1,5 +1,9 @@
 2008-01-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* man/trietool.1: Add documentation for the SBM file.
+
+2008-01-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* README: Fix my name in the reference.
 
 2008-01-10  Theppitak Karoonboonyanan  <thep@linux.thai.net>
