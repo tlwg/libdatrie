@@ -1,0 +1,60 @@
+libdatrie (0.1.2-2) unstable; urgency=low
+
+  * Do not install functions man pages for now, to avoid messing man
+    directories with plenty of doxygen-generated pages, and to avoid conflicts
+    with other packages.
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Sat, 25 Aug 2007 17:11:23 +0700
+
+libdatrie (0.1.2-1) unstable; urgency=low
+
+  * debian/libdatrie-bin.manpages:
+    - Install man pages from built directory, rather than from source.
+  * debian/libdatrie0-dev.manpages:
+    - Added to install doxygen-generated API man pages.
+  * New upstream release
+    - Limited symbols export, to avoid name clashing
+    - Improved error handling for edge cases
+    - Fix crashes
+  * Set shlibs to >= 0.1.2.
+  * Add XS-Vcs-Cvs and XS-Vcs-Browser info.
+  * Do not ignore 'make clean' error.
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Sat, 25 Aug 2007 14:56:20 +0700
+
+libdatrie (0.1.1-4) unstable; urgency=low
+
+  * debian/rules: Revert manual calls to doxygen and rely on configure
+    auto-detection. Doxygen shouldn't be found in arch buildd's now, as we had
+    moved it to Build-Depends-Indep. Thanks to Loïc Minier for suggestion.
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Mon, 11 Dec 2006 09:51:26 +0700
+
+libdatrie (0.1.1-3) unstable; urgency=low
+
+  * Package sponsored by Loïc Minier.
+  * Split arch and indep builds completely
+    - debian/control: move doxygen to Build-Depends-Indep.
+    - debian/rules: disable doxygen and manually call it on indep targets.
+  * debian/rules adjustments
+    - Remove unused shared library version info assignment.
+    - Pass --host=$(DEB_HOST_GNU_TYPE) to configure only when cross compiling.
+    - Add missing targets in .PHONY
+  * debian/*.dirs: Removed, not needed for debhelper compat level 5.
+  * debian/copyright: Change the download place to match that in watch file.
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Sun, 10 Dec 2006 17:02:24 +0700
+
+libdatrie (0.1.1-2) unstable; urgency=low
+
+  * Split binary program to libdatrie-bin.
+  * Rename libdatrie-{dev,doc} to libdatrie0-{dev,doc}.
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Wed, 18 Oct 2006 00:17:08 +0700
+
+libdatrie (0.1.1-1) unstable; urgency=low
+
+  * Initial release (Closes: #392315)
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Thu, 12 Oct 2006 15:27:50 +0700
+
