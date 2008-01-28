@@ -1,4 +1,5 @@
 libdatrie.so.0 libdatrie0 #MINVER#
+* Build-Depends-Package: libdatrie0-dev
  sb_trie_close@Base 0.1.2
  sb_trie_delete@Base 0.1.2
  sb_trie_enumerate@Base 0.1.2

@@ -1,7 +1,7 @@
 Source: libdatrie
 Priority: optional
 Maintainer: Theppitak Karoonboonyanan <thep@linux.thai.net>
-Build-Depends: dpkg-dev (>= 1.14.9), debhelper (>= 5.0.61), autotools-dev
+Build-Depends: dpkg-dev (>= 1.14.13), debhelper (>= 5.0.61), autotools-dev
 Build-Depends-Indep: doxygen
 Standards-Version: 3.7.3
 Section: libs
