@@ -1,5 +1,11 @@
 2008-01-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* configure.in: Bump the library revision.
+	* NEWS:
+	=== Version 0.1.3 ===
+
+2008-01-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* man/trietool.1: Add documentation for the SBM file.
 
 2008-01-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
