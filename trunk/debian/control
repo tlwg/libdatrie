@@ -1,12 +1,13 @@
 Source: libdatrie
 Priority: optional
 Maintainer: Theppitak Karoonboonyanan <thep@linux.thai.net>
-Build-Depends: dpkg-dev (>= 1.13.19), debhelper (>= 5), autotools-dev
+Build-Depends: dpkg-dev (>= 1.14.9), debhelper (>= 5.0.61), autotools-dev
 Build-Depends-Indep: doxygen
-Standards-Version: 3.7.2.2
+Standards-Version: 3.7.3
 Section: libs
-XS-Vcs-Cvs: pserver:anonymous@linux.thai.net:/home/cvs software/datrie
-XS-Vcs-Browser: http://linux.thai.net/viewvc/viewvc.cgi/software/datrie/
+Vcs-Cvs: pserver:anonymous@linux.thai.net:/home/cvs software/datrie
+Vcs-Browser: http://linux.thai.net/viewvc/viewvc.cgi/software/datrie/
+Homepage: http://libthai.sourceforge.net/
 
 Package: libdatrie0-dev
 Section: libdevel
@@ -28,8 +29,6 @@ Description: Development files for double-array trie library
  .
  This package contains the development libraries, header files and manpages
  you need to develop your programs using the datrie library.
- .
- Homepage: http://libthai.sourceforge.net/
 
 Package: libdatrie-bin
 Section: misc
@@ -48,8 +47,6 @@ Description: Programs for double-array trie library
  .
  This package contains the program files which is used with the library,
  including trietool, the trie manipulation tool.
- .
- Homepage: http://libthai.sourceforge.net/
 
 Package: libdatrie0
 Section: libs
@@ -68,8 +65,6 @@ Description: Double-array trie library
  .
  This package contains the shared libraries needed to run programs that use
  the datrie library.
- .
- Homepage: http://libthai.sourceforge.net/
 
 Package: libdatrie0-doc
 Section: doc
@@ -89,5 +84,3 @@ Description: Documentation files for double-array trie library
  found at http://linux.thai.net/~thep/datrie/datrie.html
  .
  This package contains some documents about the datrie library.
- .
- Homepage: http://libthai.sourceforge.net/
