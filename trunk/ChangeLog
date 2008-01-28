@@ -1,3 +1,7 @@
+2008-01-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* README: Fix my name in the reference.
+
 2008-01-10  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/tail.c (tail_set_suffix): Fix bug for the case in which
