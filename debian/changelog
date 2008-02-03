@@ -2,8 +2,9 @@ libdatrie (0.1.3-2) UNRELEASED; urgency=low
 
   * Add Build-Depends-Package info to libdatrie0.symbols and bump dpkg-dev
     Build-deps to (>= 1.14.13) accordingly. Thanks Loïc Minier.
+  * Fix CVSROOT in Vcs-Cvs, so it really works with debcheckout.
 
- -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Mon, 28 Jan 2008 20:24:28 +0700
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Sun, 03 Feb 2008 10:44:19 +0700
 
 libdatrie (0.1.3-1) unstable; urgency=low
 
