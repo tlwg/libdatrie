@@ -5,7 +5,7 @@ Build-Depends: dpkg-dev (>= 1.14.13), debhelper (>= 5.0.61), autotools-dev
 Build-Depends-Indep: doxygen
 Standards-Version: 3.7.3
 Section: libs
-Vcs-Cvs: pserver:anonymous@linux.thai.net:/home/cvs software/datrie
+Vcs-Cvs: :pserver:anonymous@linux.thai.net:/home/cvs software/datrie
 Vcs-Browser: http://linux.thai.net/viewvc/viewvc.cgi/software/datrie/
 Homepage: http://libthai.sourceforge.net/
 
