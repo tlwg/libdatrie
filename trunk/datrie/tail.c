@@ -190,7 +190,7 @@ tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix)
          */
         TrieChar *tmp = NULL;
         if (suffix)
-            tmp = strdup (suffix);
+            tmp = (TrieChar *) strdup ((const char *)suffix);
         if (t->tails[index].suffix)
             free (t->tails[index].suffix);
         t->tails[index].suffix = tmp;
