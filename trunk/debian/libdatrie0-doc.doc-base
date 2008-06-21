@@ -2,7 +2,7 @@ Document: libdatrie-reference
 Title: libdatrie Reference Manual
 Author: Theppitak Karoonboonyanan <thep@linux.thai.net>
 Abstract: This manual describes libdatrie API
-Section: Apps/Programming
+Section: Programming
 
 Format: HTML
 Index: /usr/share/doc/libdatrie-doc/html/index.html
