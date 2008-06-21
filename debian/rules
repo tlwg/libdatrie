@@ -35,6 +35,14 @@ SHLIB_VER := 0.1.2
 
 config.status: configure
 	dh_testdir
+
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	cp -f /usr/share/misc/config.sub config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	cp -f /usr/share/misc/config.guess config.guess
+endif
+
 	# Add here commands to configure the package.
 	./configure $(build_flags) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
 
@@ -44,7 +52,7 @@ build-indep-stamp:  config.status
 	dh_testdir
 
 	# Add here commands to compile the package.
-	cd doc; $(MAKE)
+	$(MAKE) -C doc
 
 	touch $@
 
@@ -53,7 +61,9 @@ build-arch-stamp:  config.status
 	dh_testdir
 
 	# Add here commands to compile the package.
-	$(MAKE)
+	$(MAKE) -C datrie
+	$(MAKE) -C tools
+	$(MAKE) -C man
 
 	touch $@
 
@@ -67,10 +77,10 @@ clean:
 	# Add here commands to clean up after the build process.
 	[ ! -f Makefile ] || $(MAKE) distclean
 ifneq "$(wildcard /usr/share/misc/config.sub)" ""
-	cp -f /usr/share/misc/config.sub config.sub
+	rm -f config.sub
 endif
 ifneq "$(wildcard /usr/share/misc/config.guess)" ""
-	cp -f /usr/share/misc/config.guess config.guess
+	rm -f config.guess
 endif
 
 	dh_clean
@@ -82,7 +92,7 @@ install-indep: build-indep
 	dh_installdirs --indep
 
 	# Add here commands to install the package into debian/tmp
-	cd doc; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C doc install DESTDIR=$(CURDIR)/debian/tmp
 
 install-arch: build-arch
 	dh_testdir
@@ -91,7 +101,10 @@ install-arch: build-arch
 	dh_installdirs --arch
 
 	# Add here commands to install the package into debian/tmp
-	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C datrie install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C tools  install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C man    install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) install-am DESTDIR=$(CURDIR)/debian/tmp
 
 # Build architecture-independent files here.
 binary-indep: build-indep install-indep
