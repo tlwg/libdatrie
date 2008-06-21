@@ -40,9 +40,8 @@ always continuous.
 The SBM file is a plain text file, with each line listing a range of 8-bit 
 character encodings to be added to the alphabet set, in the format:
 .PP
-.Vb 1
-    [0xSS,0xTT]
-.Ve
+.in +0.5in
+[0xSS,0xTT]
 .PP
 where `0xSS' and `0xTT' are hexadecimal values of starting and ending 
 character code for the range, respectively.
@@ -50,10 +49,9 @@ character code for the range, respectively.
 For example, for a dictionary that contains only English words witout any 
 punctuations, one may prepare `\fItrie\fP.sbm' as:
 .PP
-.Vb 2
-    [0x41,0x5a]
-    [0x61,0x7a]
-.Ve
+.in +0.5in
+[0x41,0x5a]
+[0x61,0x7a]
 .PP
 The first line lists the ASCII codes for A-Z, and the second for a-z.
 .SH COMMANDS
