@@ -1,3 +1,9 @@
+2008-06-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/tail.c (tail_set_suffix):
+	* datrie/sb-trie.c (sb_map_char_to_alphabet_str):
+	Fix GCC warnings about char signedness.
+
 2008-01-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.in: Bump the library revision.
