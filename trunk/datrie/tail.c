@@ -52,15 +52,27 @@ struct _Tail {
  *    METHODS IMPLEMENTAIONS   *
  *-----------------------------*/
 
-#define TAIL_SIGNATURE      0xDFFD
+#define TAIL_SIGNATURE      0xDFFDDFFD
 #define TAIL_START_BLOCKNO  1
+
+/* Tail Header:
+ * INT32: signature
+ * INT32: pointer to first free slot
+ * INT32: number of tail blocks
+ *
+ * Tail Blocks:
+ * INT32: pointer to next free block (-1 for allocated blocks)
+ * INT32: data for the key
+ * INT16: length
+ * BYTES[length]: suffix string (no terminating '\0')
+ */
 
 Tail *
 tail_open (const char *path, const char *name, TrieIOMode mode)
 {
     Tail       *t;
     TrieIndex   i;
-    uint16      sig;
+    uint32      sig;
     long        file_size;
 
     t = (Tail *) malloc (sizeof (Tail));
@@ -70,7 +82,7 @@ tail_open (const char *path, const char *name, TrieIOMode mode)
         goto exit1;
 
     file_size = file_length (t->file);
-    if (file_size != 0 && file_read_int16 (t->file, (int16 *) &sig)
+    if (file_size != 0 && file_read_int32 (t->file, (int32 *) &sig)
         && sig != TAIL_SIGNATURE)
     {
         goto exit2;
@@ -83,18 +95,18 @@ tail_open (const char *path, const char *name, TrieIOMode mode)
         t->tails      = NULL;
         t->is_dirty   = TRUE;
     } else {
-        file_read_int16 (t->file, &t->first_free);
-        file_read_int16 (t->file, &t->num_tails);
+        file_read_int32 (t->file, &t->first_free);
+        file_read_int32 (t->file, &t->num_tails);
         t->tails = (TailBlock *) malloc (t->num_tails * sizeof (TailBlock));
         if (!t->tails)
             goto exit2;
         for (i = 0; i < t->num_tails; i++) {
-            int8    length;
+            int16   length;
 
-            file_read_int16 (t->file, &t->tails[i].next_free);
-            file_read_int16 (t->file, &t->tails[i].data);
+            file_read_int32 (t->file, &t->tails[i].next_free);
+            file_read_int32 (t->file, &t->tails[i].data);
 
-            file_read_int8 (t->file, &length);
+            file_read_int16 (t->file, &length);
             t->tails[i].suffix    = (TrieChar *) malloc (length + 1);
             if (length > 0)
                 file_read_chars (t->file, (char *)t->tails[i].suffix, length);
@@ -142,24 +154,24 @@ tail_save (Tail *t)
         return 0;
 
     rewind (t->file);
-    if (!file_write_int16 (t->file, TAIL_SIGNATURE) ||
-        !file_write_int16 (t->file, t->first_free)  ||
-        !file_write_int16 (t->file, t->num_tails))
+    if (!file_write_int32 (t->file, TAIL_SIGNATURE) ||
+        !file_write_int32 (t->file, t->first_free)  ||
+        !file_write_int32 (t->file, t->num_tails))
     {
         return -1;
     }
     for (i = 0; i < t->num_tails; i++) {
-        int8    length;
+        int16   length;
 
-        if (!file_write_int16 (t->file, t->tails[i].next_free) ||
-            !file_write_int16 (t->file, t->tails[i].data))
+        if (!file_write_int32 (t->file, t->tails[i].next_free) ||
+            !file_write_int32 (t->file, t->tails[i].data))
         {
             return -1;
         }
 
         length = t->tails[i].suffix ? strlen ((const char *)t->tails[i].suffix)
                                     : 0;
-        if (!file_write_int8 (t->file, length))
+        if (!file_write_int16 (t->file, length))
             return -1;
         if (length > 0 &&
             !file_write_chars (t->file, (char *)t->tails[i].suffix, length))

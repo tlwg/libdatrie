@@ -155,7 +155,7 @@ struct _DArray {
  *    METHODS IMPLEMENTAIONS   *
  *-----------------------------*/
 
-#define DA_SIGNATURE 0xDAFD
+#define DA_SIGNATURE 0xDAFCDAFC
 
 /* DA Header:
  * - Cell 0: SIGNATURE, 1
@@ -178,7 +178,7 @@ da_open (const char *path, const char *name, TrieIOMode mode)
         goto exit1;
 
     /* init cells data */
-    d->num_cells = file_length (d->file) / 4;
+    d->num_cells = file_length (d->file) / (4 * 2);
     if (0 == d->num_cells) {
         d->num_cells = DA_POOL_BEGIN;
         d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
@@ -195,13 +195,13 @@ da_open (const char *path, const char *name, TrieIOMode mode)
         d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
         if (!d->cells)
             goto exit2;
-        file_read_int16 (d->file, &d->cells[0].base);
-        file_read_int16 (d->file, &d->cells[0].check);
-        if (DA_SIGNATURE != (uint16) d->cells[0].base)
+        file_read_int32 (d->file, &d->cells[0].base);
+        file_read_int32 (d->file, &d->cells[0].check);
+        if (DA_SIGNATURE != (uint32) d->cells[0].base)
             goto exit3;
         for (i = 1; i < d->num_cells; i++) {
-            file_read_int16 (d->file, &d->cells[i].base);
-            file_read_int16 (d->file, &d->cells[i].check);
+            file_read_int32 (d->file, &d->cells[i].base);
+            file_read_int32 (d->file, &d->cells[i].check);
         }
         d->is_dirty  = FALSE;
     }
@@ -242,8 +242,8 @@ da_save (DArray *d)
 
     rewind (d->file);
     for (i = 0; i < d->num_cells; i++) {
-        if (!file_write_int16 (d->file, d->cells[i].base) ||
-            !file_write_int16 (d->file, d->cells[i].check))
+        if (!file_write_int32 (d->file, d->cells[i].base) ||
+            !file_write_int32 (d->file, d->cells[i].check))
         {
             return -1;
         }
@@ -369,7 +369,7 @@ da_has_children    (DArray         *d,
                     TrieIndex       s)
 {
     TrieIndex   base;
-    uint16      c, max_c;
+    TrieIndex   c, max_c;
 
     base = da_get_base (d, s);
     if (TRIE_INDEX_ERROR == base || base < 0)
@@ -390,7 +390,7 @@ da_output_symbols  (DArray         *d,
 {
     Symbols    *syms;
     TrieIndex   base;
-    uint16      c, max_c;
+    TrieIndex   c, max_c;
 
     syms = symbols_new ();
 
@@ -524,7 +524,7 @@ da_relocate_base   (DArray         *d,
          */
         /* preventing the case of TAIL pointer */
         if (old_next_base > 0) {
-            uint16      c, max_c;
+            TrieIndex   c, max_c;
 
             max_c = MIN_VAL (TRIE_CHAR_MAX, TRIE_INDEX_MAX - old_next_base);
             for  (c = 0; c < max_c; c++) {
