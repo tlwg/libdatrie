@@ -1,3 +1,18 @@
+2008-11-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	First changes to break ABI for larger trie index.
+
+	* datrie/triedefs.h: Redefine TrieIndex and TrieData as int32.
+	Update TRIE_INDEX_MAX accordingly.
+	* datrie/darray.c (da_open, da_save): Redefine DA_SIGNATURE.
+	Read/write 32-bit data in headers.
+	* datrie/darray.c (da_has_children, da_output_symbols,
+	da_relocate_base):
+	Declare characters as TrieIndex instead of uint16.
+	* datrie/tail.c (tail_open, tail_save): Redefine TAIL_SIGNATURE.
+	Read/write 32-bit data in headers. Use 16-bit length for each block.
+	* configure.ac: Bump up library version to 1.0.0.
+
 2008-06-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* man/trietool.1: Use troff .in command to indent text, fixing warning

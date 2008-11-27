@@ -37,7 +37,7 @@ typedef unsigned char  TrieChar;
 /**
  * @brief Type of Trie index
  */
-typedef int16          TrieIndex;
+typedef int32          TrieIndex;
 /**
  * @brief Trie error index
  */
@@ -45,12 +45,12 @@ typedef int16          TrieIndex;
 /**
  * @brief Maximum trie index value
  */
-#define TRIE_INDEX_MAX    32767
+#define TRIE_INDEX_MAX    0x7fffffff
 
 /**
  * @brief Type of value associated to trie entries
  */
-typedef int16          TrieData;
+typedef int32          TrieData;
 /**
  * @brief Trie error data
  */
