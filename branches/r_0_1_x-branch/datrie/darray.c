@@ -17,12 +17,6 @@
  *    INTERNAL TYPES DECLARATIONS   *
  *----------------------------------*/
 
-/*
- * Type for keeping intermediate values of TrieIndex.
- * Must be bigger than TrieIndex, so that overflow can be easily detected.
- */
-typedef int32           TrieIndexInt;
-
 typedef struct _Symbols Symbols;
 
 struct _Symbols {
@@ -45,7 +39,7 @@ static void         symbols_add (Symbols *syms, TrieChar c);
 #define da_get_free_list(d)      (1)
 
 static Bool         da_check_free_cell (DArray         *d,
-                                        TrieIndexInt    s);
+                                        TrieIndex       s);
 
 static Bool         da_has_children    (DArray         *d,
                                         TrieIndex       s);
@@ -68,7 +62,7 @@ static void         da_relocate_base   (DArray         *d,
                                         TrieIndex       new_base);
 
 static Bool         da_extend_pool     (DArray         *d,
-                                        TrieIndexInt    to_index);
+                                        TrieIndex       to_index);
 
 static void         da_alloc_cell      (DArray         *d,
                                         TrieIndex       cell);
@@ -265,20 +259,20 @@ da_get_root (const DArray *d)
 TrieIndex
 da_get_base (const DArray *d, TrieIndex s)
 {
-    return (s < d->num_cells) ? d->cells[s].base : TRIE_INDEX_ERROR;
+    return (0 <= s && s < d->num_cells) ? d->cells[s].base : TRIE_INDEX_ERROR;
 }
 
 TrieIndex
 da_get_check (const DArray *d, TrieIndex s)
 {
-    return (s < d->num_cells) ? d->cells[s].check : TRIE_INDEX_ERROR;
+    return (0 <= s && s < d->num_cells) ? d->cells[s].check : TRIE_INDEX_ERROR;
 }
 
 
 void
 da_set_base (DArray *d, TrieIndex s, TrieIndex val)
 {
-    if (s < d->num_cells) {
+    if (0 <= s && s < d->num_cells) {
         d->cells[s].base = val;
         d->is_dirty = TRUE;
     }
@@ -287,7 +281,7 @@ da_set_base (DArray *d, TrieIndex s, TrieIndex val)
 void
 da_set_check (DArray *d, TrieIndex s, TrieIndex val)
 {
-    if (s < d->num_cells) {
+    if (0 <= s && s < d->num_cells) {
         d->cells[s].check = val;
         d->is_dirty = TRUE;
     }
@@ -309,18 +303,21 @@ da_walk (DArray *d, TrieIndex *s, TrieChar c)
 TrieIndex
 da_insert_branch (DArray *d, TrieIndex s, TrieChar c)
 {
-    TrieIndexInt    base, next;
+    TrieIndex   base, next;
 
     base = da_get_base (d, s);
 
     if (base > 0) {
-        next = da_get_base (d, s) + c;
+        next = base + c;
 
         /* if already there, do not actually insert */
         if (da_get_check (d, next) == s)
             return next;
 
-        if (!da_check_free_cell (d, next)) {
+        /* if (base + c) > TRIE_INDEX_MAX which means 'next' is overflow,
+         * or cell [next] is not free, relocate to a free slot
+         */
+        if (base > TRIE_INDEX_MAX - c || !da_check_free_cell (d, next)) {
             Symbols    *symbols;
             TrieIndex   new_base;
 
@@ -359,7 +356,7 @@ da_insert_branch (DArray *d, TrieIndex s, TrieChar c)
 
 static Bool
 da_check_free_cell (DArray         *d,
-                    TrieIndexInt    s)
+                    TrieIndex       s)
 {
     return da_extend_pool (d, s) && da_get_check (d, s) < 0;
 }
@@ -447,7 +444,7 @@ da_find_free_base  (DArray         *d,
                     const Symbols  *symbols)
 {
     TrieChar        first_sym;
-    TrieIndexInt    s;
+    TrieIndex       s;
 
     /* find first free cell that is beyond the first symbol */
     first_sym = symbols_get (symbols, 0);
@@ -488,7 +485,12 @@ da_fit_symbols     (DArray         *d,
     int         i;
 
     for (i = 0; i < symbols_num (symbols); i++) {
-        if (!da_check_free_cell (d, base + symbols_get (symbols, i)))
+        TrieChar    sym = symbols_get (symbols, i);
+
+        /* if (base + sym) > TRIE_INDEX_MAX which means it's overflow,
+         * or cell [base + sym] is not free, the symbol is not fit.
+         */
+        if (base > TRIE_INDEX_MAX - sym || !da_check_free_cell (d, base + sym))
             return FALSE;
     }
     return TRUE;
@@ -545,7 +547,7 @@ da_relocate_base   (DArray         *d,
 
 static Bool
 da_extend_pool     (DArray         *d,
-                    TrieIndexInt    to_index)
+                    TrieIndex       to_index)
 {
     TrieIndex   new_begin;
     TrieIndex   i;
