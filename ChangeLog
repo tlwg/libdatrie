@@ -1,3 +1,22 @@
+2008-12-01  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Get rid of the weird TrieIndexInt intermediate type, by checking
+	ranges instead.
+
+	* datrie/darray.c: Remove typedef for TrieIndexInt.
+	* datrie/darray.c (da_check_free_cell, da_extend_pool):
+	  - Accept normal TrieIndex arg instead of TrieIndexInt
+	* datrie/datrie.c (da_insert_branch):
+	  - Define 'base', 'next' vars as TrieIndex instead of TrieIndexInt
+	  - Check overflow for 'next' before checking if the cell is free
+	* datrie/datrie.c (da_find_free_base):
+	  - Define 's' var as TrieIndex instead of TrieIndexInt
+	* datrie/datrie.c (da_fit_symbols):
+	  - Check overflow for (base + sym) before checking if the cell is free
+	* datrie/datrie.c (da_get_base, da_get_check, da_set_base,
+	da_set_check)):
+	  - Also check lower bound for index range
+
 2008-06-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* man/trietool.1: Use troff .in command to indent text, fixing warning
