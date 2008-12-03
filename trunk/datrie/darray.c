@@ -140,9 +140,6 @@ typedef struct {
 struct _DArray {
     TrieIndex   num_cells;
     DACell     *cells;
-
-    FILE       *file;
-    Bool        is_dirty;
 };
 
 /*-----------------------------*
@@ -152,7 +149,7 @@ struct _DArray {
 #define DA_SIGNATURE 0xDAFCDAFC
 
 /* DA Header:
- * - Cell 0: SIGNATURE, 1
+ * - Cell 0: SIGNATURE, number of cells
  * - Cell 1: free circular-list pointers
  * - Cell 2: root node
  * - Cell 3: DA pool begin
@@ -160,66 +157,60 @@ struct _DArray {
 #define DA_POOL_BEGIN 3
 
 DArray *
-da_open (const char *path, const char *name, TrieIOMode mode)
+da_read (FILE *file)
 {
-    DArray     *d;
-    TrieIndex   i;
+    DArray     *d = NULL;
+    TrieIndex   n;
 
-    d = (DArray *) malloc (sizeof (DArray));
+    /* check signature */
+    if (!file_read_int32 (file, &n)) {
+        /* new file */
+        d = (DArray *) malloc (sizeof (DArray));
+        if (!d)
+            return NULL;
 
-    d->file = file_open (path, name, ".br", mode);
-    if (!d->file)
-        goto exit1;
-
-    /* init cells data */
-    d->num_cells = file_length (d->file) / (4 * 2);
-    if (0 == d->num_cells) {
         d->num_cells = DA_POOL_BEGIN;
         d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
         if (!d->cells)
-            goto exit2;
+            goto exit1;
         d->cells[0].base = DA_SIGNATURE;
-        d->cells[0].check = 1;
+        d->cells[0].check = DA_POOL_BEGIN;
         d->cells[1].base = -1;
         d->cells[1].check = -1;
         d->cells[2].base = DA_POOL_BEGIN;
         d->cells[2].check = 0;
-        d->is_dirty = TRUE;
     } else {
+        if (DA_SIGNATURE != (uint32) n)
+            return NULL;
+
+        /* existing file */
+        d = (DArray *) malloc (sizeof (DArray));
+        if (!d)
+            return NULL;
+
+        /* read number of cells */
+        file_read_int32 (file, &d->num_cells);
         d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
         if (!d->cells)
-            goto exit2;
-        file_read_int32 (d->file, &d->cells[0].base);
-        file_read_int32 (d->file, &d->cells[0].check);
-        if (DA_SIGNATURE != (uint32) d->cells[0].base)
-            goto exit3;
-        for (i = 1; i < d->num_cells; i++) {
-            file_read_int32 (d->file, &d->cells[i].base);
-            file_read_int32 (d->file, &d->cells[i].check);
+            goto exit1;
+        d->cells[0].base = DA_SIGNATURE;
+        d->cells[0].check= d->num_cells;
+        for (n = 1; n < d->num_cells; n++) {
+            file_read_int32 (file, &d->cells[n].base);
+            file_read_int32 (file, &d->cells[n].check);
         }
-        d->is_dirty  = FALSE;
     }
 
     return d;
 
-exit3:
-    free (d->cells);
-exit2:
-    fclose (d->file);
 exit1:
     free (d);
     return NULL;
 }
 
 int
-da_close (DArray *d)
+da_free (DArray *d)
 {
-    int ret;
-
-    if (0 != (ret = da_save (d)))
-        return ret;
-    if (0 != (ret = fclose (d->file)))
-        return ret;
     free (d->cells);
     free (d);
 
@@ -227,22 +218,20 @@ da_close (DArray *d)
 }
 
 int
-da_save (DArray *d)
+da_write (DArray *d, FILE *file)
 {
     TrieIndex   i;
 
-    if (!d->is_dirty)
-        return 0;
+    /* ensure correct header */
+    d->cells[0].check = d->num_cells;
 
-    rewind (d->file);
     for (i = 0; i < d->num_cells; i++) {
-        if (!file_write_int32 (d->file, d->cells[i].base) ||
-            !file_write_int32 (d->file, d->cells[i].check))
+        if (!file_write_int32 (file, d->cells[i].base) ||
+            !file_write_int32 (file, d->cells[i].check))
         {
             return -1;
         }
     }
-    d->is_dirty = FALSE;
 
     return 0;
 }
@@ -274,7 +263,6 @@ da_set_base (DArray *d, TrieIndex s, TrieIndex val)
 {
     if (0 <= s && s < d->num_cells) {
         d->cells[s].base = val;
-        d->is_dirty = TRUE;
     }
 }
 
@@ -283,7 +271,6 @@ da_set_check (DArray *d, TrieIndex s, TrieIndex val)
 {
     if (0 <= s && s < d->num_cells) {
         d->cells[s].check = val;
-        d->is_dirty = TRUE;
     }
 }
 

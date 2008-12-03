@@ -35,43 +35,42 @@ typedef Bool (*DAEnumFunc) (const TrieChar   *key,
 
 
 /**
- * @brief Open double-array from file
+ * @brief Read double-array data from file
  *
- * @param path : the path that stores the double-array files
- * @param name : the name of the double-array (not actual file name)
- * @param mode : openning mode, read or write
+ * @param file : the file to read
  *
  * @return a pointer to the openned double-array, NULL on failure
  *
- * Open a double-array structure of given name. Note that @a name here does 
- * not mean the actual file name. Rather, the file name will be inferred by 
- * the name.
+ * Read double-array data from the opened file, starting from the current
+ * file pointer until the end of double array data block. On return, the
+ * file pointer is left at the position after the read block.
  */
-DArray * da_open (const char *path, const char *name, TrieIOMode mode);
+DArray * da_read (FILE *file);
 
 /**
- * @brief Close double-array data
+ * @brief Free double-array data
  *
  * @param d : the double-array data
  *
  * @return 0 on success, non-zero on failure
  *
- * Close the given double-array data. If @a d was openned for writing, all 
- * pending changes will be saved to file.
+ * Free the given double-array data.
  */
-int      da_close (DArray *d);
+int      da_free (DArray *d);
 
 /**
- * @brief Save double-array data
+ * @brief Write double-array data
  *
- * @param d : the double-array data
+ * @param d     : the double-array data
+ * @param file  : the file to write to
  *
  * @return 0 on success, non-zero on failure
  *
- * If @a double-array data was openned for writing, save all pending changes 
- * to file.
+ * Write double-array data to the given @a file, starting from the current
+ * file pointer. On return, the file pointer is left after the double-array
+ * data block.
  */
-int      da_save (DArray *d);
+int      da_write (DArray *d, FILE *file);
 
 
 /**
