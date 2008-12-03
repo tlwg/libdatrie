@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "trie.h"
+#include "fileutils.h"
 #include "darray.h"
 #include "tail.h"
 
@@ -18,6 +19,9 @@
 struct _Trie {
     DArray  *da;
     Tail    *tail;
+
+    FILE    *file;
+    Bool     is_dirty;
 };
 
 /**
@@ -66,15 +70,23 @@ trie_open (const char *path, const char *name, TrieIOMode mode)
     if (!trie)
         return NULL;
 
-    if (NULL == (trie->da   = da_open (path, name, mode)))
+    trie->file = file_open (path, name, ".tri", mode);
+    if (!trie->file)
         goto exit1;
-    if (NULL == (trie->tail = tail_open (path, name, mode)))
+
+    trie->is_dirty = (file_length (trie->file) == 0);
+
+    if (NULL == (trie->da   = da_read (trie->file)))
         goto exit2;
+    if (NULL == (trie->tail = tail_read (trie->file)))
+        goto exit3;
 
     return trie;
 
+exit3:
+    da_free (trie->da);
 exit2:
-    da_close (trie->da);
+    fclose (trie->file);
 exit1:
     free (trie);
     return NULL;
@@ -83,15 +95,12 @@ exit1:
 int
 trie_close (Trie *trie)
 {
-    if (!trie)
+    if (!trie || trie_save (trie) != 0)
         return -1;
 
-    if (da_close (trie->da) != 0)
-        return -1;
-
-    if (tail_close (trie->tail) != 0)
-        return -1;
-
+    da_free (trie->da);
+    tail_free (trie->tail);
+    fclose (trie->file);
     free (trie);
 
     return 0;
@@ -103,12 +112,18 @@ trie_save (Trie *trie)
     if (!trie)
         return -1;
 
-    if (da_save (trie->da) != 0)
+    if (!trie->is_dirty)
+        return 0;
+
+    rewind (trie->file);
+
+    if (da_write (trie->da, trie->file) != 0)
         return -1;
 
-    if (tail_save (trie->tail) != 0)
+    if (tail_write (trie->tail, trie->file) != 0)
         return -1;
 
+    trie->is_dirty = FALSE;
     return 0;
 }
 
@@ -173,6 +188,7 @@ trie_store (Trie *trie, const TrieChar *key, TrieData data)
 
     /* duplicated key, overwrite val */
     tail_set_data (trie->tail, t, data);
+    trie->is_dirty = TRUE;
     return TRUE;
 }
 
@@ -195,6 +211,7 @@ trie_branch_in_branch (Trie           *trie,
     tail_set_data (trie->tail, new_tail, data);
     trie_da_set_tail_index (trie->da, new_da, new_tail);
 
+    trie->is_dirty = TRUE;
     return TRUE;
 }
 
@@ -267,6 +284,7 @@ trie_delete (Trie *trie, const TrieChar *key)
     da_set_base (trie->da, s, TRIE_INDEX_ERROR);
     da_prune (trie->da, s);
 
+    trie->is_dirty = TRUE;
     return TRUE;
 }
 

@@ -1,3 +1,67 @@
+2008-12-03  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Adjust file format by catenating *.br and *.tl data into a single
+	*.tri file.
+
+	* datrie/trie.c (struct _Trie):
+	  - Add 'file' and 'is_dirty' members
+	* datrie/trie.c (trie_open):
+	  - Open the file and call da_read() and tail_read() to load data
+	    portions, instead of openning separate files
+	* datrie/trie.c (trie_close):
+	  - Do the saving stuff and free DArray and Tail data, instead of
+	    separately closing them; then finally close the file
+	* datrie/trie.c (trie_save):
+	  - Write file portions with da_write() and tail_write() instead of
+	    saving to separate files
+	  - Handle the 'is_dirty' stuffs
+	* datrie/trie.c (trie_store, trie_branch_in_branch, trie_delete):
+	  - Set the 'is_dirty' flag
+
+	* datrie/darray.h: Change prototypes for internal APIs whose
+	functionalities are to be reduced:
+	  - da_open(path, name, mode) -> da_read(FILE*)
+	  - da_close(DArray*) -> da_free(DArray*)
+	  - da_save(DArray*) -> da_write(DArray*, FILE*)
+
+	* datrie/darray.c (struct_DArray):
+	  - Drop 'file' and 'is_dirty' members
+	* datrie/darray.c (da_open -> da_read):
+	  - Accept (FILE *) argument and drop file openning/closing codes
+	  - Store number of cells at CHECK[0], so double-array data size can
+	    determined without depending on file size
+	  - Do not allocate DArray object until needed
+	  - Drop 'is_dirty' stuffs
+	* datrie/darray.c (da_close -> da_free):
+	  - Remove file stuffs; just free memory
+	* datrie/darray.c (da_save -> da_write):
+	  - Accept (FILE *) argument and use it instead of DArray::file
+	  - Ensure CHECK[0] stores the number of cells
+	  - Drop 'is_dirty' stuffs
+	* datrie/darray.c (da_set_base, da_set_check):
+	  - Drop 'is_dirty' stuffs
+
+	* datrie/tail.h: Change prototypes for internal APIs whose
+	functionalities are to be reduced:
+	  - tail_open(path, name, mode) -> tail_read(FILE*)
+	  - tail_close(Tail*) -> tail_free(Tail*)
+	  - tail_save(Tail*) -> tail_write(Tail*, FILE*)
+
+	* datrie/tail.c (struct _Tail):
+	  - Drop 'file' and 'is_dirty' members
+	* datrie/tail.c (tail_open -> tail_read):
+	  - Accept (FILE *) argument and drop file openning/closing codes
+	  - Check for new file from read failure, rather than file size
+	  - Do not allocate Tail object until needed
+	  - Drop 'is_dirty' stuffs
+	* datrie/tail.c (tail_close -> tail_free):
+	  - Remove file stuffs; just free memory
+	* datrie/tail.c (tail_save -> tail_write):
+	  - Accept (FILE *) argument and use it instead of Tail::file
+	  - Drop 'is_dirty' stuffs
+	* datrie/tail.c (tail_set_suffix, tail_set_data, tail_free_block):
+	  - Drop 'is_dirty' stuffs
+
 2008-12-01  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Get rid of the weird TrieIndexInt intermediate type, by checking

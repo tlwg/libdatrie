@@ -21,41 +21,41 @@
 typedef struct _Tail  Tail;
 
 /**
- * @brief Open tail data from file
+ * @brief Read tail data from file
  *
- * @param path : the path that stores the tail files
- * @param name : the name of the tail data (not actual file name)
- * @param mode : openning mode, read or write
+ * @param file : the file to read
  *
  * @return a pointer to the openned tail data, NULL on failure
  *
- * Open a tail data of given name. Note that @a name here does not mean the 
- * actual file name. Rather, the file name will be inferred by the name.
+ * Read tail data from the opened file, starting from the current
+ * file pointer until the end of tail data block. On return, the
+ * file pointer is left at the position after the read block.
  */
-Tail *   tail_open (const char *path, const char *name, TrieIOMode mode);
+Tail *   tail_read (FILE *file);
 
 /**
- * @brief Close tail data
+ * @brief Free tail data
  *
  * @param t : the tail data
  *
  * @return 0 on success, non-zero on failure
  *
- * Close the given tail data. If @a d was openned for writing, all pending 
- * changes will be saved to file.
+ * Free the given tail data.
  */
-int      tail_close (Tail *t);
+int      tail_free (Tail *t);
 
 /**
- * @brief Save tail data
+ * @brief Write tail data
  *
- * @param t : the tail data
+ * @param t     : the tail data
+ * @param file  : the file to write to
  *
  * @return 0 on success, non-zero on failure
  *
- * If @a t data was openned for writing, save all pending changes to file.
+ * Write tail data to the given @a file, starting from the current file
+ * pointer. On return, the file pointer is left after the tail data block.
  */
-int      tail_save (Tail *t);
+int      tail_write (Tail *t, FILE *file);
 
 
 /**
