@@ -35,6 +35,13 @@ typedef Bool (*DAEnumFunc) (const TrieChar   *key,
 
 
 /**
+ * @brief Create a new double-array object
+ *
+ * Create a new empty doubla-array object.
+ */
+DArray * da_new ();
+
+/**
  * @brief Read double-array data from file
  *
  * @param file : the file to read

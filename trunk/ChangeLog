@@ -1,5 +1,62 @@
 2008-12-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Adjust APIs for in-memory trie support.
+
+	* datrie/trie.c (struct _Trie):
+	  - Remove 'file' member; now trie is detached from file; file is
+	    closed after loading, and reopened when saving
+	* datrie/trie.h, datrie/trie.c (trie_new):
+	  - Add public APIs: trie_new(), for non-file usage
+	  - One can still save it to file with trie_save(), BTW
+	* datrie/trie.h, datrie/trie.c (trie_open, trie_new_from_file):
+	  - Rename trie_open() to trie_new_from_file() and make it accept only
+	    one pathname parameter, instead of separated dir and name
+	  - Alphabet map is now mandatory, rather than optional
+	* datrie/trie.h, datrie/trie.c (trie_close, trie_free):
+	  - Rename trie_close() to trie_free() and do not bother with saving
+	    any more
+	* datrie/trie.h, datrie/trie.c (trie_save):
+	  - Accept file path argument and open the file for saving
+	* datrie/trie.h, datrie/trie.c (trie_is_dirty):
+	  - Add public API: trie_is_dirty() for client to determine whether
+	    saving is needed
+
+	* datrie/alpha-map-private.h:
+	  - Separate internal APIs from public
+	* datrie/alpha-map.h, datrie/alpha-map.c:
+	  - Promote alpha_map_new() and alpha_map_add_range() to public;
+	    they are now needed by trie_new()
+	  - Remove alpha_map_open()
+	  - Add public API: alpha_map_clone()
+	  - Document public APIs
+
+	* datrie/darray.h, datrie/darray.c (da_new):
+	  - Add internal API: da_new() needed by trie_new()
+	  - Code migrated from new-file case in da_read()
+	* datrie/darray.c (da_read):
+	  - No longer handle new file; read failure means an error
+
+	* datrie/tail.h, datrie/tail.c (tail_new):
+	  - Add internal API: tail_new() needed by trie_new()
+	  - Code migrated from new-file case in tail_read()
+	* datrie/tail.c (TAIL_SIGNATURE):
+	  - Update TAIL_SIGNATURE to harmonize with other data parts
+	* datrie/tail.c (tail_read):
+	  - No longer handle new file; read failure means an error
+
+	* tools/trietool.c (prepare_trie, close_trie):
+	  - Add helper function for openning and closing trie
+	* tools/trietool.c (main):
+	  - Open and close trie with prepare_trie() and close_trie()
+
+	* datrie/Makefile.am:
+	  - Install alpha-map.h as public header
+	  - Add alpha-map-private.h to source list
+	* datrie/libdatrie.def:
+	  - Update exported symbols
+
+2008-12-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Rename AlphaMap functions to be more logical.
 
 	* datrie/alpha-map.c, datrie/alpha-map.h: Rename functions

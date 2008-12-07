@@ -49,7 +49,7 @@ struct _Tail {
  *    METHODS IMPLEMENTAIONS   *
  *-----------------------------*/
 
-#define TAIL_SIGNATURE      0xDFFDDFFD
+#define TAIL_SIGNATURE      0xDFFCDFFC
 #define TAIL_START_BLOCKNO  1
 
 /* Tail Header:
@@ -65,51 +65,56 @@ struct _Tail {
  */
 
 Tail *
+tail_new ()
+{
+    Tail       *t;
+
+    t = (Tail *) malloc (sizeof (Tail));
+    if (!t)
+        return NULL;
+
+    t->first_free = 0;
+    t->num_tails  = 0;
+    t->tails      = NULL;
+
+    return t;
+}
+
+Tail *
 tail_read (FILE *file)
 {
     Tail       *t;
     TrieIndex   i;
     uint32      sig;
 
-    if (!file_read_int32 (file, (int32 *) &sig)) {
-        /* new file */
-        t = (Tail *) malloc (sizeof (Tail));
-        if (!t)
-            return NULL;
+    if (!file_read_int32 (file, (int32 *) &sig) || TAIL_SIGNATURE != sig)
+        return NULL;
 
-        t->first_free = 0;
-        t->num_tails  = 0;
-        t->tails      = NULL;
-    } else {
-        if (TAIL_SIGNATURE != sig)
-            return NULL;
+    t = (Tail *) malloc (sizeof (Tail));
+    if (!t)
+        return NULL;
 
-        t = (Tail *) malloc (sizeof (Tail));
-        if (!t)
-            return NULL;
+    file_read_int32 (file, &t->first_free);
+    file_read_int32 (file, &t->num_tails);
+    t->tails = (TailBlock *) malloc (t->num_tails * sizeof (TailBlock));
+    if (!t->tails)
+        goto exit_tail_created;
+    for (i = 0; i < t->num_tails; i++) {
+        int16   length;
 
-        file_read_int32 (file, &t->first_free);
-        file_read_int32 (file, &t->num_tails);
-        t->tails = (TailBlock *) malloc (t->num_tails * sizeof (TailBlock));
-        if (!t->tails)
-            goto exit1;
-        for (i = 0; i < t->num_tails; i++) {
-            int16   length;
+        file_read_int32 (file, &t->tails[i].next_free);
+        file_read_int32 (file, &t->tails[i].data);
 
-            file_read_int32 (file, &t->tails[i].next_free);
-            file_read_int32 (file, &t->tails[i].data);
-
-            file_read_int16 (file, &length);
-            t->tails[i].suffix    = (TrieChar *) malloc (length + 1);
-            if (length > 0)
-                file_read_chars (file, (char *)t->tails[i].suffix, length);
-            t->tails[i].suffix[length] = '\0';
-        }
+        file_read_int16 (file, &length);
+        t->tails[i].suffix    = (TrieChar *) malloc (length + 1);
+        if (length > 0)
+            file_read_chars (file, (char *)t->tails[i].suffix, length);
+        t->tails[i].suffix[length] = '\0';
     }
 
     return t;
 
-exit1:
+exit_tail_created:
     free (t);
     return NULL;
 }

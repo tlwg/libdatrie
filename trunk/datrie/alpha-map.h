@@ -13,30 +13,61 @@
 #include "typedefs.h"
 #include "triedefs.h"
 
+/**
+ * @file alpha-map.h
+ * @brief AlphaMap data type and functions
+ */
+
+/**
+ * @brief AlphaMap data type
+ */
 typedef struct _AlphaMap    AlphaMap;
 
-AlphaMap *  alpha_map_open (const char *path,
-                            const char *name,
-                            const char *ext);
+/**
+ * @brief Create new alphabet map
+ *
+ * @return a pointer to the newly created alphabet map, NULL on failure
+ *
+ * Create a new empty alphabet map. The map contents can then be added with
+ * alpha_map_add_range().
+ *
+ *  The created object must be freed with alpha_map_free().
+ */
+AlphaMap *  alpha_map_new ();
 
+/**
+ * @brief Create a clone of alphabet map
+ *
+ * @param a_map : the source alphabet map to clone
+ *
+ * @return a pointer to the alphabet map clone, NULL on failure
+ *
+ *  The created object must be freed with alpha_map_free().
+ */
+AlphaMap *  alpha_map_clone (AlphaMap *a_map);
+
+/**
+ * @brief Free an alphabet map object
+ *
+ * @param alpha_map : the alphabet map object to free
+ *
+ * Destruct the @a alpha_map and free its allocated memory.
+ */
 void        alpha_map_free (AlphaMap *alpha_map);
 
-AlphaMap *  alpha_map_read_bin (FILE *file);
-
-int         alpha_map_write_bin (AlphaMap *alpha_map, FILE *file);
-
-TrieChar    alpha_map_char_to_trie (const AlphaMap *alpha_map,
-                                    AlphaChar       ac);
-
-AlphaChar   alpha_map_trie_to_char (const AlphaMap *alpha_map,
-                                    TrieChar        tc);
-
-TrieChar *  alpha_map_char_to_trie_str (const AlphaMap  *alpha_map,
-                                        const AlphaChar *str);
-
-AlphaChar * alpha_map_trie_to_char_str (const AlphaMap  *alpha_map,
-                                        const TrieChar  *str);
-
+/**
+ * @brief Add a range to alphabet map
+ *
+ * @param alpha_map : the alphabet map object
+ * @param begin     : the first character of the range
+ * @param end       : the last character of the range
+ *
+ * Add a range of character codes from @param begin to @param end to the
+ * alphabet set.
+ */
+int         alpha_map_add_range (AlphaMap  *alpha_map,
+                                 AlphaChar  begin,
+                                 AlphaChar  end);
 
 #endif /* __ALPHA_MAP_H */
 
