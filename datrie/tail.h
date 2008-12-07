@@ -21,6 +21,13 @@
 typedef struct _Tail  Tail;
 
 /**
+ * @brief Create a new tail object
+ *
+ * Create a new empty tail object.
+ */
+Tail *   tail_new ();
+
+/**
  * @brief Read tail data from file
  *
  * @param file : the file to read

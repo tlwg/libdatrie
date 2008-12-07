@@ -11,6 +11,7 @@
 #include "trie.h"
 #include "fileutils.h"
 #include "alpha-map.h"
+#include "alpha-map-private.h"
 #include "darray.h"
 #include "tail.h"
 
@@ -22,7 +23,6 @@ struct _Trie {
     DArray     *da;
     Tail       *tail;
 
-    FILE       *file;
     Bool        is_dirty;
 };
 
@@ -64,13 +64,46 @@ static Bool        trie_branch_in_tail   (Trie           *trie,
  *-----------------------*/
 
 Trie *
-trie_open (const char *path, const char *name, TrieIOMode mode)
+trie_new (AlphaMap *alpha_map)
+{
+    Trie *trie;
+
+    trie = (Trie *) malloc (sizeof (Trie));
+    if (!trie)
+        return NULL;
+
+    trie->alpha_map = alpha_map_clone (alpha_map);
+    if (!trie->alpha_map)
+        goto exit_trie_created;
+
+    trie->da = da_new ();
+    if (!trie->da)
+        goto exit_alpha_map_created;
+
+    trie->tail = tail_new ();
+    if (!trie->tail)
+        goto exit_da_created;
+ 
+    trie->is_dirty = TRUE;
+    return trie;
+
+exit_da_created:
+    da_free (trie->da);
+exit_alpha_map_created:
+    alpha_map_free (trie->alpha_map);
+exit_trie_created:
+    free (trie);
+    return NULL;
+}
+
+Trie *
+trie_new_from_file (const char *path)
 {
     Trie       *trie;
     FILE       *trie_file;
     AlphaMap   *alt_map;
 
-    trie_file = file_open (path, name, ".tri", mode);
+    trie_file = fopen (path, "r");
     if (!trie_file)
         return NULL;
 
@@ -78,29 +111,15 @@ trie_open (const char *path, const char *name, TrieIOMode mode)
     if (!trie)
         goto exit_file_openned;
 
-    trie->file = trie_file;
-    trie->is_dirty = (file_length (trie_file) == 0);
-
-    /* Read alpha map binary, allowing failure.
-     * We need to read it anyway, even when it's to be replaced by a text
-     * version, to advance the file pointer.
-     */
-    trie->alpha_map = alpha_map_read_bin (trie_file);
-
-    /* if text format exists, prefer it */
-    alt_map = alpha_map_open (path, name, ".sbm");
-    if (alt_map) {
-        if (trie->alpha_map) {
-            alpha_map_free (trie->alpha_map);
-        }
-        trie->alpha_map = alt_map;
-    }
-
+    if (NULL == (trie->alpha_map = alpha_map_read_bin (trie_file)))
+        goto exit_trie_created;
     if (NULL == (trie->da   = da_read (trie_file)))
         goto exit_alpha_map_created;
     if (NULL == (trie->tail = tail_read (trie_file)))
         goto exit_da_created;
 
+    fclose (trie_file);
+    trie->is_dirty = FALSE;
     return trie;
 
 exit_da_created:
@@ -114,43 +133,52 @@ exit_file_openned:
     return NULL;
 }
 
-int
-trie_close (Trie *trie)
+void
+trie_free (Trie *trie)
 {
-    if (!trie || trie_save (trie) != 0)
-        return -1;
-
     alpha_map_free (trie->alpha_map);
     da_free (trie->da);
     tail_free (trie->tail);
-    fclose (trie->file);
     free (trie);
-
-    return 0;
 }
 
 int
-trie_save (Trie *trie)
+trie_save (Trie *trie, const char *path)
 {
-    if (!trie)
+    FILE *file;
+    int   res = 0;
+
+    file = fopen (path, "w+");
+    if (!file)
         return -1;
 
-    if (!trie->is_dirty)
-        return 0;
+    if (alpha_map_write_bin (trie->alpha_map, file) != 0) {
+        res = -1;
+        goto exit_file_openned;
+    }
 
-    rewind (trie->file);
+    if (da_write (trie->da, file) != 0) {
+        res = -1;
+        goto exit_file_openned;
+    }
 
-    if (alpha_map_write_bin (trie->alpha_map, trie->file) != 0)
-        return -1;
-
-    if (da_write (trie->da, trie->file) != 0)
-        return -1;
-
-    if (tail_write (trie->tail, trie->file) != 0)
-        return -1;
+    if (tail_write (trie->tail, file) != 0) {
+        res = -1;
+        goto exit_file_openned;
+    }
 
     trie->is_dirty = FALSE;
     return 0;
+
+exit_file_openned:
+    fclose (file);
+    return res;
+}
+
+Bool
+trie_is_dirty (Trie *trie)
+{
+    return trie->is_dirty;
 }
 
 

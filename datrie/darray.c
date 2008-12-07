@@ -157,53 +157,61 @@ struct _DArray {
 #define DA_POOL_BEGIN 3
 
 DArray *
+da_new ()
+{
+    DArray     *d;
+
+    d = (DArray *) malloc (sizeof (DArray));
+    if (!d)
+        return NULL;
+
+    d->num_cells = DA_POOL_BEGIN;
+    d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
+    if (!d->cells)
+        goto exit_da_created;
+    d->cells[0].base = DA_SIGNATURE;
+    d->cells[0].check = DA_POOL_BEGIN;
+    d->cells[1].base = -1;
+    d->cells[1].check = -1;
+    d->cells[2].base = DA_POOL_BEGIN;
+    d->cells[2].check = 0;
+
+    return d;
+
+exit_da_created:
+    free (d);
+    return NULL;
+}
+
+DArray *
 da_read (FILE *file)
 {
     DArray     *d = NULL;
     TrieIndex   n;
 
     /* check signature */
-    if (!file_read_int32 (file, &n)) {
-        /* new file */
-        d = (DArray *) malloc (sizeof (DArray));
-        if (!d)
+    if (!file_read_int32 (file, &n) || DA_SIGNATURE != (uint32) n)
             return NULL;
 
-        d->num_cells = DA_POOL_BEGIN;
-        d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
-        if (!d->cells)
-            goto exit1;
-        d->cells[0].base = DA_SIGNATURE;
-        d->cells[0].check = DA_POOL_BEGIN;
-        d->cells[1].base = -1;
-        d->cells[1].check = -1;
-        d->cells[2].base = DA_POOL_BEGIN;
-        d->cells[2].check = 0;
-    } else {
-        if (DA_SIGNATURE != (uint32) n)
-            return NULL;
+    d = (DArray *) malloc (sizeof (DArray));
+    if (!d)
+        return NULL;
 
-        /* existing file */
-        d = (DArray *) malloc (sizeof (DArray));
-        if (!d)
-            return NULL;
-
-        /* read number of cells */
-        file_read_int32 (file, &d->num_cells);
-        d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
-        if (!d->cells)
-            goto exit1;
-        d->cells[0].base = DA_SIGNATURE;
-        d->cells[0].check= d->num_cells;
-        for (n = 1; n < d->num_cells; n++) {
-            file_read_int32 (file, &d->cells[n].base);
-            file_read_int32 (file, &d->cells[n].check);
-        }
+    /* read number of cells */
+    file_read_int32 (file, &d->num_cells);
+    d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
+    if (!d->cells)
+        goto exit_da_created;
+    d->cells[0].base = DA_SIGNATURE;
+    d->cells[0].check= d->num_cells;
+    for (n = 1; n < d->num_cells; n++) {
+        file_read_int32 (file, &d->cells[n].base);
+        file_read_int32 (file, &d->cells[n].check);
     }
 
     return d;
 
-exit1:
+exit_da_created:
     free (d);
     return NULL;
 }

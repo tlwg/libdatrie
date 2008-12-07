@@ -19,6 +19,9 @@ typedef struct {
     Trie       *trie;
 } ProgEnv;
 
+static int  prepare_trie        (ProgEnv *env);
+static int  close_trie          (ProgEnv *env);
+
 static int  decode_switch       (int argc, char *argv[], ProgEnv *env);
 static int  decode_command      (int argc, char *argv[], ProgEnv *env);
 
@@ -47,19 +50,83 @@ main (int argc, char *argv[])
         usage (argv[0], EXIT_FAILURE);
 
     env.trie_name = argv[i++];
-    env.trie = trie_open (env.path, env.trie_name,
-                          TRIE_IO_READ | TRIE_IO_WRITE | TRIE_IO_CREATE);
-    if (!env.trie) {
-        fprintf (stderr, "Cannot open trie '%s' at '%s'\n",
-                 env.trie_name, env.path);
+
+    if (prepare_trie (&env) != 0)
         exit (EXIT_FAILURE);
-    }
 
     ret = decode_command (argc - i, argv + i, &env);
 
-    trie_close (env.trie);
+    if (close_trie (&env) != 0)
+        exit (EXIT_FAILURE);
 
     return ret;
+}
+
+static int
+prepare_trie (ProgEnv *env)
+{
+    char buff[256];
+
+    snprintf (buff, sizeof (buff),
+              "%s/%s.tri", env->path, env->trie_name);
+    env->trie = trie_new_from_file (buff);
+
+    if (!env->trie) {
+        FILE       *sbm;
+        AlphaMap   *alpha_map;
+
+        snprintf (buff, sizeof (buff),
+                  "%s/%s.sbm", env->path, env->trie_name);
+        sbm = fopen (buff, "r");
+        if (!sbm) {
+            fprintf (stderr, "Cannot open alpha map file %s\n", buff);
+            return -1;
+        }
+
+        alpha_map = alpha_map_new ();
+
+        while (fgets (buff, sizeof (buff), sbm)) {
+            int         b, e;
+
+            /* read the range
+             * format: [b,e]
+             * where: b = begin char, e = end char; both in hex values
+             */ 
+            if (sscanf (buff, " [ %x , %x ] ", &b, &e) != 2)
+                continue;
+            if (b > e) {
+                fprintf (stderr, "Range begin (%x) > range end (%x)\n", b, e);
+                continue;
+            }
+
+            alpha_map_add_range (alpha_map, b, e);
+        }
+
+        env->trie = trie_new (alpha_map);
+
+        alpha_map_free (alpha_map);
+        fclose (sbm);
+    }
+
+    return 0;
+}
+
+static int
+close_trie (ProgEnv *env)
+{
+    if (trie_is_dirty (env->trie)) {
+        char path[256];
+
+        snprintf (path, sizeof (path),
+                  "%s/%s.tri", env->path, env->trie_name);
+        if (trie_save (env->trie, path) != 0) {
+            fprintf (stderr, "Cannot save trie to %s\n", path);
+            return -1;
+        }
+    }
+
+    trie_free (env->trie);
+    return 0;
 }
 
 static int

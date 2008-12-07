@@ -9,6 +9,7 @@
 #define __TRIE_H
 
 #include <datrie/triedefs.h>
+#include <datrie/alpha-map.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,30 +47,42 @@ typedef struct _TrieState TrieState;
  *-----------------------*/
 
 /**
- * @brief Open a trie
+ * @brief Create a new trie
  *
- * @param path : the path that stores the trie files
- * @param name : the name of the trie (not actual file name)
- * @param mode : openning mode, read or write
+ * @param   alpha_map   : the alphabet set for the trie
  *
- * @return a pointer to the openned trie, NULL on failure
+ * @return a pointer to the newly created trie, NULL on failure
  *
- * Open a trie of given name. Note that @a name here does not mean the
- * actual file name. Rather, the file name will be inferred by the name.
+ * Create a new empty trie object based on the given @param alpha_map alphabet
+ * set. The trie contents can then be added and deleted with trie_store() and
+ * trie_delete() respectively.
+ *
+ * The created object must be freed with trie_free().
  */
-Trie *  trie_open (const char *path, const char *name, TrieIOMode mode);
+Trie *  trie_new (AlphaMap *alpha_map);
 
 /**
- * @brief Close a trie
+ * @brief Create a new trie by loading from a file
  *
- * @param trie: the trie
+ * @param path  : the path to the file
  *
- * @return 0 on success, non-zero on failure
+ * @return a pointer to the created trie, NULL on failure
  *
- * Close the given trie. If @a trie was openned for writing, all pending
- * changes will be saved to file.
+ * Create a new trie and initialize its contents by loading from the file at
+ * given @a path.
+ *
+ * The created object must be freed with trie_free().
  */
-int     trie_close (Trie *trie);
+Trie *  trie_new_from_file (const char *path);
+
+/**
+ * @brief Free a trie object
+ *
+ * @param trie  : the trie object to free
+ *
+ * Destruct the @a trie and free its allocated memory.
+ */
+void    trie_free (Trie *trie);
 
 /**
  * @brief Save a trie
@@ -80,7 +93,19 @@ int     trie_close (Trie *trie);
  *
  * If @a trie was openned for writing, save all pending data to file.
  */
-int     trie_save (Trie *trie);
+int     trie_save (Trie *trie, const char *path);
+
+/**
+ * @brief Check pending changes
+ *
+ * @param trie  : the trie object
+ *
+ * @return TRUE if there are pending changes, FALSE otherwise
+ *
+ * Check if the @a trie is dirty with some pending changes and needs saving
+ * to synchronize with the file.
+ */
+Bool    trie_is_dirty (Trie *trie);
 
 
 /*------------------------------*

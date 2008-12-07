@@ -11,6 +11,7 @@
 #include <stdio.h>
 
 #include "alpha-map.h"
+#include "alpha-map-private.h"
 #include "fileutils.h"
 
 /*------------------------*
@@ -31,14 +32,6 @@ alpha_char_strlen (const AlphaChar *str)
         ;
     return p - str;
 }
-
-/*-----------------------------------*
- *    PRIVATE METHODS DECLARATIONS   *
- *-----------------------------------*/
-static AlphaMap * alpha_map_new ();
-static int        alpha_map_add_range (AlphaMap *alpha_map,
-                                       AlphaChar begin,
-                                       AlphaChar end);
 
 /*------------------------------*
  *    PRIVATE DATA DEFINITONS   *
@@ -77,47 +70,6 @@ static int  alpha_map_get_total_ranges (AlphaMap *alpha_map);
  */
 
 AlphaMap *
-alpha_map_open (const char *path, const char *name, const char *ext)
-{
-    FILE       *file;
-    char        line[256];
-    AlphaMap   *alpha_map;
-
-    file = file_open (path, name, ext, TRIE_IO_READ);
-    if (!file)
-        return NULL;
-
-    /* prepare data */
-    alpha_map = alpha_map_new ();
-    if (!alpha_map)
-        goto exit1;
-
-    /* read character ranges */
-    while (fgets (line, sizeof line, file)) {
-        int         b, e;
-
-        /* read the range
-         * format: [b,e]
-         * where: b = begin char, e = end char; both in hex values
-         */ 
-        if (sscanf (line, " [ %x , %x ] ", &b, &e) != 2)
-            continue;
-        if (b > e) {
-            fprintf (stderr, "Range begin (%x) > range end (%x)\n", b, e);
-            continue;
-        }
-        alpha_map_add_range (alpha_map, b, e);
-    }
-
-    fclose (file);
-    return alpha_map;
-
-exit1:
-    fclose (file);
-    return NULL;
-}
-
-static AlphaMap *
 alpha_map_new ()
 {
     AlphaMap   *alpha_map;
@@ -127,6 +79,26 @@ alpha_map_new ()
         return NULL;
 
     alpha_map->first_range = alpha_map->last_range = NULL;
+
+    return alpha_map;
+}
+
+AlphaMap *
+alpha_map_clone (AlphaMap *a_map)
+{
+    AlphaMap   *alpha_map;
+    AlphaRange *range;
+
+    alpha_map = alpha_map_new ();
+    if (!alpha_map)
+        return NULL;
+
+    for (range = a_map->first_range; range; range = range->next) {
+        if (alpha_map_add_range (alpha_map, range->begin, range->end) != 0) {
+            alpha_map_free (alpha_map);
+            return NULL;
+        }
+    }
 
     return alpha_map;
 }
@@ -215,7 +187,7 @@ alpha_map_write_bin (AlphaMap *alpha_map, FILE *file)
     return 0;
 }
 
-static int
+int
 alpha_map_add_range (AlphaMap *alpha_map, AlphaChar begin, AlphaChar end)
 {
     AlphaRange *range;
