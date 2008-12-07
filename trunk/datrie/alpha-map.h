@@ -25,17 +25,17 @@ AlphaMap *  alpha_map_read_bin (FILE *file);
 
 int         alpha_map_write_bin (AlphaMap *alpha_map, FILE *file);
 
-TrieChar    alpha_map_char_to_alphabet (const AlphaMap *alpha_map,
-                                        AlphaChar       ac);
+TrieChar    alpha_map_char_to_trie (const AlphaMap *alpha_map,
+                                    AlphaChar       ac);
 
-AlphaChar   alpha_map_alphabet_to_char (const AlphaMap *alpha_map,
-                                        TrieChar        tc);
+AlphaChar   alpha_map_trie_to_char (const AlphaMap *alpha_map,
+                                    TrieChar        tc);
 
-TrieChar *  alpha_map_char_to_alphabet_str (const AlphaMap  *alpha_map,
-                                            const AlphaChar *str);
+TrieChar *  alpha_map_char_to_trie_str (const AlphaMap  *alpha_map,
+                                        const AlphaChar *str);
 
-AlphaChar * alpha_map_alphabet_to_char_str (const AlphaMap  *alpha_map,
-                                            const TrieChar  *str);
+AlphaChar * alpha_map_trie_to_char_str (const AlphaMap  *alpha_map,
+                                        const TrieChar  *str);
 
 
 #endif /* __ALPHA_MAP_H */

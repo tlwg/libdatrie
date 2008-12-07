@@ -243,7 +243,7 @@ alpha_map_add_range (AlphaMap *alpha_map, AlphaChar begin, AlphaChar end)
 }
 
 TrieChar
-alpha_map_char_to_alphabet (const AlphaMap *alpha_map, AlphaChar ac)
+alpha_map_char_to_trie (const AlphaMap *alpha_map, AlphaChar ac)
 {
     TrieChar    alpha_begin;
     AlphaRange *range;
@@ -265,7 +265,7 @@ alpha_map_char_to_alphabet (const AlphaMap *alpha_map, AlphaChar ac)
 }
 
 AlphaChar
-alpha_map_alphabet_to_char (const AlphaMap *alpha_map, TrieChar tc)
+alpha_map_trie_to_char (const AlphaMap *alpha_map, TrieChar tc)
 {
     TrieChar    alpha_begin;
     AlphaRange *range;
@@ -287,14 +287,14 @@ alpha_map_alphabet_to_char (const AlphaMap *alpha_map, TrieChar tc)
 }
 
 TrieChar *
-alpha_map_char_to_alphabet_str (const AlphaMap *alpha_map, const AlphaChar *str)
+alpha_map_char_to_trie_str (const AlphaMap *alpha_map, const AlphaChar *str)
 {
     TrieChar   *alphabet_str, *p;
 
     alphabet_str = (TrieChar *) malloc (alpha_char_strlen ((const char *)str)
                                         + 1);
     for (p = alphabet_str; *str; p++, str++) {
-        *p = alpha_map_char_to_alphabet (alpha_map, *str);
+        *p = alpha_map_char_to_trie (alpha_map, *str);
     }
     *p = 0;
 
@@ -302,14 +302,14 @@ alpha_map_char_to_alphabet_str (const AlphaMap *alpha_map, const AlphaChar *str)
 }
 
 AlphaChar *
-alpha_map_alphabet_to_char_str (const AlphaMap *alpha_map, const TrieChar *str)
+alpha_map_trie_to_char_str (const AlphaMap *alpha_map, const TrieChar *str)
 {
     AlphaChar  *alpha_str, *p;
 
     alpha_str = (AlphaChar *) malloc ((strlen ((const char *)str) + 1)
                                       * sizeof (AlphaChar));
     for (p = alpha_str; *str; p++, str++) {
-        *p = (AlphaChar) alpha_map_alphabet_to_char (alpha_map, *str);
+        *p = (AlphaChar) alpha_map_trie_to_char (alpha_map, *str);
     }
     *p = 0;
 

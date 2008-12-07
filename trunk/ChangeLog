@@ -1,5 +1,19 @@
 2008-12-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Rename AlphaMap functions to be more logical.
+
+	* datrie/alpha-map.c, datrie/alpha-map.h: Rename functions
+	  - alpha_map_char_to_alphabet -> alpha_map_char_to_trie
+	  - alpha_map_alphabet_to_char -> alpha_map_trie_to_char
+	  - alpha_map_char_to_alphabet_str -> alpha_map_char_to_trie_str
+	  - alpha_map_alphabet_to_char_str -> alpha_map_trie_to_char_str
+
+	* datrie/trie.c (trie_retrieve, trie_store, trie_delete,
+	  trie_da_enum_func, trie_state_walk, trie_state_is_walkable):
+	  - Call the AlphaMap functions with the new names
+
+2008-12-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Merge SBTrie alphabet mapping feature into Trie.
 
 	* datrie/triedefs.h (AlphaChar):
