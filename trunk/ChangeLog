@@ -1,5 +1,11 @@
 2008-12-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/trie.c (trie_retrieve):
+	  - Remove unused var 'len'
+	  - Compare AlphaChar with integer zero rather than '\0'
+
+2008-12-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Adjust APIs for in-memory trie support.
 
 	* datrie/trie.c (struct _Trie):
