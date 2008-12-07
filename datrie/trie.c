@@ -192,7 +192,6 @@ trie_retrieve (Trie *trie, const AlphaChar *key, TrieData *o_data)
     TrieIndex        s;
     short            suffix_idx;
     const TrieChar  *p;
-    size_t           len;
 
     /* walk through branches */
     s = da_get_root (trie->da);
@@ -202,7 +201,7 @@ trie_retrieve (Trie *trie, const AlphaChar *key, TrieData *o_data)
         {
             return FALSE;
         }
-        if ('\0' == *p)
+        if (0 == *p)
             break;
     }
 
@@ -215,7 +214,7 @@ trie_retrieve (Trie *trie, const AlphaChar *key, TrieData *o_data)
         {
             return FALSE;
         }
-        if ('\0' == *p)
+        if (0 == *p)
             break;
     }
 
