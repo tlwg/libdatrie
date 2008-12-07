@@ -32,7 +32,7 @@ typedef struct _Trie   Trie;
  *
  * @return TRUE to continue enumeration, FALSE to stop
  */
-typedef Bool (*TrieEnumFunc) (const TrieChar   *key,
+typedef Bool (*TrieEnumFunc) (const AlphaChar  *key,
                               TrieData          key_data,
                               void             *user_data);
 
@@ -100,7 +100,7 @@ int     trie_save (Trie *trie);
  * if @a key is found and @a o_val is not NULL, @a *o_val is set
  * to the data associated to @a key.
  */
-Bool    trie_retrieve (Trie *trie, const TrieChar *key, TrieData *o_data);
+Bool    trie_retrieve (Trie *trie, const AlphaChar *key, TrieData *o_data);
 
 /**
  * @brief Store a value for  an entry to trie
@@ -114,7 +114,7 @@ Bool    trie_retrieve (Trie *trie, const TrieChar *key, TrieData *o_data);
  * Store a data @a data for the given @a key in @a trie. If @a key does not 
  * exist in @a trie, it will be appended.
  */
-Bool    trie_store (Trie *trie, const TrieChar *key, TrieData data);
+Bool    trie_store (Trie *trie, const AlphaChar *key, TrieData data);
 
 /**
  * @brief Delete an entry from trie
@@ -126,7 +126,7 @@ Bool    trie_store (Trie *trie, const TrieChar *key, TrieData data);
  *
  * Delete an entry for the given @a key from @a trie.
  */
-Bool    trie_delete (Trie *trie, const TrieChar *key);
+Bool    trie_delete (Trie *trie, const AlphaChar *key);
 
 /**
  * @brief Enumerate entries in trie
@@ -208,7 +208,7 @@ void      trie_state_rewind (TrieState *s);
  * Walk the trie stepwise, using a given character @a c.
  * On return, the state @a s is updated to the new state if successfully walked.
  */
-Bool      trie_state_walk (TrieState *s, TrieChar c);
+Bool      trie_state_walk (TrieState *s, AlphaChar c);
 
 /**
  * @brief Test walkability of character from state
@@ -220,7 +220,7 @@ Bool      trie_state_walk (TrieState *s, TrieChar c);
  *
  * Test if there is a transition from state @a s with input character @a c.
  */
-Bool      trie_state_is_walkable (const TrieState *s, TrieChar c);
+Bool      trie_state_is_walkable (const TrieState *s, AlphaChar c);
 
 /**
  * @brief Check for terminal state

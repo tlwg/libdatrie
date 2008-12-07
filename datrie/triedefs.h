@@ -25,6 +25,16 @@ typedef enum {
 } TrieIOMode;
 
 /**
+ * @brief Trie character type for alphabet
+ */
+typedef unsigned char  AlphaChar;
+
+/**
+ * @brief Error value for alphabet character
+ */
+#define ALPHA_CHAR_ERROR   (~(AlphaChar)0)
+
+/**
  * @brief Trie character type for key
  */
 typedef unsigned char  TrieChar;

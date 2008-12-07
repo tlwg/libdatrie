@@ -8,12 +8,10 @@
 #ifndef __ALPHA_MAP_H
 #define __ALPHA_MAP_H
 
+#include <stdio.h>
+
 #include "typedefs.h"
 #include "triedefs.h"
-
-typedef uint16  UniChar;
-
-#define UNI_CHAR_ERROR   (~(UniChar)0)
 
 typedef struct _AlphaMap    AlphaMap;
 
@@ -23,9 +21,21 @@ AlphaMap *  alpha_map_open (const char *path,
 
 void        alpha_map_free (AlphaMap *alpha_map);
 
-TrieChar    alpha_map_char_to_alphabet (const AlphaMap *alpha_map, UniChar uc);
+AlphaMap *  alpha_map_read_bin (FILE *file);
 
-UniChar     alpha_map_alphabet_to_char (const AlphaMap *alpha_map, TrieChar tc);
+int         alpha_map_write_bin (AlphaMap *alpha_map, FILE *file);
+
+TrieChar    alpha_map_char_to_alphabet (const AlphaMap *alpha_map,
+                                        AlphaChar       ac);
+
+AlphaChar   alpha_map_alphabet_to_char (const AlphaMap *alpha_map,
+                                        TrieChar        tc);
+
+TrieChar *  alpha_map_char_to_alphabet_str (const AlphaMap  *alpha_map,
+                                            const AlphaChar *str);
+
+AlphaChar * alpha_map_alphabet_to_char_str (const AlphaMap  *alpha_map,
+                                            const TrieChar  *str);
 
 
 #endif /* __ALPHA_MAP_H */

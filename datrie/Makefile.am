@@ -3,8 +3,7 @@ pkgincludedir = $(includedir)/datrie
 pkginclude_HEADERS =	\
 	typedefs.h	\
 	triedefs.h	\
-	trie.h		\
-	sb-trie.h
+	trie.h
 
 EXTRA_DIST = libdatrie.def
 
@@ -25,9 +24,8 @@ libdatrie_la_SOURCES =	\
 	trie.h		\
 	trie.c		\
 	alpha-map.h	\
-	alpha-map.c	\
-	sb-trie.h	\
-	sb-trie.c
+	alpha-map.c
+
 libdatrie_la_LDFLAGS =	-no-undefined \
 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 	-export-symbols $(srcdir)/libdatrie.def

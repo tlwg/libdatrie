@@ -10,6 +10,7 @@
 
 #include "trie.h"
 #include "fileutils.h"
+#include "alpha-map.h"
 #include "darray.h"
 #include "tail.h"
 
@@ -17,11 +18,12 @@
  * @brief Trie structure
  */
 struct _Trie {
-    DArray  *da;
-    Tail    *tail;
+    AlphaMap   *alpha_map;
+    DArray     *da;
+    Tail       *tail;
 
-    FILE    *file;
-    Bool     is_dirty;
+    FILE       *file;
+    Bool        is_dirty;
 };
 
 /**
@@ -64,31 +66,51 @@ static Bool        trie_branch_in_tail   (Trie           *trie,
 Trie *
 trie_open (const char *path, const char *name, TrieIOMode mode)
 {
-    Trie *trie;
+    Trie       *trie;
+    FILE       *trie_file;
+    AlphaMap   *alt_map;
+
+    trie_file = file_open (path, name, ".tri", mode);
+    if (!trie_file)
+        return NULL;
 
     trie = (Trie *) malloc (sizeof (Trie));
     if (!trie)
-        return NULL;
+        goto exit_file_openned;
 
-    trie->file = file_open (path, name, ".tri", mode);
-    if (!trie->file)
-        goto exit1;
+    trie->file = trie_file;
+    trie->is_dirty = (file_length (trie_file) == 0);
 
-    trie->is_dirty = (file_length (trie->file) == 0);
+    /* Read alpha map binary, allowing failure.
+     * We need to read it anyway, even when it's to be replaced by a text
+     * version, to advance the file pointer.
+     */
+    trie->alpha_map = alpha_map_read_bin (trie_file);
 
-    if (NULL == (trie->da   = da_read (trie->file)))
-        goto exit2;
-    if (NULL == (trie->tail = tail_read (trie->file)))
-        goto exit3;
+    /* if text format exists, prefer it */
+    alt_map = alpha_map_open (path, name, ".sbm");
+    if (alt_map) {
+        if (trie->alpha_map) {
+            alpha_map_free (trie->alpha_map);
+        }
+        trie->alpha_map = alt_map;
+    }
+
+    if (NULL == (trie->da   = da_read (trie_file)))
+        goto exit_alpha_map_created;
+    if (NULL == (trie->tail = tail_read (trie_file)))
+        goto exit_da_created;
 
     return trie;
 
-exit3:
+exit_da_created:
     da_free (trie->da);
-exit2:
-    fclose (trie->file);
-exit1:
+exit_alpha_map_created:
+    alpha_map_free (trie->alpha_map);
+exit_trie_created:
     free (trie);
+exit_file_openned:
+    fclose (trie_file);
     return NULL;
 }
 
@@ -98,6 +120,7 @@ trie_close (Trie *trie)
     if (!trie || trie_save (trie) != 0)
         return -1;
 
+    alpha_map_free (trie->alpha_map);
     da_free (trie->da);
     tail_free (trie->tail);
     fclose (trie->file);
@@ -117,6 +140,9 @@ trie_save (Trie *trie)
 
     rewind (trie->file);
 
+    if (alpha_map_write_bin (trie->alpha_map, trie->file) != 0)
+        return -1;
+
     if (da_write (trie->da, trie->file) != 0)
         return -1;
 
@@ -133,7 +159,7 @@ trie_save (Trie *trie)
  *------------------------------*/
 
 Bool
-trie_retrieve (Trie *trie, const TrieChar *key, TrieData *o_data)
+trie_retrieve (Trie *trie, const AlphaChar *key, TrieData *o_data)
 {
     TrieIndex        s;
     short            suffix_idx;
@@ -143,8 +169,11 @@ trie_retrieve (Trie *trie, const TrieChar *key, TrieData *o_data)
     /* walk through branches */
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
-        if (!da_walk (trie->da, &s, *p))
+        if (!da_walk (trie->da, &s,
+                      alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+        {
             return FALSE;
+        }
         if ('\0' == *p)
             break;
     }
@@ -152,9 +181,15 @@ trie_retrieve (Trie *trie, const TrieChar *key, TrieData *o_data)
     /* walk through tail */
     s = trie_da_get_tail_index (trie->da, s);
     suffix_idx = 0;
-    len = strlen ((const char *) p) + 1;    /* including null-terminator */
-    if (tail_walk_str (trie->tail, s, &suffix_idx, p, len) != len)
-        return FALSE;
+    for ( ; ; p++) {
+        if (!tail_walk_char (trie->tail, s, &suffix_idx,
+                             alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+        {
+            return FALSE;
+        }
+        if ('\0' == *p)
+            break;
+    }
 
     /* found, set the val and return */
     if (o_data)
@@ -163,28 +198,51 @@ trie_retrieve (Trie *trie, const TrieChar *key, TrieData *o_data)
 }
 
 Bool
-trie_store (Trie *trie, const TrieChar *key, TrieData data)
+trie_store (Trie *trie, const AlphaChar *key, TrieData data)
 {
     TrieIndex        s, t;
     short            suffix_idx;
-    const TrieChar  *p;
-    size_t           len;
+    const TrieChar  *p, *sep;
 
     /* walk through branches */
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
-        if (!da_walk (trie->da, &s, *p))
-            return trie_branch_in_branch (trie, s, p, data);
-        if ('\0' == *p)
+        if (!da_walk (trie->da, &s,
+                      alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+        {
+            TrieChar *key_str;
+            Bool      res;
+
+            key_str = alpha_map_char_to_alphabet_str (trie->alpha_map, p);
+            res = trie_branch_in_branch (trie, s, key_str, data);
+            free (key_str);
+
+            return res;
+        }
+        if (0 == *p)
             break;
     }
 
     /* walk through tail */
+    sep = p;
     t = trie_da_get_tail_index (trie->da, s);
     suffix_idx = 0;
-    len = strlen ((const char *) p) + 1;    /* including null-terminator */
-    if (tail_walk_str (trie->tail, t, &suffix_idx, p, len) != len)
-        return trie_branch_in_tail (trie, s, p, data);
+    for ( ; ; p++) {
+        if (!tail_walk_char (trie->tail, t, &suffix_idx,
+                             alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+        {
+            TrieChar *tail_str;
+            Bool      res;
+
+            tail_str = alpha_map_char_to_alphabet_str (trie->alpha_map, sep);
+            res = trie_branch_in_tail (trie, s, tail_str, data);
+            free (tail_str);
+
+            return res;
+        }
+        if (0 == *p)
+            break;
+    }
 
     /* duplicated key, overwrite val */
     tail_set_data (trie->tail, t, data);
@@ -257,28 +315,36 @@ fail:
 }
 
 Bool
-trie_delete (Trie *trie, const TrieChar *key)
+trie_delete (Trie *trie, const AlphaChar *key)
 {
     TrieIndex        s, t;
     short            suffix_idx;
-    const TrieChar  *p;
-    size_t           len;
+    const AlphaChar *p;
 
     /* walk through branches */
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
-        if (!da_walk (trie->da, &s, *p))
+        if (!da_walk (trie->da, &s,
+                      alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+        {
             return FALSE;
-        if ('\0' == *p)
+        }
+        if (0 == *p)
             break;
     }
 
     /* walk through tail */
     t = trie_da_get_tail_index (trie->da, s);
     suffix_idx = 0;
-    len = strlen ((const char *) p) + 1;    /* including null-terminator */
-    if (tail_walk_str (trie->tail, t, &suffix_idx, p, len) != len)
-        return FALSE;
+    for ( ; ; p++) {
+        if (!tail_walk_char (trie->tail, t, &suffix_idx,
+                             alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+        {
+            return FALSE;
+        }
+        if (0 == *p)
+            break;
+    }
 
     tail_delete (trie->tail, t);
     da_set_base (trie->da, s, TRIE_INDEX_ERROR);
@@ -300,7 +366,7 @@ trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
     _TrieEnumData  *enum_data;
     TrieIndex       t;
     const TrieChar *suffix;
-    TrieChar       *full_key;
+    AlphaChar      *full_key, *p;
     Bool            ret;
 
     enum_data = (_TrieEnumData *) user_data;
@@ -308,9 +374,16 @@ trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
     t = trie_da_get_tail_index (enum_data->trie->da, sep_node);
     suffix = tail_get_suffix (enum_data->trie->tail, t);
 
-    full_key = (TrieChar *) malloc (strlen ((const char *)key)
-                                    + strlen ((const char *)suffix) + 1);
-    strcat (strcpy ((char *)full_key, (const char *)key), (const char *)suffix);
+    full_key = (AlphaChar *) malloc ((strlen ((const char *)key)
+                                      + strlen ((const char *)suffix) + 1)
+                                     * sizeof (AlphaChar));
+    for (p = full_key; *key; p++, key++) {
+        *p = alpha_map_alphabet_to_char (enum_data->trie->alpha_map, *key);
+    }
+    for ( ; *suffix; p++, suffix++) {
+        *p = alpha_map_alphabet_to_char (enum_data->trie->alpha_map, *suffix);
+    }
+    *p = 0;
 
     ret = (*enum_data->enum_func) (full_key,
                                    tail_get_data (enum_data->trie->tail, t),
@@ -384,12 +457,14 @@ trie_state_rewind (TrieState *s)
 }
 
 Bool
-trie_state_walk (TrieState *s, TrieChar c)
+trie_state_walk (TrieState *s, AlphaChar c)
 {
+    TrieChar tc = alpha_map_char_to_alphabet (s->trie->alpha_map, c);
+
     if (!s->is_suffix) {
         Bool ret;
 
-        ret = da_walk (s->trie->da, &s->index, c);
+        ret = da_walk (s->trie->da, &s->index, tc);
 
         if (ret && trie_da_is_separate (s->trie->da, s->index)) {
             s->index = trie_da_get_tail_index (s->trie->da, s->index);
@@ -399,18 +474,20 @@ trie_state_walk (TrieState *s, TrieChar c)
 
         return ret;
     } else {
-        return tail_walk_char (s->trie->tail, s->index, &s->suffix_idx, c);
+        return tail_walk_char (s->trie->tail, s->index, &s->suffix_idx, tc);
     }
 }
 
 Bool
-trie_state_is_walkable (const TrieState *s, TrieChar c)
+trie_state_is_walkable (const TrieState *s, AlphaChar c)
 {
+    TrieChar tc = alpha_map_char_to_alphabet (s->trie->alpha_map, c);
+
     if (!s->is_suffix)
-        return da_is_walkable (s->trie->da, s->index, c);
+        return da_is_walkable (s->trie->da, s->index, tc);
     else 
         return tail_is_walkable_char (s->trie->tail, s->index, s->suffix_idx,
-                                      c);
+                                      tc);
 }
 
 Bool
