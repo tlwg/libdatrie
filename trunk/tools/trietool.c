@@ -11,12 +11,12 @@
 #include <ctype.h>
 
 #include <config.h>
-#include <datrie/sb-trie.h>
+#include <datrie/trie.h>
 
 typedef struct {
     const char *path;
     const char *trie_name;
-    SBTrie     *sb_trie;
+    Trie       *trie;
 } ProgEnv;
 
 static int  decode_switch       (int argc, char *argv[], ProgEnv *env);
@@ -47,9 +47,9 @@ main (int argc, char *argv[])
         usage (argv[0], EXIT_FAILURE);
 
     env.trie_name = argv[i++];
-    env.sb_trie = sb_trie_open (env.path, env.trie_name,
-                                TRIE_IO_READ | TRIE_IO_WRITE | TRIE_IO_CREATE);
-    if (!env.sb_trie) {
+    env.trie = trie_open (env.path, env.trie_name,
+                          TRIE_IO_READ | TRIE_IO_WRITE | TRIE_IO_CREATE);
+    if (!env.trie) {
         fprintf (stderr, "Cannot open trie '%s' at '%s'\n",
                  env.trie_name, env.path);
         exit (EXIT_FAILURE);
@@ -57,7 +57,7 @@ main (int argc, char *argv[])
 
     ret = decode_command (argc - i, argv + i, &env);
 
-    sb_trie_close (env.sb_trie);
+    trie_close (env.trie);
 
     return ret;
 }
@@ -139,7 +139,7 @@ command_add (int argc, char *argv[], ProgEnv *env)
         key = (const TrieChar *) argv[opt_idx++];
         data = (opt_idx < argc) ? atoi (argv[opt_idx++]) : TRIE_DATA_ERROR;
 
-        if (!sb_trie_store (env->sb_trie, key, data)) {
+        if (!trie_store (env->trie, key, data)) {
             fprintf (stderr, "Failed to add entry '%s' with data %d\n",
                      key, data);
         }
@@ -179,7 +179,7 @@ command_add_list (int argc, char *argv[], ProgEnv *env)
             data_val = ('\0' != *data) ? atoi (data) : TRIE_DATA_ERROR;
 
             /* store the key */
-            if (!sb_trie_store (env->sb_trie, (const TrieChar *) key, data_val))
+            if (!trie_store (env->trie, key, data_val))
                 fprintf (stderr, "Failed to add key '%s' with data %d.\n",
                          key, data_val);
         }
@@ -196,7 +196,7 @@ command_delete (int argc, char *argv[], ProgEnv *env)
     int opt_idx;
 
     for (opt_idx = 0; opt_idx < argc; opt_idx++)
-        if (!sb_trie_delete (env->sb_trie, (const TrieChar *) argv[opt_idx]))
+        if (!trie_delete (env->trie, argv[opt_idx]))
             fprintf (stderr, "No entry '%s'. Not deleted.\n", argv[opt_idx]);
 
     return opt_idx;
@@ -219,7 +219,7 @@ command_delete_list (int argc, char *argv[], ProgEnv *env)
 
         p = string_trim (line);
         if ('\0' != *p)
-            if (!sb_trie_delete (env->sb_trie, (const TrieChar *) p))
+            if (!trie_delete (env->trie, p))
                 fprintf (stderr, "No entry '%s'. Not deleted.\n", p);
     }
 
@@ -238,7 +238,7 @@ command_query (int argc, char *argv[], ProgEnv *env)
         return 0;
     }
 
-    if (sb_trie_retrieve (env->sb_trie, (const TrieChar *) argv[0], &data)) {
+    if (trie_retrieve (env->trie, argv[0], &data)) {
         printf ("%d\n", data);
     } else {
         fprintf (stderr, "query: Key '%s' not found.\n", argv[0]);
@@ -248,7 +248,7 @@ command_query (int argc, char *argv[], ProgEnv *env)
 }
 
 static Bool
-list_enum_func (const SBChar *key, TrieData key_data, void *user_data)
+list_enum_func (const AlphaChar *key, TrieData key_data, void *user_data)
 {
     printf ("%s\t%d\n", key, key_data);
     return TRUE;
@@ -257,7 +257,7 @@ list_enum_func (const SBChar *key, TrieData key_data, void *user_data)
 static int
 command_list (int argc, char *argv[], ProgEnv *env)
 {
-    sb_trie_enumerate (env->sb_trie, list_enum_func, (void *) 0);
+    trie_enumerate (env->trie, list_enum_func, (void *) 0);
     return 0;
 }
 
