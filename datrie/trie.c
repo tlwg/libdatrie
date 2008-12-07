@@ -170,7 +170,7 @@ trie_retrieve (Trie *trie, const AlphaChar *key, TrieData *o_data)
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
         if (!da_walk (trie->da, &s,
-                      alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+                      alpha_map_char_to_trie (trie->alpha_map, *p)))
         {
             return FALSE;
         }
@@ -183,7 +183,7 @@ trie_retrieve (Trie *trie, const AlphaChar *key, TrieData *o_data)
     suffix_idx = 0;
     for ( ; ; p++) {
         if (!tail_walk_char (trie->tail, s, &suffix_idx,
-                             alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+                             alpha_map_char_to_trie (trie->alpha_map, *p)))
         {
             return FALSE;
         }
@@ -208,12 +208,12 @@ trie_store (Trie *trie, const AlphaChar *key, TrieData data)
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
         if (!da_walk (trie->da, &s,
-                      alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+                      alpha_map_char_to_trie (trie->alpha_map, *p)))
         {
             TrieChar *key_str;
             Bool      res;
 
-            key_str = alpha_map_char_to_alphabet_str (trie->alpha_map, p);
+            key_str = alpha_map_char_to_trie_str (trie->alpha_map, p);
             res = trie_branch_in_branch (trie, s, key_str, data);
             free (key_str);
 
@@ -229,12 +229,12 @@ trie_store (Trie *trie, const AlphaChar *key, TrieData data)
     suffix_idx = 0;
     for ( ; ; p++) {
         if (!tail_walk_char (trie->tail, t, &suffix_idx,
-                             alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+                             alpha_map_char_to_trie (trie->alpha_map, *p)))
         {
             TrieChar *tail_str;
             Bool      res;
 
-            tail_str = alpha_map_char_to_alphabet_str (trie->alpha_map, sep);
+            tail_str = alpha_map_char_to_trie_str (trie->alpha_map, sep);
             res = trie_branch_in_tail (trie, s, tail_str, data);
             free (tail_str);
 
@@ -325,7 +325,7 @@ trie_delete (Trie *trie, const AlphaChar *key)
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
         if (!da_walk (trie->da, &s,
-                      alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+                      alpha_map_char_to_trie (trie->alpha_map, *p)))
         {
             return FALSE;
         }
@@ -338,7 +338,7 @@ trie_delete (Trie *trie, const AlphaChar *key)
     suffix_idx = 0;
     for ( ; ; p++) {
         if (!tail_walk_char (trie->tail, t, &suffix_idx,
-                             alpha_map_char_to_alphabet (trie->alpha_map, *p)))
+                             alpha_map_char_to_trie (trie->alpha_map, *p)))
         {
             return FALSE;
         }
@@ -378,10 +378,10 @@ trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
                                       + strlen ((const char *)suffix) + 1)
                                      * sizeof (AlphaChar));
     for (p = full_key; *key; p++, key++) {
-        *p = alpha_map_alphabet_to_char (enum_data->trie->alpha_map, *key);
+        *p = alpha_map_trie_to_char (enum_data->trie->alpha_map, *key);
     }
     for ( ; *suffix; p++, suffix++) {
-        *p = alpha_map_alphabet_to_char (enum_data->trie->alpha_map, *suffix);
+        *p = alpha_map_trie_to_char (enum_data->trie->alpha_map, *suffix);
     }
     *p = 0;
 
@@ -459,7 +459,7 @@ trie_state_rewind (TrieState *s)
 Bool
 trie_state_walk (TrieState *s, AlphaChar c)
 {
-    TrieChar tc = alpha_map_char_to_alphabet (s->trie->alpha_map, c);
+    TrieChar tc = alpha_map_char_to_trie (s->trie->alpha_map, c);
 
     if (!s->is_suffix) {
         Bool ret;
@@ -481,7 +481,7 @@ trie_state_walk (TrieState *s, AlphaChar c)
 Bool
 trie_state_is_walkable (const TrieState *s, AlphaChar c)
 {
-    TrieChar tc = alpha_map_char_to_alphabet (s->trie->alpha_map, c);
+    TrieChar tc = alpha_map_char_to_trie (s->trie->alpha_map, c);
 
     if (!s->is_suffix)
         return da_is_walkable (s->trie->da, s->index, tc);
