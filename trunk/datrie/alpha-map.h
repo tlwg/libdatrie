@@ -69,6 +69,15 @@ int         alpha_map_add_range (AlphaMap  *alpha_map,
                                  AlphaChar  begin,
                                  AlphaChar  end);
 
+/**
+ * @brief Alphabet string length
+ *
+ * @param str   : the array of null-terminated AlphaChar string to measure
+ *
+ * @return the total characters in @a str.
+ */
+int         alpha_char_strlen (const AlphaChar *str);
+
 #endif /* __ALPHA_MAP_H */
 
 

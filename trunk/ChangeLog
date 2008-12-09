@@ -1,5 +1,26 @@
 2008-12-09  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Unicode (UCS-4) character support.
+
+	* datrie/triedefs.h (AlphaChar):
+	  - unsigned char -> uint32
+
+	* datrie/alpha-map.h, datrie/alpha-map.c, datrie/libdatrie.def:
+	  - Export alpha_char_strlen() utility routine
+
+	* tools/trietool.c
+	  (ProgEnv, init_conv, conv_to_alpha, conv_from_alpha, close_conv):
+	  - Add routines for converting characters between locale (LC_CTYPE)
+	    codeset and UCS-4
+	* tools/trietool.c (main):
+	  - Initialize and close conversion routines
+	* tools/trietool.c
+	  (command_add, command_add_list, command_delete, command_delete_list,
+	  command_query, list_enum_func, command_list):
+	  - Convert character encodings between I/O and trie
+
+2008-12-09  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/trie.c (trie_retrieve, trie_store):
 	  - Use (AlphaChar *), not (TrieChar *), as key pointer type
 
