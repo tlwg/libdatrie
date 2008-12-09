@@ -30,10 +30,10 @@ struct _Trie {
  * @brief TrieState structure
  */
 struct _TrieState {
-    Trie      *trie;        /**< the corresponding trie */
-    TrieIndex  index;       /**< index in double-array/tail structures */
-    short      suffix_idx;  /**< suffix character offset, if in suffix */
-    short      is_suffix;   /**< whether it is currently in suffix part */
+    const Trie *trie;       /**< the corresponding trie */
+    TrieIndex   index;      /**< index in double-array/tail structures */
+    short       suffix_idx; /**< suffix character offset, if in suffix */
+    short       is_suffix;  /**< whether it is currently in suffix part */
 };
 
 /*------------------------*
@@ -44,10 +44,10 @@ struct _TrieState {
 #define trie_da_get_tail_index(da,s)   (-da_get_base ((da), (s)))
 #define trie_da_set_tail_index(da,s,v) (da_set_base ((da), (s), -(v)))
 
-static TrieState * trie_state_new (Trie      *trie,
-                                   TrieIndex  index,
-                                   short      suffix_idx,
-                                   short      is_suffix);
+static TrieState * trie_state_new (const Trie *trie,
+                                   TrieIndex   index,
+                                   short       suffix_idx,
+                                   short       is_suffix);
 
 static Bool        trie_branch_in_branch (Trie           *trie,
                                           TrieIndex       sep_node,
@@ -64,7 +64,7 @@ static Bool        trie_branch_in_tail   (Trie           *trie,
  *-----------------------*/
 
 Trie *
-trie_new (AlphaMap *alpha_map)
+trie_new (const AlphaMap *alpha_map)
 {
     Trie *trie;
 
@@ -176,7 +176,7 @@ exit_file_openned:
 }
 
 Bool
-trie_is_dirty (Trie *trie)
+trie_is_dirty (const Trie *trie)
 {
     return trie->is_dirty;
 }
@@ -187,7 +187,7 @@ trie_is_dirty (Trie *trie)
  *------------------------------*/
 
 Bool
-trie_retrieve (Trie *trie, const AlphaChar *key, TrieData *o_data)
+trie_retrieve (const Trie *trie, const AlphaChar *key, TrieData *o_data)
 {
     TrieIndex        s;
     short            suffix_idx;
@@ -382,7 +382,7 @@ trie_delete (Trie *trie, const AlphaChar *key)
 }
 
 typedef struct {
-    Trie           *trie;
+    const Trie     *trie;
     TrieEnumFunc    enum_func;
     void           *user_data;
 } _TrieEnumData;
@@ -421,7 +421,7 @@ trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
 }
 
 Bool
-trie_enumerate (Trie *trie, TrieEnumFunc enum_func, void *user_data)
+trie_enumerate (const Trie *trie, TrieEnumFunc enum_func, void *user_data)
 {
     _TrieEnumData   enum_data;
 
@@ -438,7 +438,7 @@ trie_enumerate (Trie *trie, TrieEnumFunc enum_func, void *user_data)
  *-------------------------------*/
 
 TrieState *
-trie_root (Trie *trie)
+trie_root (const Trie *trie)
 {
     return trie_state_new (trie, da_get_root (trie->da), 0, FALSE);
 }
@@ -448,7 +448,10 @@ trie_root (Trie *trie)
  *----------------*/
 
 static TrieState *
-trie_state_new (Trie *trie, TrieIndex index, short suffix_idx, short is_suffix)
+trie_state_new (const Trie *trie,
+                TrieIndex   index,
+                short       suffix_idx,
+                short       is_suffix)
 {
     TrieState *s;
 

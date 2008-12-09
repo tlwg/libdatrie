@@ -59,11 +59,9 @@ DArray * da_read (FILE *file);
  *
  * @param d : the double-array data
  *
- * @return 0 on success, non-zero on failure
- *
  * Free the given double-array data.
  */
-int      da_free (DArray *d);
+void     da_free (DArray *d);
 
 /**
  * @brief Write double-array data
@@ -77,7 +75,7 @@ int      da_free (DArray *d);
  * file pointer. On return, the file pointer is left after the double-array
  * data block.
  */
-int      da_write (DArray *d, FILE *file);
+int      da_write (const DArray *d, FILE *file);
 
 
 /**
@@ -153,7 +151,7 @@ void       da_set_check (DArray *d, TrieIndex s, TrieIndex val);
  * returns TRUE and @a *s is updated to the new state. Otherwise, it returns
  * FALSE and @a *s is left unchanged.
  */
-Bool       da_walk (DArray *d, TrieIndex *s, TrieChar c);
+Bool       da_walk (const DArray *d, TrieIndex *s, TrieChar c);
 
 /**
  * @brief Test walkability in double-array structure
@@ -226,7 +224,7 @@ void       da_prune_upto (DArray *d, TrieIndex p, TrieIndex s);
  * the separate node, and user-supplied data. Returning FALSE from such
  * callback will stop enumeration and return FALSE.
  */
-Bool    da_enumerate (DArray *d, DAEnumFunc enum_func, void *user_data);
+Bool    da_enumerate (const DArray *d, DAEnumFunc enum_func, void *user_data);
 
 #endif  /* __DARRAY_H */
 

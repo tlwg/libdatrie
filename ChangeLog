@@ -1,5 +1,42 @@
 2008-12-09  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Use const where possible + general clean-ups.
+
+	* datrie/alpha-map-private.h, datrie/alpha-map.c (alpha_map_write_bin):
+	* datrie/alpha-map.h, datrie/alpha-map.c (alpha_map_clone):
+	* datrie/alpha-map.c (alpha_map_get_total_ranges):
+	  - Accept (const AlphaMap *) arg
+	* datrie/alpha-map.c (alpha_map_char_to_trie_str):
+	  - Rename 'alphabet_str' to 'trie_str', to be more sensible
+
+	* datrie/darray.h, datrie/darray.c (da_write, da_walk, da_enumerate):
+	* datrie/darray.c
+	  (da_output_symbols, da_get_state_key, da_enumerate_recursive):
+	  - Accept (const DArray *) arg
+	* datrie/darray.h, datrie/darray.c (da_free):
+	  - Made void function, instead of int
+	* datrie/darray.c (da_new):
+	  - Set CHECK[0] = d->num_cells, to be more clear
+	* datrie/darray.c (da_write, da_extend_pool):
+	  - Update CHECK[0] whenever DArray::num_cells is changed, instead of
+	    just setting it before writing; so da_write() can now accept
+	    (const DArray *) arg
+
+	* datrie/tail.h, datrie/tail.c
+	  (tail_write, tail_get_data, tail_walk_str, tail_walk_char):
+	  - Accept (const Tail *) arg
+	* datrie/tail.h, datrie/tail.c (tail_free):
+	  - Made void function, instead of int
+
+	* datrie/trie.c (struct _TrieState, struct _TrieEnumData):
+	  - 'trie' member is now const pointer
+	* datrie/trie.h, datrie/trie.c
+	  (trie_new, trie_is_dirty, trie_retrieve, trie_enumerate, trie_root):
+	* datrie/trie.c (trie_state_new):
+	  - Accept (const Trie *) arg
+
+2008-12-09  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Unicode (UCS-4) character support.
 
 	* datrie/triedefs.h (AlphaChar):
