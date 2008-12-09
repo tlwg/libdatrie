@@ -44,7 +44,7 @@ AlphaMap *  alpha_map_new ();
  *
  *  The created object must be freed with alpha_map_free().
  */
-AlphaMap *  alpha_map_clone (AlphaMap *a_map);
+AlphaMap *  alpha_map_clone (const AlphaMap *a_map);
 
 /**
  * @brief Free an alphabet map object

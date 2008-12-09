@@ -49,7 +49,7 @@ Tail *   tail_read (FILE *file);
  *
  * Free the given tail data.
  */
-int      tail_free (Tail *t);
+void     tail_free (Tail *t);
 
 /**
  * @brief Write tail data
@@ -62,7 +62,7 @@ int      tail_free (Tail *t);
  * Write tail data to the given @a file, starting from the current file
  * pointer. On return, the file pointer is left after the tail data block.
  */
-int      tail_write (Tail *t, FILE *file);
+int      tail_write (const Tail *t, FILE *file);
 
 
 /**
@@ -111,7 +111,7 @@ TrieIndex tail_add_suffix (Tail *t, const TrieChar *suffix);
  *
  * Get data associated to suffix entry @a index in tail data.
  */
-TrieData tail_get_data (Tail *t, TrieIndex index);
+TrieData tail_get_data (const Tail *t, TrieIndex index);
 
 /**
  * @brief Set data associated to suffix entry
@@ -152,7 +152,7 @@ void     tail_delete (Tail *t, TrieIndex index);
  * @a *suffix_idx is updated to the position after the last successful walk,
  * and the function returns the total number of character succesfully walked.
  */
-int      tail_walk_str  (Tail            *t,
+int      tail_walk_str  (const Tail      *t,
                          TrieIndex        s,
                          short           *suffix_idx,
                          const TrieChar  *str,
@@ -173,7 +173,7 @@ int      tail_walk_str  (Tail            *t,
  * it returns TRUE, and @a *suffix_idx is updated to the next character.
  * Otherwise, it returns FALSE, and @a *suffix_idx is left unchanged.
  */
-Bool     tail_walk_char (Tail            *t,
+Bool     tail_walk_char (const Tail      *t,
                          TrieIndex        s,
                          short           *suffix_idx,
                          TrieChar         c);

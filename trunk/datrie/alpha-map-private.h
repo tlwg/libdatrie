@@ -13,7 +13,7 @@
 
 AlphaMap *  alpha_map_read_bin (FILE *file);
 
-int         alpha_map_write_bin (AlphaMap *alpha_map, FILE *file);
+int         alpha_map_write_bin (const AlphaMap *alpha_map, FILE *file);
 
 TrieChar    alpha_map_char_to_trie (const AlphaMap *alpha_map,
                                     AlphaChar       ac);

@@ -59,7 +59,7 @@ typedef struct _TrieState TrieState;
  *
  * The created object must be freed with trie_free().
  */
-Trie *  trie_new (AlphaMap *alpha_map);
+Trie *  trie_new (const AlphaMap *alpha_map);
 
 /**
  * @brief Create a new trie by loading from a file
@@ -105,7 +105,7 @@ int     trie_save (Trie *trie, const char *path);
  * Check if the @a trie is dirty with some pending changes and needs saving
  * to synchronize with the file.
  */
-Bool    trie_is_dirty (Trie *trie);
+Bool    trie_is_dirty (const Trie *trie);
 
 
 /*------------------------------*
@@ -125,7 +125,9 @@ Bool    trie_is_dirty (Trie *trie);
  * if @a key is found and @a o_val is not NULL, @a *o_val is set
  * to the data associated to @a key.
  */
-Bool    trie_retrieve (Trie *trie, const AlphaChar *key, TrieData *o_data);
+Bool    trie_retrieve (const Trie      *trie,
+                       const AlphaChar *key,
+                       TrieData        *o_data);
 
 /**
  * @brief Store a value for  an entry to trie
@@ -166,7 +168,9 @@ Bool    trie_delete (Trie *trie, const AlphaChar *key);
  * @a enum_func callback function is called, with the entry key and data.
  * Returning FALSE from such callback will stop enumeration and return FALSE.
  */
-Bool    trie_enumerate (Trie *trie, TrieEnumFunc enum_func, void *user_data);
+Bool    trie_enumerate (const Trie     *trie,
+                        TrieEnumFunc    enum_func,
+                        void           *user_data);
 
 
 /*-------------------------------*
@@ -184,7 +188,7 @@ Bool    trie_enumerate (Trie *trie, TrieEnumFunc enum_func, void *user_data);
  *
  * The returned state is allocated and must be freed with trie_state_free()
  */
-TrieState * trie_root (Trie *trie);
+TrieState * trie_root (const Trie *trie);
 
 
 /*----------------*

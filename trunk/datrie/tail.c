@@ -119,7 +119,7 @@ exit_tail_created:
     return NULL;
 }
 
-int
+void
 tail_free (Tail *t)
 {
     TrieIndex   i;
@@ -131,12 +131,10 @@ tail_free (Tail *t)
         free (t->tails);
     }
     free (t);
-
-    return 0;
 }
 
 int
-tail_write (Tail *t, FILE *file)
+tail_write (const Tail *t, FILE *file)
 {
     TrieIndex   i;
 
@@ -258,7 +256,7 @@ tail_free_block (Tail *t, TrieIndex block)
 }
 
 TrieData
-tail_get_data (Tail *t, TrieIndex index)
+tail_get_data (const Tail *t, TrieIndex index)
 {
     index -= TAIL_START_BLOCKNO;
     return (index < t->num_tails) ? t->tails[index].data : TRIE_DATA_ERROR;
@@ -282,7 +280,7 @@ tail_delete (Tail *t, TrieIndex index)
 }
 
 int
-tail_walk_str  (Tail            *t,
+tail_walk_str  (const Tail      *t,
                 TrieIndex        s,
                 short           *suffix_idx,
                 const TrieChar  *str,
@@ -311,7 +309,7 @@ tail_walk_str  (Tail            *t,
 }
 
 Bool
-tail_walk_char (Tail            *t,
+tail_walk_char (const Tail      *t,
                 TrieIndex        s,
                 short           *suffix_idx,
                 TrieChar         c)

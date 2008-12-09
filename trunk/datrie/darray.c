@@ -44,10 +44,10 @@ static Bool         da_check_free_cell (DArray         *d,
 static Bool         da_has_children    (DArray         *d,
                                         TrieIndex       s);
 
-static Symbols *    da_output_symbols  (DArray         *d,
+static Symbols *    da_output_symbols  (const DArray   *d,
                                         TrieIndex       s);
 
-static TrieChar *   da_get_state_key   (DArray         *d,
+static TrieChar *   da_get_state_key   (const DArray   *d,
                                         TrieIndex       state);
 
 static TrieIndex    da_find_free_base  (DArray         *d,
@@ -70,10 +70,10 @@ static void         da_alloc_cell      (DArray         *d,
 static void         da_free_cell       (DArray         *d,
                                         TrieIndex       cell);
 
-static Bool         da_enumerate_recursive (DArray     *d,
-                                            TrieIndex   state,
-                                            DAEnumFunc  enum_func,
-                                            void       *user_data);
+static Bool         da_enumerate_recursive (const DArray   *d,
+                                            TrieIndex       state,
+                                            DAEnumFunc      enum_func,
+                                            void           *user_data);
 
 /* ==================== BEGIN IMPLEMENTATION PART ====================  */
 
@@ -170,7 +170,7 @@ da_new ()
     if (!d->cells)
         goto exit_da_created;
     d->cells[0].base = DA_SIGNATURE;
-    d->cells[0].check = DA_POOL_BEGIN;
+    d->cells[0].check = d->num_cells;
     d->cells[1].base = -1;
     d->cells[1].check = -1;
     d->cells[2].base = DA_POOL_BEGIN;
@@ -216,22 +216,17 @@ exit_da_created:
     return NULL;
 }
 
-int
+void
 da_free (DArray *d)
 {
     free (d->cells);
     free (d);
-
-    return 0;
 }
 
 int
-da_write (DArray *d, FILE *file)
+da_write (const DArray *d, FILE *file)
 {
     TrieIndex   i;
-
-    /* ensure correct header */
-    d->cells[0].check = d->num_cells;
 
     for (i = 0; i < d->num_cells; i++) {
         if (!file_write_int32 (file, d->cells[i].base) ||
@@ -283,7 +278,7 @@ da_set_check (DArray *d, TrieIndex s, TrieIndex val)
 }
 
 Bool
-da_walk (DArray *d, TrieIndex *s, TrieChar c)
+da_walk (const DArray *d, TrieIndex *s, TrieChar c)
 {
     TrieIndex   next;
 
@@ -377,7 +372,7 @@ da_has_children    (DArray         *d,
 }
 
 static Symbols *
-da_output_symbols  (DArray         *d,
+da_output_symbols  (const DArray   *d,
                     TrieIndex       s)
 {
     Symbols    *syms;
@@ -397,7 +392,7 @@ da_output_symbols  (DArray         *d,
 }
 
 static TrieChar *
-da_get_state_key   (DArray         *d,
+da_get_state_key   (const DArray   *d,
                     TrieIndex       state)
 {
     TrieChar   *key;
@@ -571,6 +566,9 @@ da_extend_pool     (DArray         *d,
     da_set_check (d, to_index, -da_get_free_list (d));
     da_set_base (d, da_get_free_list (d), -to_index);
 
+    /* update header cell */
+    d->cells[0].check = d->num_cells;
+
     return TRUE;
 }
 
@@ -627,16 +625,16 @@ da_free_cell       (DArray         *d,
 }
 
 Bool
-da_enumerate (DArray *d, DAEnumFunc enum_func, void *user_data)
+da_enumerate (const DArray *d, DAEnumFunc enum_func, void *user_data)
 {
     return da_enumerate_recursive (d, da_get_root (d), enum_func, user_data);
 }
 
 static Bool
-da_enumerate_recursive (DArray     *d,
-                        TrieIndex   state,
-                        DAEnumFunc  enum_func,
-                        void       *user_data)
+da_enumerate_recursive (const DArray   *d,
+                        TrieIndex       state,
+                        DAEnumFunc      enum_func,
+                        void           *user_data)
 {
     Bool        ret;
     TrieIndex   base;

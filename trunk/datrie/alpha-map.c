@@ -43,7 +43,7 @@ struct _AlphaMap {
 /*-----------------------------------*
  *    PRIVATE METHODS DECLARATIONS   *
  *-----------------------------------*/
-static int  alpha_map_get_total_ranges (AlphaMap *alpha_map);
+static int  alpha_map_get_total_ranges (const AlphaMap *alpha_map);
 
 /*-----------------------------*
  *    METHODS IMPLEMENTAIONS   *
@@ -75,7 +75,7 @@ alpha_map_new ()
 }
 
 AlphaMap *
-alpha_map_clone (AlphaMap *a_map)
+alpha_map_clone (const AlphaMap *a_map)
 {
     AlphaMap   *alpha_map;
     AlphaRange *range;
@@ -144,7 +144,7 @@ alpha_map_read_bin (FILE *file)
 }
 
 static int
-alpha_map_get_total_ranges (AlphaMap *alpha_map)
+alpha_map_get_total_ranges (const AlphaMap *alpha_map)
 {
     int         n;
     AlphaRange *range;
@@ -157,7 +157,7 @@ alpha_map_get_total_ranges (AlphaMap *alpha_map)
 }
 
 int
-alpha_map_write_bin (AlphaMap *alpha_map, FILE *file)
+alpha_map_write_bin (const AlphaMap *alpha_map, FILE *file)
 {
     AlphaRange *range;
 
@@ -252,16 +252,15 @@ alpha_map_trie_to_char (const AlphaMap *alpha_map, TrieChar tc)
 TrieChar *
 alpha_map_char_to_trie_str (const AlphaMap *alpha_map, const AlphaChar *str)
 {
-    TrieChar   *alphabet_str, *p;
+    TrieChar   *trie_str, *p;
 
-    alphabet_str = (TrieChar *) malloc (alpha_char_strlen ((const char *)str)
-                                        + 1);
-    for (p = alphabet_str; *str; p++, str++) {
+    trie_str = (TrieChar *) malloc (alpha_char_strlen (str) + 1);
+    for (p = trie_str; *str; p++, str++) {
         *p = alpha_map_char_to_trie (alpha_map, *str);
     }
     *p = 0;
 
-    return alphabet_str;
+    return trie_str;
 }
 
 AlphaChar *
