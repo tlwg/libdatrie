@@ -27,7 +27,7 @@ typedef enum {
 /**
  * @brief Trie character type for alphabet
  */
-typedef unsigned char  AlphaChar;
+typedef uint32         AlphaChar;
 
 /**
  * @brief Error value for alphabet character

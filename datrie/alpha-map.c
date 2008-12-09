@@ -14,16 +14,7 @@
 #include "alpha-map-private.h"
 #include "fileutils.h"
 
-/*------------------------*
- *   INTERNAL FUNCTIONS   *
- *------------------------*/
-static int alpha_char_strlen (const AlphaChar *str);
-
-/*----------------------------------------*
- *   INTERNAL FUNCTIONS IMPLEMENTATIONS   *
- *----------------------------------------*/
-
-static int
+int
 alpha_char_strlen (const AlphaChar *str)
 {
     const AlphaChar *p;

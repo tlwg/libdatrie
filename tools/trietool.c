@@ -9,15 +9,38 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <locale.h>
+#include <langinfo.h>
+#include <iconv.h>
+
+#include <assert.h>
 
 #include <config.h>
 #include <datrie/trie.h>
 
+/* iconv encoding name for AlphaChar string */
+#define ALPHA_ENC   "UCS-4LE"
+
+#define N_ELEMENTS(a)   (sizeof(a)/sizeof((a)[0]))
+
 typedef struct {
     const char *path;
     const char *trie_name;
+    iconv_t     to_alpha_conv;
+    iconv_t     from_alpha_conv;
     Trie       *trie;
 } ProgEnv;
+
+static void init_conv           (ProgEnv *env);
+static size_t conv_to_alpha     (ProgEnv           *env,
+                                 const char        *in,
+                                 AlphaChar         *out,
+                                 size_t             out_size);
+static size_t conv_from_alpha   (ProgEnv           *env,
+                                 const AlphaChar   *in,
+                                 char              *out,
+                                 size_t             out_size);
+static void close_conv          (ProgEnv *env);
 
 static int  prepare_trie        (ProgEnv *env);
 static int  close_trie          (ProgEnv *env);
@@ -45,6 +68,8 @@ main (int argc, char *argv[])
 
     env.path = ".";
 
+    init_conv (&env);
+
     i = decode_switch (argc, argv, &env);
     if (i == argc)
         usage (argv[0], EXIT_FAILURE);
@@ -59,7 +84,91 @@ main (int argc, char *argv[])
     if (close_trie (&env) != 0)
         exit (EXIT_FAILURE);
 
+    close_conv (&env);
+
     return ret;
+}
+
+static void
+init_conv (ProgEnv *env)
+{
+    char *prev_locale;
+    char *locale_codeset;
+
+    prev_locale = setlocale (LC_CTYPE, "");
+    locale_codeset = nl_langinfo (CODESET);
+    setlocale (LC_CTYPE, prev_locale);
+
+    env->to_alpha_conv = iconv_open (ALPHA_ENC, locale_codeset);
+    env->from_alpha_conv = iconv_open (locale_codeset, ALPHA_ENC);
+}
+
+static size_t
+conv_to_alpha (ProgEnv *env, const char *in, AlphaChar *out, size_t out_size)
+{
+    char   *in_p = (char *) in;
+    char   *out_p = (char *) out;
+    size_t  in_left = strlen (in);
+    size_t  out_left = out_size * sizeof (AlphaChar);
+    size_t  res;
+
+    assert (sizeof (AlphaChar) == 4);
+
+    /* convert to UCS-4LE */
+    res = iconv (env->to_alpha_conv, (char **) &in_p, &in_left,
+                 &out_p, &out_left);
+
+    if (res < 0)
+        return res;
+
+    /* convert UCS-4LE to AlphaChar string */
+    res = 0;
+    for (in_p = (char *) out; res < out_size && in_p + 3 < out_p; in_p += 4) {
+        out[res++] = in_p[0]
+                     | (in_p[1] << 8)
+                     | (in_p[2] << 16)
+                     | (in_p[3] << 24);
+    }
+    if (res < out_size) {
+        out[res] = 0;
+    }
+
+    return res;
+}
+
+static size_t
+conv_from_alpha (ProgEnv *env, const AlphaChar *in, char *out, size_t out_size)
+{
+    size_t  in_left = alpha_char_strlen (in) * sizeof (AlphaChar);
+    size_t  res;
+
+    assert (sizeof (AlphaChar) == 4);
+
+    /* convert AlphaChar to UCS-4LE */
+    for (res = 0; in[res]; res++) {
+        unsigned char  b[4];
+
+        b[0] = in[res] & 0xff;
+        b[1] = (in[res] >> 8) & 0xff;
+        b[2] = (in[res] >> 16) & 0xff;
+        b[3] = (in[res] >> 24) & 0xff;
+
+        memcpy ((char *) &in[res], b, 4);
+    }
+
+    /* convert UCS-4LE to locale codeset */
+    res = iconv (env->from_alpha_conv, (char **) &in, &in_left,
+                 &out, &out_size);
+    *out = 0;
+
+    return res;
+}
+
+static void
+close_conv (ProgEnv *env)
+{
+    iconv_close (env->to_alpha_conv);
+    iconv_close (env->from_alpha_conv);
 }
 
 static int
@@ -200,13 +309,15 @@ command_add (int argc, char *argv[], ProgEnv *env)
 
     opt_idx = 0;
     while (opt_idx < argc) {
-        const TrieChar *key;
+        const char     *key;
+        AlphaChar       key_alpha[256];
         TrieData        data;
 
-        key = (const TrieChar *) argv[opt_idx++];
+        key = argv[opt_idx++];
         data = (opt_idx < argc) ? atoi (argv[opt_idx++]) : TRIE_DATA_ERROR;
 
-        if (!trie_store (env->trie, key, data)) {
+        conv_to_alpha (env, key, key_alpha, N_ELEMENTS (key_alpha));
+        if (!trie_store (env->trie, key_alpha, data)) {
             fprintf (stderr, "Failed to add entry '%s' with data %d\n",
                      key, data);
         }
@@ -229,6 +340,7 @@ command_add_list (int argc, char *argv[], ProgEnv *env)
 
     while (fgets (line, sizeof line, input)) {
         char       *key, *data;
+        AlphaChar   key_alpha[256];
         TrieData    data_val;
 
         key = string_trim (line);
@@ -246,7 +358,8 @@ command_add_list (int argc, char *argv[], ProgEnv *env)
             data_val = ('\0' != *data) ? atoi (data) : TRIE_DATA_ERROR;
 
             /* store the key */
-            if (!trie_store (env->trie, key, data_val))
+            conv_to_alpha (env, key, key_alpha, N_ELEMENTS (key_alpha));
+            if (!trie_store (env->trie, key_alpha, data_val))
                 fprintf (stderr, "Failed to add key '%s' with data %d.\n",
                          key, data_val);
         }
@@ -262,9 +375,14 @@ command_delete (int argc, char *argv[], ProgEnv *env)
 {
     int opt_idx;
 
-    for (opt_idx = 0; opt_idx < argc; opt_idx++)
-        if (!trie_delete (env->trie, argv[opt_idx]))
+    for (opt_idx = 0; opt_idx < argc; opt_idx++) {
+        AlphaChar   key_alpha[256];
+
+        conv_to_alpha (env, argv[opt_idx], key_alpha, N_ELEMENTS (key_alpha));
+        if (!trie_delete (env->trie, key_alpha)) {
             fprintf (stderr, "No entry '%s'. Not deleted.\n", argv[opt_idx]);
+        }
+    }
 
     return opt_idx;
 }
@@ -285,9 +403,14 @@ command_delete_list (int argc, char *argv[], ProgEnv *env)
         char   *p;
 
         p = string_trim (line);
-        if ('\0' != *p)
-            if (!trie_delete (env->trie, p))
+        if ('\0' != *p) {
+            AlphaChar   key_alpha[256];
+
+            conv_to_alpha (env, p, key_alpha, N_ELEMENTS (key_alpha));
+            if (!trie_delete (env->trie, key_alpha)) {
                 fprintf (stderr, "No entry '%s'. Not deleted.\n", p);
+            }
+        }
     }
 
     fclose (input);
@@ -298,6 +421,7 @@ command_delete_list (int argc, char *argv[], ProgEnv *env)
 static int
 command_query (int argc, char *argv[], ProgEnv *env)
 {
+    AlphaChar   key_alpha[256];
     TrieData    data;
 
     if (argc == 0) {
@@ -305,7 +429,8 @@ command_query (int argc, char *argv[], ProgEnv *env)
         return 0;
     }
 
-    if (trie_retrieve (env->trie, argv[0], &data)) {
+    conv_to_alpha (env, argv[0], key_alpha, N_ELEMENTS (key_alpha));
+    if (trie_retrieve (env->trie, key_alpha, &data)) {
         printf ("%d\n", data);
     } else {
         fprintf (stderr, "query: Key '%s' not found.\n", argv[0]);
@@ -317,14 +442,18 @@ command_query (int argc, char *argv[], ProgEnv *env)
 static Bool
 list_enum_func (const AlphaChar *key, TrieData key_data, void *user_data)
 {
-    printf ("%s\t%d\n", key, key_data);
+    ProgEnv    *env = (ProgEnv *) user_data;
+    char        key_locale[1024];
+
+    conv_from_alpha (env, key, key_locale, N_ELEMENTS (key_locale));
+    printf ("%s\t%d\n", key_locale, key_data);
     return TRUE;
 }
 
 static int
 command_list (int argc, char *argv[], ProgEnv *env)
 {
-    trie_enumerate (env->trie, list_enum_func, (void *) 0);
+    trie_enumerate (env->trie, list_enum_func, (void *) env);
     return 0;
 }
 
