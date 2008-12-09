@@ -191,7 +191,7 @@ trie_retrieve (Trie *trie, const AlphaChar *key, TrieData *o_data)
 {
     TrieIndex        s;
     short            suffix_idx;
-    const TrieChar  *p;
+    const AlphaChar *p;
 
     /* walk through branches */
     s = da_get_root (trie->da);
@@ -229,7 +229,7 @@ trie_store (Trie *trie, const AlphaChar *key, TrieData data)
 {
     TrieIndex        s, t;
     short            suffix_idx;
-    const TrieChar  *p, *sep;
+    const AlphaChar *p, *sep;
 
     /* walk through branches */
     s = da_get_root (trie->da);

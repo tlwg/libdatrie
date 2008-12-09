@@ -1,3 +1,8 @@
+2008-12-09  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/trie.c (trie_retrieve, trie_store):
+	  - Use (AlphaChar *), not (TrieChar *), as key pointer type
+
 2008-12-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/trie.c (trie_retrieve):
