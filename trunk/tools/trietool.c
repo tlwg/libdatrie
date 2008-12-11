@@ -329,13 +329,48 @@ command_add (int argc, char *argv[], ProgEnv *env)
 static int
 command_add_list (int argc, char *argv[], ProgEnv *env)
 {
-    FILE   *input;
-    char    line[256];
+    const char *enc_name, *input_name;
+    int         opt_idx;
+    iconv_t     saved_conv;
+    FILE       *input;
+    char        line[256];
 
-    input = fopen (argv[0], "r");
+    enc_name = 0;
+    opt_idx = 0;
+    if (strcmp (argv[0], "-e") == 0 ||
+        strcmp (argv[0], "--encoding") == 0)
+    {
+        if (++opt_idx >= argc) {
+            fprintf (stderr, "add-list option \"%s\" requires encoding name",
+                     argv[0]);
+            return opt_idx;
+        }
+        enc_name = argv[opt_idx++];
+    }
+    if (opt_idx >= argc) {
+        fprintf (stderr, "add-list requires input word list file name\n");
+        return opt_idx;
+    }
+    input_name = argv[opt_idx++];
+
+    if (enc_name) {
+        iconv_t conv = iconv_open (ALPHA_ENC, enc_name);
+        if ((iconv_t) -1 == conv) {
+            fprintf (stderr,
+                    "Conversion from \"%s\" to \"%s\" is not supported.\n",
+                    enc_name, ALPHA_ENC);
+            return opt_idx;
+        }
+
+        saved_conv = env->to_alpha_conv;
+        env->to_alpha_conv = conv;
+    }
+
+    input = fopen (input_name, "r");
     if (!input) {
-        fprintf (stderr, "add-list: Cannot open input file '%s'\n", argv[0]);
-        return 1;
+        fprintf (stderr, "add-list: Cannot open input file \"%s\"\n",
+                 input_name);
+        goto exit_iconv_openned;
     }
 
     while (fgets (line, sizeof line, input)) {
@@ -367,7 +402,13 @@ command_add_list (int argc, char *argv[], ProgEnv *env)
 
     fclose (input);
 
-    return 1;
+exit_iconv_openned:
+    if (enc_name) {
+        iconv_close (env->to_alpha_conv);
+        env->to_alpha_conv = saved_conv;
+    }
+
+    return opt_idx;
 }
 
 static int
@@ -390,13 +431,48 @@ command_delete (int argc, char *argv[], ProgEnv *env)
 static int
 command_delete_list (int argc, char *argv[], ProgEnv *env)
 {
+    const char *enc_name, *input_name;
+    int         opt_idx;
+    iconv_t     saved_conv;
     FILE   *input;
     char    line[256];
 
-    input = fopen (argv[0], "r");
+    enc_name = 0;
+    opt_idx = 0;
+    if (strcmp (argv[0], "-e") == 0 ||
+        strcmp (argv[0], "--encoding") == 0)
+    {
+        if (++opt_idx >= argc) {
+            fprintf (stderr, "delete-list option \"%s\" requires encoding name",
+                     argv[0]);
+            return opt_idx;
+        }
+        enc_name = argv[opt_idx++];
+    }
+    if (opt_idx >= argc) {
+        fprintf (stderr, "delete-list requires input word list file name\n");
+        return opt_idx;
+    }
+    input_name = argv[opt_idx++];
+
+    if (enc_name) {
+        iconv_t conv = iconv_open (ALPHA_ENC, enc_name);
+        if ((iconv_t) -1 == conv) {
+            fprintf (stderr,
+                    "Conversion from \"%s\" to \"%s\" is not supported.\n",
+                    enc_name, ALPHA_ENC);
+            return opt_idx;
+        }
+
+        saved_conv = env->to_alpha_conv;
+        env->to_alpha_conv = conv;
+    }
+
+    input = fopen (input_name, "r");
     if (!input) {
-        fprintf (stderr, "delete-list: Cannot open input file '%s'\n", argv[0]);
-        return 1;
+        fprintf (stderr, "delete-list: Cannot open input file \"%s\"\n",
+                 input_name);
+        goto exit_iconv_openned;
     }
 
     while (fgets (line, sizeof line, input)) {
@@ -415,7 +491,13 @@ command_delete_list (int argc, char *argv[], ProgEnv *env)
 
     fclose (input);
 
-    return 1;
+exit_iconv_openned:
+    if (enc_name) {
+        iconv_close (env->to_alpha_conv);
+        env->to_alpha_conv = saved_conv;
+    }
+
+    return opt_idx;
 }
 
 static int
@@ -470,12 +552,22 @@ usage (const char *prog_name, int exit_status)
         "  -V, --version            output version information and exit\n"
         "\n"
         "Commands:\n"
-        "  add  WORD DATA ...       add WORD with DATA to trie\n"
-        "  add-list LISTFILE        add WORD and DATA from LISTFILE to trie\n"
-        "  delete WORD ...          delete WORD from trie\n"
-        "  delete-list LISTFILE     delete words listed in LISTFILE from trie\n"
-        "  query WORD               query WORD data from trie\n"
-        "  list                     list all words in trie\n"
+        "  add  WORD DATA ...\n"
+        "      Add WORD with DATA to trie\n"
+        "  add-list [OPTION] LISTFILE\n"
+        "      Add words and data listed in LISTFILE to trie\n"
+        "      Options:\n"
+        "          -e, --encoding ENC    specify character encoding of LISTFILE\n"
+        "  delete WORD ...\n"
+        "      Delete WORD from trie\n"
+        "  delete-list [OPTION] LISTFILE\n"
+        "      Delete words listed in LISTFILE from trie\n"
+        "      Options:\n"
+        "          -e, --encoding ENC    specify character encoding of LISTFILE\n"
+        "  query WORD\n"
+        "      Query WORD data from trie\n"
+        "  list\n"
+        "      List all words in trie\n"
     );
 
     exit (exit_status);

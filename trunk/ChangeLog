@@ -1,3 +1,13 @@
+2008-12-11  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Allow specifying character encoding for word list file.
+
+	* tools/trietool.c (command_add_list, command_delete_list):
+	  - Add '-e|--encoding ENC' option which temporarily override locale's
+	    codeset for character conversion
+	* tools/trietool.c (usage):
+	  - Update usage message accordingly
+
 2008-12-09  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Use const where possible + general clean-ups.
