@@ -1,3 +1,8 @@
+2008-12-12  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* tools/trietool.c (prepare_trie):
+	  - Try to read alphabet map from '*.abm' instead of '*.sbm'
+
 2008-12-11  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Allow specifying character encoding for word list file.

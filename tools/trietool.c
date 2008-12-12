@@ -185,10 +185,10 @@ prepare_trie (ProgEnv *env)
         AlphaMap   *alpha_map;
 
         snprintf (buff, sizeof (buff),
-                  "%s/%s.sbm", env->path, env->trie_name);
+                  "%s/%s.abm", env->path, env->trie_name);
         sbm = fopen (buff, "r");
         if (!sbm) {
-            fprintf (stderr, "Cannot open alpha map file %s\n", buff);
+            fprintf (stderr, "Cannot open alphabet map file %s\n", buff);
             return -1;
         }
 
