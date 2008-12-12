@@ -1,5 +1,10 @@
 2008-12-12  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* NEWS, configure.ac:
+	=== Version 0.1.99.1 ===
+
+2008-12-12  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* man/trietool.1: Update document
 	  - Trie is now stored in a single '*.tri' file
 	  - The alphabet map is renamed from '*.sbm' to '*.abm'

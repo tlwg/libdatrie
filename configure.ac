@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libdatrie, 0.1.3, thep@linux.thai.net)
+AC_INIT(libdatrie, 0.1.99.1, thep@linux.thai.net)
 AC_CONFIG_SRCDIR([datrie/trie.h])
 AC_CONFIG_HEADER([config.h])
 
