@@ -1,5 +1,14 @@
 2008-12-12  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* man/trietool.1: Update document
+	  - Trie is now stored in a single '*.tri' file
+	  - The alphabet map is renamed from '*.sbm' to '*.abm'
+	  - Mention Unicode, instead of single-byte character domain
+	  - Document the options for 'add-list' and 'delete-list' commands
+	  - Adjust troff formatting commands
+
+2008-12-12  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* tools/trietool.c (prepare_trie):
 	  - Try to read alphabet map from '*.abm' instead of '*.sbm'
 
