@@ -1,5 +1,15 @@
 2008-12-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Ensure that ranges in AlphaMap are always sorted and don't overlap.
+
+	* datrie/alpha-map.c (struct _AlphaMap, alpha_map_new):
+	  - Remove 'last_range' member
+	* datrie/alpha-map.c (alpha_map_add_range):
+	  - Check if the new range overlaps existing ranges and merge them
+	    as necessary.
+
+2008-12-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* configure.ac: Post-release version bump.
 	* configure.ac, Makefile.am, datrie.pc.in -> datrie-0.2.pc.in:
 	Rename pkg-config file, to allow co-existence with datrie 0.1.x.

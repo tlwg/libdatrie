@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include "alpha-map.h"
 #include "alpha-map-private.h"
@@ -37,7 +38,6 @@ typedef struct _AlphaRange {
 
 struct _AlphaMap {
     AlphaRange     *first_range;
-    AlphaRange     *last_range;
 };
 
 /*-----------------------------------*
@@ -69,7 +69,7 @@ alpha_map_new ()
     if (!alpha_map)
         return NULL;
 
-    alpha_map->first_range = alpha_map->last_range = NULL;
+    alpha_map->first_range = NULL;
 
     return alpha_map;
 }
@@ -181,26 +181,89 @@ alpha_map_write_bin (const AlphaMap *alpha_map, FILE *file)
 int
 alpha_map_add_range (AlphaMap *alpha_map, AlphaChar begin, AlphaChar end)
 {
-    AlphaRange *range;
+    AlphaRange *q, *r, *begin_node, *end_node;
 
     if (begin > end)
         return -1;
 
-    range = (AlphaRange *) malloc (sizeof (AlphaRange));
-    if (!range)
-        return -1;
+    begin_node = end_node = 0;
 
-    range->begin = begin;
-    range->end   = end;
-
-    /* append it to list of ranges */
-    range->next = NULL;
-    if (alpha_map->last_range) {
-        alpha_map->last_range->next = range;
-    } else {
-        alpha_map->first_range = range;
+    /* Skip first ranges till 'begin' is covered */
+    for (q = 0, r = alpha_map->first_range;
+         r && r->begin <= begin;
+         q = r, r = r->next)
+    {
+        if (begin <= r->end) {
+            /* 'r' covers 'begin' -> take 'r' as beginning point */
+            begin_node = r;
+            break;
+        }
     }
-    alpha_map->last_range = range;
+    if (!begin_node && r && r->begin <= end) {
+        /* ['begin', 'end'] overlaps into 'r'-begin
+         * -> extend 'r'-begin to include the range
+         */
+        r->begin = begin;
+        begin_node = r;
+    }
+    /* Run upto the first range that exceeds 'end' */
+    while (r && r->begin <= end) {
+        if (end <= r->end) {
+            /* 'r' covers 'end' -> take 'r' as ending point */
+            end_node = r;
+            break;
+        } else if (r != begin_node) {
+            /* ['begin', 'end'] covers the whole 'r' -> remove 'r' */
+            if (q) {
+                q->next = r->next;
+                free (r);
+                r = q->next;
+            } else {
+                alpha_map->first_range = r->next;
+                free (r);
+                r = alpha_map->first_range;
+            }
+        } else {
+            q = r;
+            r = r->next;
+        }
+    }
+    if (!end_node && q && begin <= q->end) {
+        /* ['begin', 'end'] overlaps 'q' at the end
+         * -> extend 'q'-end to include the range
+         */
+        q->end = end;
+        end_node = q;
+    }
+
+    if (begin_node && end_node) {
+        if (begin_node != end_node) {
+            /* Merge begin_node and end_node ranges together */
+            assert (begin_node->next == end_node);
+            begin_node->end = end_node->end;
+            begin_node->next = end_node->next;
+            free (end_node);
+        }
+    } else if (!begin_node && !end_node) {
+        /* ['begin', 'end'] overlaps with none of the ranges
+         * -> insert a new range
+         */
+        AlphaRange *range = (AlphaRange *) malloc (sizeof (AlphaRange));
+
+        if (!range)
+            return -1;
+
+        range->begin = begin;
+        range->end   = end;
+
+        /* insert it between 'q' and 'r' */
+        if (q) {
+            q->next = range;
+        } else {
+            alpha_map->first_range = range;
+        }
+        range->next = r;
+    }
 
     return 0;
 }
