@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libdatrie, 0.1.99.1, thep@linux.thai.net)
+AC_INIT(libdatrie, 0.1.99.1cvs, thep@linux.thai.net)
 AC_CONFIG_SRCDIR([datrie/trie.h])
 AC_CONFIG_HEADER([config.h])
 
@@ -62,7 +62,7 @@ AM_CONDITIONAL(ENABLE_DOXYGEN_DOC,test "x$enable_doxygen_doc" = "xyes")
 AC_FUNC_MALLOC
 
 AC_CONFIG_FILES([Makefile
-                 datrie.pc
+                 datrie-0.2.pc
                  datrie/Makefile
                  tools/Makefile
                  man/Makefile

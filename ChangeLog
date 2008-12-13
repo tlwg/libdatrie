@@ -1,3 +1,9 @@
+2008-12-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configure.ac: Post-release version bump.
+	* configure.ac, Makefile.am, datrie.pc.in -> datrie-0.2.pc.in:
+	Rename pkg-config file, to allow co-existence with datrie 0.1.x.
+
 2008-12-12  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* NEWS, configure.ac:
