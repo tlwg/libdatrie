@@ -1,5 +1,10 @@
 2008-12-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* tools/Makefile.am: Rename 'trietool' program to 'trietool-0.2',
+	to allow co-existence with datrie 0.1.x.
+
+2008-12-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/darray.c (da_read):
 	* datrie/tail.c (tail_read):
 	Restore file pointer on signature check failure.
