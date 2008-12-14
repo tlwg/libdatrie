@@ -1,3 +1,7 @@
+2008-12-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* man/trietool.1: Document that no more than 255 alphabets are allowed.
+
 2008-12-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Ensure that ranges in AlphaMap are always sorted and don't overlap.
