@@ -1,5 +1,11 @@
 2008-12-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/darray.c (da_read):
+	* datrie/tail.c (tail_read):
+	Restore file pointer on signature check failure.
+
+2008-12-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* man/trietool.1: Document that no more than 255 alphabets are allowed.
 
 2008-12-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>

@@ -83,12 +83,17 @@ tail_new ()
 Tail *
 tail_read (FILE *file)
 {
+    long        save_pos;
     Tail       *t;
     TrieIndex   i;
     uint32      sig;
 
-    if (!file_read_int32 (file, (int32 *) &sig) || TAIL_SIGNATURE != sig)
+    /* check signature */
+    save_pos = ftell (file);
+    if (!file_read_int32 (file, (int32 *) &sig) || TAIL_SIGNATURE != sig) {
+        fseek (file, save_pos, SEEK_SET);
         return NULL;
+    }
 
     t = (Tail *) malloc (sizeof (Tail));
     if (!t)
