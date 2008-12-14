@@ -186,12 +186,16 @@ exit_da_created:
 DArray *
 da_read (FILE *file)
 {
+    long        save_pos;
     DArray     *d = NULL;
     TrieIndex   n;
 
     /* check signature */
-    if (!file_read_int32 (file, &n) || DA_SIGNATURE != (uint32) n)
-            return NULL;
+    save_pos = ftell (file);
+    if (!file_read_int32 (file, &n) || DA_SIGNATURE != (uint32) n) {
+        fseek (file, save_pos, SEEK_SET);
+        return NULL;
+    }
 
     d = (DArray *) malloc (sizeof (DArray));
     if (!d)
