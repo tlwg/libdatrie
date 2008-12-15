@@ -1,0 +1,18 @@
+Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat
+Upstream-Author: Theppitak Karoonboonyanan <thep@linux.thai.net>
+Packaged-By: Theppitak Karoonboonyanan <thep@linux.thai.net>
+Packaged-Date: Thu, 12 Oct 2006 15:27:50 +0700
+Original-Source-Location: ftp://linux.thai.net/pub/thailinux/software/libthai/
+
+Files: debian/*
+Copyright: © 2006-2008 Theppitak Karoonboonyanan <thep@linux.thai.net> 
+License: GPL-2+
+
+Files: *
+Copyright: © 2006-2008 Theppitak Karoonboonyanan <thep@linux.thai.net>
+License: LGPL-2+
+
+On Debian GNU/Linux systems, the complete text of the GNU General Public
+License version 2 can be found in `/usr/share/common-licenses/GPL-2',
+and that of GNU Lesser General Public License version 2 can be found in
+`/usr/share/common-licenses/LGPL-2'.
