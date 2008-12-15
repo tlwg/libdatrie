@@ -1,5 +1,12 @@
 2008-12-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* configure.ac: Post-release version bump.
+
+	* tools/trietool.c (conv_to_alpha): Use uint8 to access data bytes
+	instead of char, to fix char signedness bug.
+
+2008-12-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* NEWS, configure.ac:
 	=== Version 0.1.99.2 ===
 
