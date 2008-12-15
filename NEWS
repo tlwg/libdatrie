@@ -1,5 +1,10 @@
 libdatrie
 
+0.1.99.2 (2008-12-15)
+========
+- More robust handling of alphabet ranges
+- Allow co-existence with libdatrie0
+
 0.1.99.1 (2008-12-12)
 ========
 - Breaking ABI with libdatrie0

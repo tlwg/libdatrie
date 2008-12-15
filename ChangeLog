@@ -1,5 +1,10 @@
 2008-12-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* NEWS, configure.ac:
+	=== Version 0.1.99.2 ===
+
+2008-12-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* man/Makefile.am, man/trietool.1 -> man/trietool-0.2.1:
 	Rename 'trietool' man page to 'trietool-0.2', according to the
 	corrsponding binary.
