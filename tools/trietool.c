@@ -111,6 +111,7 @@ conv_to_alpha (ProgEnv *env, const char *in, AlphaChar *out, size_t out_size)
     size_t  in_left = strlen (in);
     size_t  out_left = out_size * sizeof (AlphaChar);
     size_t  res;
+    uint8  *byte_p;
 
     assert (sizeof (AlphaChar) == 4);
 
@@ -123,11 +124,14 @@ conv_to_alpha (ProgEnv *env, const char *in, AlphaChar *out, size_t out_size)
 
     /* convert UCS-4LE to AlphaChar string */
     res = 0;
-    for (in_p = (char *) out; res < out_size && in_p + 3 < out_p; in_p += 4) {
-        out[res++] = in_p[0]
-                     | (in_p[1] << 8)
-                     | (in_p[2] << 16)
-                     | (in_p[3] << 24);
+    for (byte_p = (uint8 *) out;
+         res < out_size && byte_p + 3 < out_p;
+         byte_p += 4)
+    {
+        out[res++] = byte_p[0]
+                     | (byte_p[1] << 8)
+                     | (byte_p[2] << 16)
+                     | (byte_p[3] << 24);
     }
     if (res < out_size) {
         out[res] = 0;
