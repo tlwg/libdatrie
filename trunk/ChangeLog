@@ -1,3 +1,9 @@
+2008-12-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* man/Makefile.am, man/trietool.1 -> man/trietool-0.2.1:
+	Rename 'trietool' man page to 'trietool-0.2', according to the
+	corrsponding binary.
+
 2008-12-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* tools/Makefile.am: Rename 'trietool' program to 'trietool-0.2',
