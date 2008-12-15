@@ -1,5 +1,10 @@
 2008-12-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* tools/trietool.c (conv_to_alpha): Use 'unsigned char' instead of
+	'uint8'. Better not tie to datrie internal notations too much.
+
+2008-12-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* configure.ac: Post-release version bump.
 
 	* tools/trietool.c (conv_to_alpha): Use uint8 to access data bytes
