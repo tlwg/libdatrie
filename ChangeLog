@@ -1,3 +1,8 @@
+2008-12-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/trie.h, datrie/trie.c, datrie/libdatrie.def (trie_state_copy):
+	Add a new API function for trie state reuse support.
+
 2008-12-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* tools/trietool.c (conv_to_alpha): Use 'unsigned char' instead of

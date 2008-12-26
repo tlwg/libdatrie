@@ -14,6 +14,7 @@ trie_delete
 trie_enumerate
 trie_root
 trie_state_clone
+trie_state_copy
 trie_state_free
 trie_state_rewind
 trie_state_walk
