@@ -209,6 +209,17 @@ TrieState * trie_root (const Trie *trie);
 TrieState * trie_state_clone (const TrieState *s);
 
 /**
+ * @brief Copy trie state to another
+ *
+ * @param dst  : the destination state
+ * @param src  : the source state
+ *
+ * Copy trie state data from @a src to @a dst. All existing data in @a dst
+ * is overwritten.
+ */
+void        trie_state_copy (TrieState *dst, const TrieState *src);
+
+/**
  * @brief Free a trie state
  *
  * @param s    : the state to free

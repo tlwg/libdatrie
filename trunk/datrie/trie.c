@@ -467,6 +467,15 @@ trie_state_new (const Trie *trie,
     return s;
 }
 
+void
+trie_state_copy (TrieState *dst, const TrieState *src)
+{
+    dst->trie       = src->trie;
+    dst->index      = src->index;
+    dst->suffix_idx = src->suffix_idx;
+    dst->is_suffix  = src->is_suffix;
+}
+
 TrieState *
 trie_state_clone (const TrieState *s)
 {
