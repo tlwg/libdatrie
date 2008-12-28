@@ -275,6 +275,18 @@ Bool      trie_state_is_walkable (const TrieState *s, AlphaChar c);
 #define   trie_state_is_terminal(s) trie_state_is_walkable((s),TRIE_CHAR_TERM)
 
 /**
+ * @brief Check for single path
+ *
+ * @param s    : the state to check
+ *
+ * @return boolean value indicating whether it is in a single path
+ *
+ * Check if the given state is in a single path, that is, there is no other
+ * barnch from it to leaf.
+ */
+Bool      trie_state_is_single (const TrieState *s);
+
+/**
  * @brief Check for leaf state
  *
  * @param s    : the state to check
@@ -284,7 +296,8 @@ Bool      trie_state_is_walkable (const TrieState *s, AlphaChar c);
  * Check if the given state is a leaf state. A leaf state is a terminal state 
  * that has no other branch.
  */
-Bool      trie_state_is_leaf (const TrieState *s);
+#define   trie_state_is_leaf(s) \
+    (trie_state_is_single(s) && trie_state_is_terminal(s))
 
 /**
  * @brief Get data from leaf state

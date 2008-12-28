@@ -1,3 +1,12 @@
+2008-12-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/trie.h, datrie/trie.c, datrie/libdatrie.def
+	(trie_state_is_leaf, +trie_state_is_single):
+	  - Introduce a new state condition: single. A single state is a state
+	    in a single path, with no other branch til its leaf.
+	  - Redefine trie_state_is_leaf() as a macro based on it and
+	    trie_state_is_terminal().
+
 2008-12-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/trie.h, datrie/trie.c, datrie/libdatrie.def (trie_state_copy):
