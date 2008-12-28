@@ -530,9 +530,9 @@ trie_state_is_walkable (const TrieState *s, AlphaChar c)
 }
 
 Bool
-trie_state_is_leaf (const TrieState *s)
+trie_state_is_single (const TrieState *s)
 {
-    return s->is_suffix && trie_state_is_terminal (s);
+    return s->is_suffix;
 }
 
 TrieData

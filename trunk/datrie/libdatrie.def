@@ -19,5 +19,5 @@ trie_state_free
 trie_state_rewind
 trie_state_walk
 trie_state_is_walkable
-trie_state_is_leaf
+trie_state_is_single
 trie_state_get_data
