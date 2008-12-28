@@ -255,20 +255,20 @@ da_get_root (const DArray *d)
 TrieIndex
 da_get_base (const DArray *d, TrieIndex s)
 {
-    return (0 <= s && s < d->num_cells) ? d->cells[s].base : TRIE_INDEX_ERROR;
+    return (s < d->num_cells) ? d->cells[s].base : TRIE_INDEX_ERROR;
 }
 
 TrieIndex
 da_get_check (const DArray *d, TrieIndex s)
 {
-    return (0 <= s && s < d->num_cells) ? d->cells[s].check : TRIE_INDEX_ERROR;
+    return (s < d->num_cells) ? d->cells[s].check : TRIE_INDEX_ERROR;
 }
 
 
 void
 da_set_base (DArray *d, TrieIndex s, TrieIndex val)
 {
-    if (0 <= s && s < d->num_cells) {
+    if (s < d->num_cells) {
         d->cells[s].base = val;
     }
 }
@@ -276,7 +276,7 @@ da_set_base (DArray *d, TrieIndex s, TrieIndex val)
 void
 da_set_check (DArray *d, TrieIndex s, TrieIndex val)
 {
-    if (0 <= s && s < d->num_cells) {
+    if (s < d->num_cells) {
         d->cells[s].check = val;
     }
 }

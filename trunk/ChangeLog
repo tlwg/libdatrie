@@ -1,5 +1,12 @@
 2008-12-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/datrie.c (da_get_base, da_get_check, da_set_base,
+	da_set_check)):
+	Revert lower bound checks. It's no use checking too much for internal
+	code.
+
+2008-12-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/trie.h, datrie/trie.c, datrie/libdatrie.def
 	(trie_state_is_leaf, +trie_state_is_single):
 	  - Introduce a new state condition: single. A single state is a state
