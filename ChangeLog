@@ -1,3 +1,9 @@
+2008-12-29  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/alpha-map.c (alpha_map_char_to_trie, alpha_map_trie_to_char):
+	Tighten the loop for more readability, plus eliminating one duplicated
+	check.
+
 2008-12-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/datrie.c (da_get_base, da_get_check, da_set_base,

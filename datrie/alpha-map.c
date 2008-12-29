@@ -278,14 +278,12 @@ alpha_map_char_to_trie (const AlphaMap *alpha_map, AlphaChar ac)
         return 0;
 
     alpha_begin = 1;
-    for (range = alpha_map->first_range;
-         range && (ac < range->begin || range->end < ac);
-         range = range->next)
-    {
+    for (range = alpha_map->first_range; range; range = range->next) {
+        if (range->begin <= ac && ac <= range->end)
+            return alpha_begin + (ac - range->begin);
+
         alpha_begin += range->end - range->begin + 1;
     }
-    if (range)
-        return alpha_begin + (ac - range->begin);
 
     return TRIE_CHAR_MAX;
 }
@@ -300,14 +298,12 @@ alpha_map_trie_to_char (const AlphaMap *alpha_map, TrieChar tc)
         return 0;
 
     alpha_begin = 1;
-    for (range = alpha_map->first_range;
-         range && alpha_begin + (range->end - range->begin) < tc;
-         range = range->next)
-    {
+    for (range = alpha_map->first_range; range; range = range->next) {
+        if (tc <= alpha_begin + (range->end - range->begin))
+            return range->begin + (tc - alpha_begin);
+
         alpha_begin += range->end - range->begin + 1;
     }
-    if (range)
-        return range->begin + (tc - alpha_begin);
 
     return ALPHA_CHAR_ERROR;
 }
