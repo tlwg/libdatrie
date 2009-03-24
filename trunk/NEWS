@@ -1,5 +1,10 @@
 libdatrie
 
+0.2.0 (2009-03-24)
+=====
+- New APIs for performance: trie_state_copy(), trie_state_is_single()
+- Clean-ups
+
 0.1.99.2 (2008-12-15)
 ========
 - More robust handling of alphabet ranges

@@ -1,5 +1,10 @@
 2009-03-24  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* NEWS, configure.ac:
+	=== Version 0.2.0 ===
+
+2009-03-24  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* Makefile.am, +README.migration:
 	Add migration documentation.
 
