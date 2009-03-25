@@ -30,8 +30,8 @@ else
 	CFLAGS += -O2
 endif
 
-SHARED_PKG := libdatrie0
-SHLIB_VER := 0.1.2
+SHARED_PKG := libdatrie1
+SHLIB_VER := 0.2.0
 
 config.status: configure
 	dh_testdir
@@ -72,7 +72,6 @@ build: build-indep build-arch
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-indep-stamp build-arch-stamp
 
 	# Add here commands to clean up after the build process.
 	[ ! -f Makefile ] || $(MAKE) distclean
@@ -88,7 +87,7 @@ endif
 install-indep: build-indep
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	dh_installdirs --indep
 
 	# Add here commands to install the package into debian/tmp
@@ -97,7 +96,7 @@ install-indep: build-indep
 install-arch: build-arch
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	dh_installdirs --arch
 
 	# Add here commands to install the package into debian/tmp

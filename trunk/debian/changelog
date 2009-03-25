@@ -1,3 +1,32 @@
+libdatrie (0.2.0-1) experimental; urgency=low
+
+  * VCS moved from CVS to SVN; update Vcs-* fields accordingly.
+  * New upstream version, with ABI breakage
+    - Rename binary packages according to SONAME change, to allow run-time
+      coexistence with old version: libdatrie1, libdatrie1-bin
+    - Rename libdatrie0-dev to libdatrie-dev, and conflicts with
+      libdatrie0-dev, as both versions share the same headers location;
+      this should be the package naming scheme from now on
+    - Ditto to libdatrie-doc
+  * Shared lib updates:
+    - debian/rules:
+      + Bump shlib dep to 0.2.0, and shlib package is now libdatrie1
+    - debian/libdatrie1.symbols:
+      + Update symbols, setting minver to 0.2.0 for all symbols
+  * Bump debhelper compat to level 7
+    - Bump debian/compat to 7
+    - Build-dep on debhelper (>= 7)
+    - debian/rules:
+      + Replace obsoleted 'dh_clean -k' with 'dh_prep'
+      + Remove *-stamp clean-ups in clean target, as dh_clean now does it
+  * debian/libdatrie-doc.docs:
+    - Install README.migration provided by upstream
+  * debian/copyright:
+    - Update format to proposal rev 454
+  * Bump Standards-Version to 3.8.1 (no changes needed)
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Wed, 25 Mar 2009 14:43:36 +0700
+
 libdatrie (0.1.3-2) unstable; urgency=low
 
   * Add Build-Depends-Package info to libdatrie0.symbols and bump dpkg-dev
