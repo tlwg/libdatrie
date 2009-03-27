@@ -1,3 +1,9 @@
+libdatrie (0.2.0-2) UNRELEASED; urgency=low
+
+  * Fix broken Vcs-Browser field.
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Fri, 27 Mar 2009 11:37:49 +0700
+
 libdatrie (0.2.0-1) experimental; urgency=low
 
   * VCS moved from CVS to SVN; update Vcs-* fields accordingly.
