@@ -1,5 +1,15 @@
 2009-03-31  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Fix gcc warnings.
+
+	* tools/trietool.c (conv_to_alpha): Cast 'out_p' pointer before
+	comparing.
+	* tools/trietool.c (command_add_list, command_delete_list):
+	Make sure 'saved_conv' is initialized before use.
+	* datrie/trie.c (trie_new_from_file): Remove unused 'alt_map' var.
+
+2009-03-31  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* configura.ac: Post-release version suffix added.
 
 	* datrie/trie.h (trie_save): Document parameter 'path'.

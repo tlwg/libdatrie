@@ -125,7 +125,7 @@ conv_to_alpha (ProgEnv *env, const char *in, AlphaChar *out, size_t out_size)
     /* convert UCS-4LE to AlphaChar string */
     res = 0;
     for (byte_p = (const unsigned char *) out;
-         res < out_size && byte_p + 3 < out_p;
+         res < out_size && byte_p + 3 < (unsigned char*) out_p;
          byte_p += 4)
     {
         out[res++] = byte_p[0]
@@ -341,6 +341,7 @@ command_add_list (int argc, char *argv[], ProgEnv *env)
 
     enc_name = 0;
     opt_idx = 0;
+    saved_conv = env->to_alpha_conv;
     if (strcmp (argv[0], "-e") == 0 ||
         strcmp (argv[0], "--encoding") == 0)
     {
@@ -366,7 +367,6 @@ command_add_list (int argc, char *argv[], ProgEnv *env)
             return opt_idx;
         }
 
-        saved_conv = env->to_alpha_conv;
         env->to_alpha_conv = conv;
     }
 
@@ -443,6 +443,7 @@ command_delete_list (int argc, char *argv[], ProgEnv *env)
 
     enc_name = 0;
     opt_idx = 0;
+    saved_conv = env->to_alpha_conv;
     if (strcmp (argv[0], "-e") == 0 ||
         strcmp (argv[0], "--encoding") == 0)
     {
@@ -468,7 +469,6 @@ command_delete_list (int argc, char *argv[], ProgEnv *env)
             return opt_idx;
         }
 
-        saved_conv = env->to_alpha_conv;
         env->to_alpha_conv = conv;
     }
 
