@@ -101,7 +101,6 @@ trie_new_from_file (const char *path)
 {
     Trie       *trie;
     FILE       *trie_file;
-    AlphaMap   *alt_map;
 
     trie_file = fopen (path, "r");
     if (!trie_file)
