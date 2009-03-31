@@ -85,9 +85,11 @@ Trie *  trie_new_from_file (const char *path);
 void    trie_free (Trie *trie);
 
 /**
- * @brief Save a trie
+ * @brief Save a trie to file
  *
- * @param trie: the trie
+ * @param trie  : the trie
+ *
+ * @param path  : the path to the file
  *
  * @return 0 on success, non-zero on failure
  *
