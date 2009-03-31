@@ -1,3 +1,10 @@
+2009-03-31  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configura.ac: Post-release version suffix added.
+
+	* datrie/trie.h (trie_save): Document parameter 'path'.
+	* doc/Doxygen.in: Update format to doxygen 1.5.8.
+
 2009-03-24  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* NEWS, configure.ac:
