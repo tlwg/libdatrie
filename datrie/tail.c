@@ -43,92 +43,85 @@ struct _Tail {
     TrieIndex   num_tails;
     TailBlock  *tails;
     TrieIndex   first_free;
+
+    FILE       *file;
+    Bool        is_dirty;
 };
 
 /*-----------------------------*
  *    METHODS IMPLEMENTAIONS   *
  *-----------------------------*/
 
-#define TAIL_SIGNATURE      0xDFFCDFFC
+#define TAIL_SIGNATURE      0xDFFD
 #define TAIL_START_BLOCKNO  1
 
-/* Tail Header:
- * INT32: signature
- * INT32: pointer to first free slot
- * INT32: number of tail blocks
- *
- * Tail Blocks:
- * INT32: pointer to next free block (-1 for allocated blocks)
- * INT32: data for the key
- * INT16: length
- * BYTES[length]: suffix string (no terminating '\0')
- */
-
 Tail *
-tail_new ()
+tail_open (const char *path, const char *name, TrieIOMode mode)
 {
-    Tail       *t;
-
-    t = (Tail *) malloc (sizeof (Tail));
-    if (!t)
-        return NULL;
-
-    t->first_free = 0;
-    t->num_tails  = 0;
-    t->tails      = NULL;
-
-    return t;
-}
-
-Tail *
-tail_read (FILE *file)
-{
-    long        save_pos;
     Tail       *t;
     TrieIndex   i;
-    uint32      sig;
-
-    /* check signature */
-    save_pos = ftell (file);
-    if (!file_read_int32 (file, (int32 *) &sig) || TAIL_SIGNATURE != sig) {
-        fseek (file, save_pos, SEEK_SET);
-        return NULL;
-    }
+    uint16      sig;
+    long        file_size;
 
     t = (Tail *) malloc (sizeof (Tail));
-    if (!t)
-        return NULL;
 
-    file_read_int32 (file, &t->first_free);
-    file_read_int32 (file, &t->num_tails);
-    t->tails = (TailBlock *) malloc (t->num_tails * sizeof (TailBlock));
-    if (!t->tails)
-        goto exit_tail_created;
-    for (i = 0; i < t->num_tails; i++) {
-        int16   length;
+    t->file = file_open (path, name, ".tl", mode);
+    if (!t->file)
+        goto exit1;
 
-        file_read_int32 (file, &t->tails[i].next_free);
-        file_read_int32 (file, &t->tails[i].data);
+    file_size = file_length (t->file);
+    if (file_size != 0 && file_read_int16 (t->file, (int16 *) &sig)
+        && sig != TAIL_SIGNATURE)
+    {
+        goto exit2;
+    }
 
-        file_read_int16 (file, &length);
-        t->tails[i].suffix    = (TrieChar *) malloc (length + 1);
-        if (length > 0)
-            file_read_chars (file, (char *)t->tails[i].suffix, length);
-        t->tails[i].suffix[length] = '\0';
+    /* init tails data */
+    if (file_size == 0) {
+        t->first_free = 0;
+        t->num_tails  = 0;
+        t->tails      = NULL;
+        t->is_dirty   = TRUE;
+    } else {
+        file_read_int16 (t->file, &t->first_free);
+        file_read_int16 (t->file, &t->num_tails);
+        t->tails = (TailBlock *) malloc (t->num_tails * sizeof (TailBlock));
+        if (!t->tails)
+            goto exit2;
+        for (i = 0; i < t->num_tails; i++) {
+            int8    length;
+
+            file_read_int16 (t->file, &t->tails[i].next_free);
+            file_read_int16 (t->file, &t->tails[i].data);
+
+            file_read_int8 (t->file, &length);
+            t->tails[i].suffix    = (TrieChar *) malloc (length + 1);
+            if (length > 0)
+                file_read_chars (t->file, (char *)t->tails[i].suffix, length);
+            t->tails[i].suffix[length] = '\0';
+        }
+        t->is_dirty = FALSE;
     }
 
     return t;
 
-exit_tail_created:
+exit2:
+    fclose (t->file);
+exit1:
     free (t);
     return NULL;
 }
 
-void
-tail_free (Tail *t)
+int
+tail_close (Tail *t)
 {
+    int         ret;
     TrieIndex   i;
 
+    if (0 != (ret = tail_save (t)))
+        return ret;
+    if (0 != (ret = fclose (t->file)))
+        return ret;
     if (t->tails) {
         for (i = 0; i < t->num_tails; i++)
             if (t->tails[i].suffix)
@@ -136,38 +129,45 @@ tail_free (Tail *t)
         free (t->tails);
     }
     free (t);
+
+    return 0;
 }
 
 int
-tail_write (const Tail *t, FILE *file)
+tail_save (Tail *t)
 {
     TrieIndex   i;
 
-    if (!file_write_int32 (file, TAIL_SIGNATURE) ||
-        !file_write_int32 (file, t->first_free)  ||
-        !file_write_int32 (file, t->num_tails))
+    if (!t->is_dirty)
+        return 0;
+
+    rewind (t->file);
+    if (!file_write_int16 (t->file, TAIL_SIGNATURE) ||
+        !file_write_int16 (t->file, t->first_free)  ||
+        !file_write_int16 (t->file, t->num_tails))
     {
         return -1;
     }
     for (i = 0; i < t->num_tails; i++) {
-        int16   length;
+        int8    length;
 
-        if (!file_write_int32 (file, t->tails[i].next_free) ||
-            !file_write_int32 (file, t->tails[i].data))
+        if (!file_write_int16 (t->file, t->tails[i].next_free) ||
+            !file_write_int16 (t->file, t->tails[i].data))
         {
             return -1;
         }
 
         length = t->tails[i].suffix ? strlen ((const char *)t->tails[i].suffix)
                                     : 0;
-        if (!file_write_int16 (file, length))
+        if (!file_write_int8 (t->file, length))
             return -1;
         if (length > 0 &&
-            !file_write_chars (file, (char *)t->tails[i].suffix, length))
+            !file_write_chars (t->file, (char *)t->tails[i].suffix, length))
         {
             return -1;
         }
     }
+    t->is_dirty = FALSE;
 
     return 0;
 }
@@ -195,6 +195,7 @@ tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix)
             free (t->tails[index].suffix);
         t->tails[index].suffix = tmp;
 
+        t->is_dirty = TRUE;
         return TRUE;
     }
     return FALSE;
@@ -258,10 +259,12 @@ tail_free_block (Tail *t, TrieIndex block)
         t->tails[j].next_free = block;
     else
         t->first_free = block;
+
+    t->is_dirty = TRUE;
 }
 
 TrieData
-tail_get_data (const Tail *t, TrieIndex index)
+tail_get_data (Tail *t, TrieIndex index)
 {
     index -= TAIL_START_BLOCKNO;
     return (index < t->num_tails) ? t->tails[index].data : TRIE_DATA_ERROR;
@@ -273,6 +276,7 @@ tail_set_data (Tail *t, TrieIndex index, TrieData data)
     index -= TAIL_START_BLOCKNO;
     if (index < t->num_tails) {
         t->tails[index].data = data;
+        t->is_dirty = TRUE;
         return TRUE;
     }
     return FALSE;
@@ -285,7 +289,7 @@ tail_delete (Tail *t, TrieIndex index)
 }
 
 int
-tail_walk_str  (const Tail      *t,
+tail_walk_str  (Tail            *t,
                 TrieIndex        s,
                 short           *suffix_idx,
                 const TrieChar  *str,
@@ -314,7 +318,7 @@ tail_walk_str  (const Tail      *t,
 }
 
 Bool
-tail_walk_char (const Tail      *t,
+tail_walk_char (Tail            *t,
                 TrieIndex        s,
                 short           *suffix_idx,
                 TrieChar         c)

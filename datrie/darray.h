@@ -35,47 +35,43 @@ typedef Bool (*DAEnumFunc) (const TrieChar   *key,
 
 
 /**
- * @brief Create a new double-array object
+ * @brief Open double-array from file
  *
- * Create a new empty doubla-array object.
- */
-DArray * da_new ();
-
-/**
- * @brief Read double-array data from file
- *
- * @param file : the file to read
+ * @param path : the path that stores the double-array files
+ * @param name : the name of the double-array (not actual file name)
+ * @param mode : openning mode, read or write
  *
  * @return a pointer to the openned double-array, NULL on failure
  *
- * Read double-array data from the opened file, starting from the current
- * file pointer until the end of double array data block. On return, the
- * file pointer is left at the position after the read block.
+ * Open a double-array structure of given name. Note that @a name here does 
+ * not mean the actual file name. Rather, the file name will be inferred by 
+ * the name.
  */
-DArray * da_read (FILE *file);
+DArray * da_open (const char *path, const char *name, TrieIOMode mode);
 
 /**
- * @brief Free double-array data
+ * @brief Close double-array data
  *
  * @param d : the double-array data
  *
- * Free the given double-array data.
+ * @return 0 on success, non-zero on failure
+ *
+ * Close the given double-array data. If @a d was openned for writing, all 
+ * pending changes will be saved to file.
  */
-void     da_free (DArray *d);
+int      da_close (DArray *d);
 
 /**
- * @brief Write double-array data
+ * @brief Save double-array data
  *
- * @param d     : the double-array data
- * @param file  : the file to write to
+ * @param d : the double-array data
  *
  * @return 0 on success, non-zero on failure
  *
- * Write double-array data to the given @a file, starting from the current
- * file pointer. On return, the file pointer is left after the double-array
- * data block.
+ * If @a double-array data was openned for writing, save all pending changes 
+ * to file.
  */
-int      da_write (const DArray *d, FILE *file);
+int      da_save (DArray *d);
 
 
 /**
@@ -151,7 +147,7 @@ void       da_set_check (DArray *d, TrieIndex s, TrieIndex val);
  * returns TRUE and @a *s is updated to the new state. Otherwise, it returns
  * FALSE and @a *s is left unchanged.
  */
-Bool       da_walk (const DArray *d, TrieIndex *s, TrieChar c);
+Bool       da_walk (DArray *d, TrieIndex *s, TrieChar c);
 
 /**
  * @brief Test walkability in double-array structure
@@ -224,7 +220,7 @@ void       da_prune_upto (DArray *d, TrieIndex p, TrieIndex s);
  * the separate node, and user-supplied data. Returning FALSE from such
  * callback will stop enumeration and return FALSE.
  */
-Bool    da_enumerate (const DArray *d, DAEnumFunc enum_func, void *user_data);
+Bool    da_enumerate (DArray *d, DAEnumFunc enum_func, void *user_data);
 
 #endif  /* __DARRAY_H */
 

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libdatrie, 0.2.0svn, thep@linux.thai.net)
+AC_INIT(libdatrie, 0.1.4, thep@linux.thai.net)
 AC_CONFIG_SRCDIR([datrie/trie.h])
 AC_CONFIG_HEADER([config.h])
 
@@ -12,8 +12,8 @@ AM_INIT_AUTOMAKE
 # Library code modified:                    REVISION++
 # Interfaces added:              CURRENT++  REVISION=0  AGE++
 # Interfaces changed/removed:    CURRENT++  REVISION=0  AGE=0
-LT_CURRENT=1
-LT_REVISION=0
+LT_CURRENT=0
+LT_REVISION=4
 LT_AGE=0
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
@@ -62,7 +62,7 @@ AM_CONDITIONAL(ENABLE_DOXYGEN_DOC,test "x$enable_doxygen_doc" = "xyes")
 AC_FUNC_MALLOC
 
 AC_CONFIG_FILES([Makefile
-                 datrie-0.2.pc
+                 datrie.pc
                  datrie/Makefile
                  tools/Makefile
                  man/Makefile

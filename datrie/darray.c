@@ -44,10 +44,10 @@ static Bool         da_check_free_cell (DArray         *d,
 static Bool         da_has_children    (DArray         *d,
                                         TrieIndex       s);
 
-static Symbols *    da_output_symbols  (const DArray   *d,
+static Symbols *    da_output_symbols  (DArray         *d,
                                         TrieIndex       s);
 
-static TrieChar *   da_get_state_key   (const DArray   *d,
+static TrieChar *   da_get_state_key   (DArray         *d,
                                         TrieIndex       state);
 
 static TrieIndex    da_find_free_base  (DArray         *d,
@@ -70,10 +70,10 @@ static void         da_alloc_cell      (DArray         *d,
 static void         da_free_cell       (DArray         *d,
                                         TrieIndex       cell);
 
-static Bool         da_enumerate_recursive (const DArray   *d,
-                                            TrieIndex       state,
-                                            DAEnumFunc      enum_func,
-                                            void           *user_data);
+static Bool         da_enumerate_recursive (DArray     *d,
+                                            TrieIndex   state,
+                                            DAEnumFunc  enum_func,
+                                            void       *user_data);
 
 /* ==================== BEGIN IMPLEMENTATION PART ====================  */
 
@@ -140,16 +140,19 @@ typedef struct {
 struct _DArray {
     TrieIndex   num_cells;
     DACell     *cells;
+
+    FILE       *file;
+    Bool        is_dirty;
 };
 
 /*-----------------------------*
  *    METHODS IMPLEMENTAIONS   *
  *-----------------------------*/
 
-#define DA_SIGNATURE 0xDAFCDAFC
+#define DA_SIGNATURE 0xDAFD
 
 /* DA Header:
- * - Cell 0: SIGNATURE, number of cells
+ * - Cell 0: SIGNATURE, 1
  * - Cell 1: free circular-list pointers
  * - Cell 2: root node
  * - Cell 3: DA pool begin
@@ -157,88 +160,89 @@ struct _DArray {
 #define DA_POOL_BEGIN 3
 
 DArray *
-da_new ()
+da_open (const char *path, const char *name, TrieIOMode mode)
 {
     DArray     *d;
+    TrieIndex   i;
 
     d = (DArray *) malloc (sizeof (DArray));
-    if (!d)
-        return NULL;
 
-    d->num_cells = DA_POOL_BEGIN;
-    d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
-    if (!d->cells)
-        goto exit_da_created;
-    d->cells[0].base = DA_SIGNATURE;
-    d->cells[0].check = d->num_cells;
-    d->cells[1].base = -1;
-    d->cells[1].check = -1;
-    d->cells[2].base = DA_POOL_BEGIN;
-    d->cells[2].check = 0;
+    d->file = file_open (path, name, ".br", mode);
+    if (!d->file)
+        goto exit1;
 
-    return d;
-
-exit_da_created:
-    free (d);
-    return NULL;
-}
-
-DArray *
-da_read (FILE *file)
-{
-    long        save_pos;
-    DArray     *d = NULL;
-    TrieIndex   n;
-
-    /* check signature */
-    save_pos = ftell (file);
-    if (!file_read_int32 (file, &n) || DA_SIGNATURE != (uint32) n) {
-        fseek (file, save_pos, SEEK_SET);
-        return NULL;
-    }
-
-    d = (DArray *) malloc (sizeof (DArray));
-    if (!d)
-        return NULL;
-
-    /* read number of cells */
-    file_read_int32 (file, &d->num_cells);
-    d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
-    if (!d->cells)
-        goto exit_da_created;
-    d->cells[0].base = DA_SIGNATURE;
-    d->cells[0].check= d->num_cells;
-    for (n = 1; n < d->num_cells; n++) {
-        file_read_int32 (file, &d->cells[n].base);
-        file_read_int32 (file, &d->cells[n].check);
+    /* init cells data */
+    d->num_cells = file_length (d->file) / 4;
+    if (0 == d->num_cells) {
+        d->num_cells = DA_POOL_BEGIN;
+        d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
+        if (!d->cells)
+            goto exit2;
+        d->cells[0].base = DA_SIGNATURE;
+        d->cells[0].check = 1;
+        d->cells[1].base = -1;
+        d->cells[1].check = -1;
+        d->cells[2].base = DA_POOL_BEGIN;
+        d->cells[2].check = 0;
+        d->is_dirty = TRUE;
+    } else {
+        d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
+        if (!d->cells)
+            goto exit2;
+        file_read_int16 (d->file, &d->cells[0].base);
+        file_read_int16 (d->file, &d->cells[0].check);
+        if (DA_SIGNATURE != (uint16) d->cells[0].base)
+            goto exit3;
+        for (i = 1; i < d->num_cells; i++) {
+            file_read_int16 (d->file, &d->cells[i].base);
+            file_read_int16 (d->file, &d->cells[i].check);
+        }
+        d->is_dirty  = FALSE;
     }
 
     return d;
 
-exit_da_created:
-    free (d);
-    return NULL;
-}
-
-void
-da_free (DArray *d)
-{
+exit3:
     free (d->cells);
+exit2:
+    fclose (d->file);
+exit1:
     free (d);
+    return NULL;
 }
 
 int
-da_write (const DArray *d, FILE *file)
+da_close (DArray *d)
+{
+    int ret;
+
+    if (0 != (ret = da_save (d)))
+        return ret;
+    if (0 != (ret = fclose (d->file)))
+        return ret;
+    free (d->cells);
+    free (d);
+
+    return 0;
+}
+
+int
+da_save (DArray *d)
 {
     TrieIndex   i;
 
+    if (!d->is_dirty)
+        return 0;
+
+    rewind (d->file);
     for (i = 0; i < d->num_cells; i++) {
-        if (!file_write_int32 (file, d->cells[i].base) ||
-            !file_write_int32 (file, d->cells[i].check))
+        if (!file_write_int16 (d->file, d->cells[i].base) ||
+            !file_write_int16 (d->file, d->cells[i].check))
         {
             return -1;
         }
     }
+    d->is_dirty = FALSE;
 
     return 0;
 }
@@ -255,34 +259,36 @@ da_get_root (const DArray *d)
 TrieIndex
 da_get_base (const DArray *d, TrieIndex s)
 {
-    return (s < d->num_cells) ? d->cells[s].base : TRIE_INDEX_ERROR;
+    return (0 <= s && s < d->num_cells) ? d->cells[s].base : TRIE_INDEX_ERROR;
 }
 
 TrieIndex
 da_get_check (const DArray *d, TrieIndex s)
 {
-    return (s < d->num_cells) ? d->cells[s].check : TRIE_INDEX_ERROR;
+    return (0 <= s && s < d->num_cells) ? d->cells[s].check : TRIE_INDEX_ERROR;
 }
 
 
 void
 da_set_base (DArray *d, TrieIndex s, TrieIndex val)
 {
-    if (s < d->num_cells) {
+    if (0 <= s && s < d->num_cells) {
         d->cells[s].base = val;
+        d->is_dirty = TRUE;
     }
 }
 
 void
 da_set_check (DArray *d, TrieIndex s, TrieIndex val)
 {
-    if (s < d->num_cells) {
+    if (0 <= s && s < d->num_cells) {
         d->cells[s].check = val;
+        d->is_dirty = TRUE;
     }
 }
 
 Bool
-da_walk (const DArray *d, TrieIndex *s, TrieChar c)
+da_walk (DArray *d, TrieIndex *s, TrieChar c)
 {
     TrieIndex   next;
 
@@ -360,7 +366,7 @@ da_has_children    (DArray         *d,
                     TrieIndex       s)
 {
     TrieIndex   base;
-    TrieIndex   c, max_c;
+    uint16      c, max_c;
 
     base = da_get_base (d, s);
     if (TRIE_INDEX_ERROR == base || base < 0)
@@ -376,12 +382,12 @@ da_has_children    (DArray         *d,
 }
 
 static Symbols *
-da_output_symbols  (const DArray   *d,
+da_output_symbols  (DArray         *d,
                     TrieIndex       s)
 {
     Symbols    *syms;
     TrieIndex   base;
-    TrieIndex   c, max_c;
+    uint16      c, max_c;
 
     syms = symbols_new ();
 
@@ -396,7 +402,7 @@ da_output_symbols  (const DArray   *d,
 }
 
 static TrieChar *
-da_get_state_key   (const DArray   *d,
+da_get_state_key   (DArray         *d,
                     TrieIndex       state)
 {
     TrieChar   *key;
@@ -520,7 +526,7 @@ da_relocate_base   (DArray         *d,
          */
         /* preventing the case of TAIL pointer */
         if (old_next_base > 0) {
-            TrieIndex   c, max_c;
+            uint16      c, max_c;
 
             max_c = MIN_VAL (TRIE_CHAR_MAX, TRIE_INDEX_MAX - old_next_base);
             for  (c = 0; c < max_c; c++) {
@@ -569,9 +575,6 @@ da_extend_pool     (DArray         *d,
     da_set_base (d, new_begin, -free_tail);
     da_set_check (d, to_index, -da_get_free_list (d));
     da_set_base (d, da_get_free_list (d), -to_index);
-
-    /* update header cell */
-    d->cells[0].check = d->num_cells;
 
     return TRUE;
 }
@@ -629,16 +632,16 @@ da_free_cell       (DArray         *d,
 }
 
 Bool
-da_enumerate (const DArray *d, DAEnumFunc enum_func, void *user_data)
+da_enumerate (DArray *d, DAEnumFunc enum_func, void *user_data)
 {
     return da_enumerate_recursive (d, da_get_root (d), enum_func, user_data);
 }
 
 static Bool
-da_enumerate_recursive (const DArray   *d,
-                        TrieIndex       state,
-                        DAEnumFunc      enum_func,
-                        void           *user_data)
+da_enumerate_recursive (DArray     *d,
+                        TrieIndex   state,
+                        DAEnumFunc  enum_func,
+                        void       *user_data)
 {
     Bool        ret;
     TrieIndex   base;

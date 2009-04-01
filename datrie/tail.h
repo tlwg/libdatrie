@@ -21,48 +21,41 @@
 typedef struct _Tail  Tail;
 
 /**
- * @brief Create a new tail object
+ * @brief Open tail data from file
  *
- * Create a new empty tail object.
- */
-Tail *   tail_new ();
-
-/**
- * @brief Read tail data from file
- *
- * @param file : the file to read
+ * @param path : the path that stores the tail files
+ * @param name : the name of the tail data (not actual file name)
+ * @param mode : openning mode, read or write
  *
  * @return a pointer to the openned tail data, NULL on failure
  *
- * Read tail data from the opened file, starting from the current
- * file pointer until the end of tail data block. On return, the
- * file pointer is left at the position after the read block.
+ * Open a tail data of given name. Note that @a name here does not mean the 
+ * actual file name. Rather, the file name will be inferred by the name.
  */
-Tail *   tail_read (FILE *file);
+Tail *   tail_open (const char *path, const char *name, TrieIOMode mode);
 
 /**
- * @brief Free tail data
+ * @brief Close tail data
  *
  * @param t : the tail data
  *
  * @return 0 on success, non-zero on failure
  *
- * Free the given tail data.
+ * Close the given tail data. If @a d was openned for writing, all pending 
+ * changes will be saved to file.
  */
-void     tail_free (Tail *t);
+int      tail_close (Tail *t);
 
 /**
- * @brief Write tail data
+ * @brief Save tail data
  *
- * @param t     : the tail data
- * @param file  : the file to write to
+ * @param t : the tail data
  *
  * @return 0 on success, non-zero on failure
  *
- * Write tail data to the given @a file, starting from the current file
- * pointer. On return, the file pointer is left after the tail data block.
+ * If @a t data was openned for writing, save all pending changes to file.
  */
-int      tail_write (const Tail *t, FILE *file);
+int      tail_save (Tail *t);
 
 
 /**
@@ -111,7 +104,7 @@ TrieIndex tail_add_suffix (Tail *t, const TrieChar *suffix);
  *
  * Get data associated to suffix entry @a index in tail data.
  */
-TrieData tail_get_data (const Tail *t, TrieIndex index);
+TrieData tail_get_data (Tail *t, TrieIndex index);
 
 /**
  * @brief Set data associated to suffix entry
@@ -152,7 +145,7 @@ void     tail_delete (Tail *t, TrieIndex index);
  * @a *suffix_idx is updated to the position after the last successful walk,
  * and the function returns the total number of character succesfully walked.
  */
-int      tail_walk_str  (const Tail      *t,
+int      tail_walk_str  (Tail            *t,
                          TrieIndex        s,
                          short           *suffix_idx,
                          const TrieChar  *str,
@@ -173,7 +166,7 @@ int      tail_walk_str  (const Tail      *t,
  * it returns TRUE, and @a *suffix_idx is updated to the next character.
  * Otherwise, it returns FALSE, and @a *suffix_idx is left unchanged.
  */
-Bool     tail_walk_char (const Tail      *t,
+Bool     tail_walk_char (Tail            *t,
                          TrieIndex        s,
                          short           *suffix_idx,
                          TrieChar         c);

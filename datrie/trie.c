@@ -9,9 +9,6 @@
 #include <string.h>
 
 #include "trie.h"
-#include "fileutils.h"
-#include "alpha-map.h"
-#include "alpha-map-private.h"
 #include "darray.h"
 #include "tail.h"
 
@@ -19,21 +16,18 @@
  * @brief Trie structure
  */
 struct _Trie {
-    AlphaMap   *alpha_map;
-    DArray     *da;
-    Tail       *tail;
-
-    Bool        is_dirty;
+    DArray  *da;
+    Tail    *tail;
 };
 
 /**
  * @brief TrieState structure
  */
 struct _TrieState {
-    const Trie *trie;       /**< the corresponding trie */
-    TrieIndex   index;      /**< index in double-array/tail structures */
-    short       suffix_idx; /**< suffix character offset, if in suffix */
-    short       is_suffix;  /**< whether it is currently in suffix part */
+    Trie      *trie;        /**< the corresponding trie */
+    TrieIndex  index;       /**< index in double-array/tail structures */
+    short      suffix_idx;  /**< suffix character offset, if in suffix */
+    short      is_suffix;   /**< whether it is currently in suffix part */
 };
 
 /*------------------------*
@@ -44,10 +38,10 @@ struct _TrieState {
 #define trie_da_get_tail_index(da,s)   (-da_get_base ((da), (s)))
 #define trie_da_set_tail_index(da,s,v) (da_set_base ((da), (s), -(v)))
 
-static TrieState * trie_state_new (const Trie *trie,
-                                   TrieIndex   index,
-                                   short       suffix_idx,
-                                   short       is_suffix);
+static TrieState * trie_state_new (Trie      *trie,
+                                   TrieIndex  index,
+                                   short      suffix_idx,
+                                   short      is_suffix);
 
 static Bool        trie_branch_in_branch (Trie           *trie,
                                           TrieIndex       sep_node,
@@ -64,7 +58,7 @@ static Bool        trie_branch_in_tail   (Trie           *trie,
  *-----------------------*/
 
 Trie *
-trie_new (const AlphaMap *alpha_map)
+trie_open (const char *path, const char *name, TrieIOMode mode)
 {
     Trie *trie;
 
@@ -72,112 +66,50 @@ trie_new (const AlphaMap *alpha_map)
     if (!trie)
         return NULL;
 
-    trie->alpha_map = alpha_map_clone (alpha_map);
-    if (!trie->alpha_map)
-        goto exit_trie_created;
+    if (NULL == (trie->da   = da_open (path, name, mode)))
+        goto exit1;
+    if (NULL == (trie->tail = tail_open (path, name, mode)))
+        goto exit2;
 
-    trie->da = da_new ();
-    if (!trie->da)
-        goto exit_alpha_map_created;
-
-    trie->tail = tail_new ();
-    if (!trie->tail)
-        goto exit_da_created;
- 
-    trie->is_dirty = TRUE;
     return trie;
 
-exit_da_created:
-    da_free (trie->da);
-exit_alpha_map_created:
-    alpha_map_free (trie->alpha_map);
-exit_trie_created:
+exit2:
+    da_close (trie->da);
+exit1:
     free (trie);
     return NULL;
-}
-
-Trie *
-trie_new_from_file (const char *path)
-{
-    Trie       *trie;
-    FILE       *trie_file;
-
-    trie_file = fopen (path, "r");
-    if (!trie_file)
-        return NULL;
-
-    trie = (Trie *) malloc (sizeof (Trie));
-    if (!trie)
-        goto exit_file_openned;
-
-    if (NULL == (trie->alpha_map = alpha_map_read_bin (trie_file)))
-        goto exit_trie_created;
-    if (NULL == (trie->da   = da_read (trie_file)))
-        goto exit_alpha_map_created;
-    if (NULL == (trie->tail = tail_read (trie_file)))
-        goto exit_da_created;
-
-    fclose (trie_file);
-    trie->is_dirty = FALSE;
-    return trie;
-
-exit_da_created:
-    da_free (trie->da);
-exit_alpha_map_created:
-    alpha_map_free (trie->alpha_map);
-exit_trie_created:
-    free (trie);
-exit_file_openned:
-    fclose (trie_file);
-    return NULL;
-}
-
-void
-trie_free (Trie *trie)
-{
-    alpha_map_free (trie->alpha_map);
-    da_free (trie->da);
-    tail_free (trie->tail);
-    free (trie);
 }
 
 int
-trie_save (Trie *trie, const char *path)
+trie_close (Trie *trie)
 {
-    FILE *file;
-    int   res = 0;
-
-    file = fopen (path, "w+");
-    if (!file)
+    if (!trie)
         return -1;
 
-    if (alpha_map_write_bin (trie->alpha_map, file) != 0) {
-        res = -1;
-        goto exit_file_openned;
-    }
+    if (da_close (trie->da) != 0)
+        return -1;
 
-    if (da_write (trie->da, file) != 0) {
-        res = -1;
-        goto exit_file_openned;
-    }
+    if (tail_close (trie->tail) != 0)
+        return -1;
 
-    if (tail_write (trie->tail, file) != 0) {
-        res = -1;
-        goto exit_file_openned;
-    }
+    free (trie);
 
-    trie->is_dirty = FALSE;
     return 0;
-
-exit_file_openned:
-    fclose (file);
-    return res;
 }
 
-Bool
-trie_is_dirty (const Trie *trie)
+int
+trie_save (Trie *trie)
 {
-    return trie->is_dirty;
+    if (!trie)
+        return -1;
+
+    if (da_save (trie->da) != 0)
+        return -1;
+
+    if (tail_save (trie->tail) != 0)
+        return -1;
+
+    return 0;
 }
 
 
@@ -186,36 +118,28 @@ trie_is_dirty (const Trie *trie)
  *------------------------------*/
 
 Bool
-trie_retrieve (const Trie *trie, const AlphaChar *key, TrieData *o_data)
+trie_retrieve (Trie *trie, const TrieChar *key, TrieData *o_data)
 {
     TrieIndex        s;
     short            suffix_idx;
-    const AlphaChar *p;
+    const TrieChar  *p;
+    size_t           len;
 
     /* walk through branches */
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
-        if (!da_walk (trie->da, &s,
-                      alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
+        if (!da_walk (trie->da, &s, *p))
             return FALSE;
-        }
-        if (0 == *p)
+        if ('\0' == *p)
             break;
     }
 
     /* walk through tail */
     s = trie_da_get_tail_index (trie->da, s);
     suffix_idx = 0;
-    for ( ; ; p++) {
-        if (!tail_walk_char (trie->tail, s, &suffix_idx,
-                             alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
-            return FALSE;
-        }
-        if (0 == *p)
-            break;
-    }
+    len = strlen ((const char *) p) + 1;    /* including null-terminator */
+    if (tail_walk_str (trie->tail, s, &suffix_idx, p, len) != len)
+        return FALSE;
 
     /* found, set the val and return */
     if (o_data)
@@ -224,55 +148,31 @@ trie_retrieve (const Trie *trie, const AlphaChar *key, TrieData *o_data)
 }
 
 Bool
-trie_store (Trie *trie, const AlphaChar *key, TrieData data)
+trie_store (Trie *trie, const TrieChar *key, TrieData data)
 {
     TrieIndex        s, t;
     short            suffix_idx;
-    const AlphaChar *p, *sep;
+    const TrieChar  *p;
+    size_t           len;
 
     /* walk through branches */
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
-        if (!da_walk (trie->da, &s,
-                      alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
-            TrieChar *key_str;
-            Bool      res;
-
-            key_str = alpha_map_char_to_trie_str (trie->alpha_map, p);
-            res = trie_branch_in_branch (trie, s, key_str, data);
-            free (key_str);
-
-            return res;
-        }
-        if (0 == *p)
+        if (!da_walk (trie->da, &s, *p))
+            return trie_branch_in_branch (trie, s, p, data);
+        if ('\0' == *p)
             break;
     }
 
     /* walk through tail */
-    sep = p;
     t = trie_da_get_tail_index (trie->da, s);
     suffix_idx = 0;
-    for ( ; ; p++) {
-        if (!tail_walk_char (trie->tail, t, &suffix_idx,
-                             alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
-            TrieChar *tail_str;
-            Bool      res;
-
-            tail_str = alpha_map_char_to_trie_str (trie->alpha_map, sep);
-            res = trie_branch_in_tail (trie, s, tail_str, data);
-            free (tail_str);
-
-            return res;
-        }
-        if (0 == *p)
-            break;
-    }
+    len = strlen ((const char *) p) + 1;    /* including null-terminator */
+    if (tail_walk_str (trie->tail, t, &suffix_idx, p, len) != len)
+        return trie_branch_in_tail (trie, s, p, data);
 
     /* duplicated key, overwrite val */
     tail_set_data (trie->tail, t, data);
-    trie->is_dirty = TRUE;
     return TRUE;
 }
 
@@ -295,7 +195,6 @@ trie_branch_in_branch (Trie           *trie,
     tail_set_data (trie->tail, new_tail, data);
     trie_da_set_tail_index (trie->da, new_da, new_tail);
 
-    trie->is_dirty = TRUE;
     return TRUE;
 }
 
@@ -341,47 +240,38 @@ fail:
 }
 
 Bool
-trie_delete (Trie *trie, const AlphaChar *key)
+trie_delete (Trie *trie, const TrieChar *key)
 {
     TrieIndex        s, t;
     short            suffix_idx;
-    const AlphaChar *p;
+    const TrieChar  *p;
+    size_t           len;
 
     /* walk through branches */
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
-        if (!da_walk (trie->da, &s,
-                      alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
+        if (!da_walk (trie->da, &s, *p))
             return FALSE;
-        }
-        if (0 == *p)
+        if ('\0' == *p)
             break;
     }
 
     /* walk through tail */
     t = trie_da_get_tail_index (trie->da, s);
     suffix_idx = 0;
-    for ( ; ; p++) {
-        if (!tail_walk_char (trie->tail, t, &suffix_idx,
-                             alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
-            return FALSE;
-        }
-        if (0 == *p)
-            break;
-    }
+    len = strlen ((const char *) p) + 1;    /* including null-terminator */
+    if (tail_walk_str (trie->tail, t, &suffix_idx, p, len) != len)
+        return FALSE;
 
     tail_delete (trie->tail, t);
     da_set_base (trie->da, s, TRIE_INDEX_ERROR);
     da_prune (trie->da, s);
 
-    trie->is_dirty = TRUE;
     return TRUE;
 }
 
 typedef struct {
-    const Trie     *trie;
+    Trie           *trie;
     TrieEnumFunc    enum_func;
     void           *user_data;
 } _TrieEnumData;
@@ -392,7 +282,7 @@ trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
     _TrieEnumData  *enum_data;
     TrieIndex       t;
     const TrieChar *suffix;
-    AlphaChar      *full_key, *p;
+    TrieChar       *full_key;
     Bool            ret;
 
     enum_data = (_TrieEnumData *) user_data;
@@ -400,16 +290,9 @@ trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
     t = trie_da_get_tail_index (enum_data->trie->da, sep_node);
     suffix = tail_get_suffix (enum_data->trie->tail, t);
 
-    full_key = (AlphaChar *) malloc ((strlen ((const char *)key)
-                                      + strlen ((const char *)suffix) + 1)
-                                     * sizeof (AlphaChar));
-    for (p = full_key; *key; p++, key++) {
-        *p = alpha_map_trie_to_char (enum_data->trie->alpha_map, *key);
-    }
-    for ( ; *suffix; p++, suffix++) {
-        *p = alpha_map_trie_to_char (enum_data->trie->alpha_map, *suffix);
-    }
-    *p = 0;
+    full_key = (TrieChar *) malloc (strlen ((const char *)key)
+                                    + strlen ((const char *)suffix) + 1);
+    strcat (strcpy ((char *)full_key, (const char *)key), (const char *)suffix);
 
     ret = (*enum_data->enum_func) (full_key,
                                    tail_get_data (enum_data->trie->tail, t),
@@ -420,7 +303,7 @@ trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
 }
 
 Bool
-trie_enumerate (const Trie *trie, TrieEnumFunc enum_func, void *user_data)
+trie_enumerate (Trie *trie, TrieEnumFunc enum_func, void *user_data)
 {
     _TrieEnumData   enum_data;
 
@@ -437,7 +320,7 @@ trie_enumerate (const Trie *trie, TrieEnumFunc enum_func, void *user_data)
  *-------------------------------*/
 
 TrieState *
-trie_root (const Trie *trie)
+trie_root (Trie *trie)
 {
     return trie_state_new (trie, da_get_root (trie->da), 0, FALSE);
 }
@@ -447,10 +330,7 @@ trie_root (const Trie *trie)
  *----------------*/
 
 static TrieState *
-trie_state_new (const Trie *trie,
-                TrieIndex   index,
-                short       suffix_idx,
-                short       is_suffix)
+trie_state_new (Trie *trie, TrieIndex index, short suffix_idx, short is_suffix)
 {
     TrieState *s;
 
@@ -464,15 +344,6 @@ trie_state_new (const Trie *trie,
     s->is_suffix  = is_suffix;
 
     return s;
-}
-
-void
-trie_state_copy (TrieState *dst, const TrieState *src)
-{
-    dst->trie       = src->trie;
-    dst->index      = src->index;
-    dst->suffix_idx = src->suffix_idx;
-    dst->is_suffix  = src->is_suffix;
 }
 
 TrieState *
@@ -495,14 +366,12 @@ trie_state_rewind (TrieState *s)
 }
 
 Bool
-trie_state_walk (TrieState *s, AlphaChar c)
+trie_state_walk (TrieState *s, TrieChar c)
 {
-    TrieChar tc = alpha_map_char_to_trie (s->trie->alpha_map, c);
-
     if (!s->is_suffix) {
         Bool ret;
 
-        ret = da_walk (s->trie->da, &s->index, tc);
+        ret = da_walk (s->trie->da, &s->index, c);
 
         if (ret && trie_da_is_separate (s->trie->da, s->index)) {
             s->index = trie_da_get_tail_index (s->trie->da, s->index);
@@ -512,26 +381,24 @@ trie_state_walk (TrieState *s, AlphaChar c)
 
         return ret;
     } else {
-        return tail_walk_char (s->trie->tail, s->index, &s->suffix_idx, tc);
+        return tail_walk_char (s->trie->tail, s->index, &s->suffix_idx, c);
     }
 }
 
 Bool
-trie_state_is_walkable (const TrieState *s, AlphaChar c)
+trie_state_is_walkable (const TrieState *s, TrieChar c)
 {
-    TrieChar tc = alpha_map_char_to_trie (s->trie->alpha_map, c);
-
     if (!s->is_suffix)
-        return da_is_walkable (s->trie->da, s->index, tc);
+        return da_is_walkable (s->trie->da, s->index, c);
     else 
         return tail_is_walkable_char (s->trie->tail, s->index, s->suffix_idx,
-                                      tc);
+                                      c);
 }
 
 Bool
-trie_state_is_single (const TrieState *s)
+trie_state_is_leaf (const TrieState *s)
 {
-    return s->is_suffix;
+    return s->is_suffix && trie_state_is_terminal (s);
 }
 
 TrieData

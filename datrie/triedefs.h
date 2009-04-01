@@ -25,16 +25,6 @@ typedef enum {
 } TrieIOMode;
 
 /**
- * @brief Trie character type for alphabet
- */
-typedef uint32         AlphaChar;
-
-/**
- * @brief Error value for alphabet character
- */
-#define ALPHA_CHAR_ERROR   (~(AlphaChar)0)
-
-/**
  * @brief Trie character type for key
  */
 typedef unsigned char  TrieChar;
@@ -47,7 +37,7 @@ typedef unsigned char  TrieChar;
 /**
  * @brief Type of Trie index
  */
-typedef int32          TrieIndex;
+typedef int16          TrieIndex;
 /**
  * @brief Trie error index
  */
@@ -55,12 +45,12 @@ typedef int32          TrieIndex;
 /**
  * @brief Maximum trie index value
  */
-#define TRIE_INDEX_MAX    0x7fffffff
+#define TRIE_INDEX_MAX    32767
 
 /**
  * @brief Type of value associated to trie entries
  */
-typedef int32          TrieData;
+typedef int16          TrieData;
 /**
  * @brief Trie error data
  */
