@@ -1,5 +1,11 @@
 2009-04-01  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* configure.ac: Bump the library revision.
+	* configure.ac, NEWS:
+	=== Version 0.1.4 ===
+
+2009-04-01  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/Makefile.am, datrie/libdatrie.def -> datrie/libdatrie.map:
 	Replace libtool symbol exports with symbol versioning, to ease
 	upgrading across SONAME.
