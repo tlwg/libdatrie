@@ -4,10 +4,10 @@ Maintainer: Theppitak Karoonboonyanan <thep@linux.thai.net>
 DM-Upload-Allowed: yes
 Build-Depends: dpkg-dev (>= 1.14.13), debhelper (>= 5.0.61), autotools-dev
 Build-Depends-Indep: doxygen
-Standards-Version: 3.8.0
+Standards-Version: 3.8.1
 Section: libs
-Vcs-Cvs: :pserver:anonymous@linux.thai.net:/home/cvs software/datrie
-Vcs-Browser: http://linux.thai.net/viewvc/viewvc.cgi/software/datrie/
+Vcs-Svn: http://linux.thai.net/svn/software/datrie
+Vcs-Browser: http://linux.thai.net/websvn/wsvn/software.datrie/?sc=0
 Homepage: http://libthai.sourceforge.net/
 
 Package: libdatrie0-dev
