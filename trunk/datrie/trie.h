@@ -53,7 +53,7 @@ typedef struct _TrieState TrieState;
  *
  * @return a pointer to the newly created trie, NULL on failure
  *
- * Create a new empty trie object based on the given @param alpha_map alphabet
+ * Create a new empty trie object based on the given @a alpha_map alphabet
  * set. The trie contents can then be added and deleted with trie_store() and
  * trie_delete() respectively.
  *
@@ -93,7 +93,8 @@ void    trie_free (Trie *trie);
  *
  * @return 0 on success, non-zero on failure
  *
- * If @a trie was openned for writing, save all pending data to file.
+ * Create a new file at the given @a path and write @a trie data to it.
+ * If @a path already exists, its contents will be replaced.
  */
 int     trie_save (Trie *trie, const char *path);
 
@@ -124,7 +125,7 @@ Bool    trie_is_dirty (const Trie *trie);
  * @return boolean value indicating the existence of the entry.
  *
  * Retrieve an entry for the given @a key from @a trie. On return,
- * if @a key is found and @a o_val is not NULL, @a *o_val is set
+ * if @a key is found and @a o_data is not NULL, @a *o_data is set
  * to the data associated to @a key.
  */
 Bool    trie_retrieve (const Trie      *trie,
@@ -140,8 +141,9 @@ Bool    trie_retrieve (const Trie      *trie,
  *
  * @return boolean value indicating the success of the process
  *
- * Store a data @a data for the given @a key in @a trie. If @a key does not 
- * exist in @a trie, it will be appended.
+ * Store a @a data for the given @a key in @a trie. If @a key does not 
+ * exist in @a trie, it will be appended. If it does, its current data will
+ * be overwritten.
  */
 Bool    trie_store (Trie *trie, const AlphaChar *key, TrieData data);
 
@@ -271,8 +273,8 @@ Bool      trie_state_is_walkable (const TrieState *s, AlphaChar c);
  *
  * @return boolean value indicating whether it is a terminal state
  *
- * Check if the given state is a terminal state. A leaf state is a trie state 
- * that terminates a key, and stores a value associated with the key.
+ * Check if the given state is a terminal state. A terminal state is a trie
+ * state that terminates a key, and stores a value associated with it.
  */
 #define   trie_state_is_terminal(s) trie_state_is_walkable((s),TRIE_CHAR_TERM)
 
@@ -284,7 +286,7 @@ Bool      trie_state_is_walkable (const TrieState *s, AlphaChar c);
  * @return boolean value indicating whether it is in a single path
  *
  * Check if the given state is in a single path, that is, there is no other
- * barnch from it to leaf.
+ * branch from it to leaf.
  */
 Bool      trie_state_is_single (const TrieState *s);
 
@@ -304,12 +306,12 @@ Bool      trie_state_is_single (const TrieState *s);
 /**
  * @brief Get data from leaf state
  *
- * @param s    : the leaf state
+ * @param s    : a leaf state
  *
  * @return the data associated with the leaf state @a s,
  *         or TRIE_DATA_ERROR if @a s is not a leaf state
  *
- * Get value from a leaf state of trie. Getting the value from leaf state 
+ * Get value from a leaf state of trie. Getting value from a non-leaf state
  * will result in TRIE_DATA_ERROR.
  */
 TrieData trie_state_get_data (const TrieState *s);
