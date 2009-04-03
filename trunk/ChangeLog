@@ -1,3 +1,9 @@
+2009-04-03  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/fileutils.h, datrie/fileutils.c
+	(make_full_path, file_open, file_length): Remove unused codes.
+	* datrie/triedefs.h (TrieIOMode): Remove unused typedef.
+
 2009-04-01  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/Makefile.am, datrie/libdatrie.def -> datrie/libdatrie.map:

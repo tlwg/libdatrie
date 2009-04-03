@@ -16,15 +16,6 @@
  */
 
 /**
- * @brief Trie IO modes
- */
-typedef enum {
-    TRIE_IO_READ   = 0x01,
-    TRIE_IO_WRITE  = 0x02,
-    TRIE_IO_CREATE = 0x04
-} TrieIOMode;
-
-/**
  * @brief Trie character type for alphabet
  */
 typedef uint32         AlphaChar;
