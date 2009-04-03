@@ -62,7 +62,7 @@ void        alpha_map_free (AlphaMap *alpha_map);
  * @param begin     : the first character of the range
  * @param end       : the last character of the range
  *
- * Add a range of character codes from @param begin to @param end to the
+ * Add a range of character codes from @a begin to @a end to the
  * alphabet set.
  */
 int         alpha_map_add_range (AlphaMap  *alpha_map,

@@ -1,5 +1,9 @@
 2009-04-03  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/alpha-map.h, datrie/trie.h: Revise documentation.
+
+2009-04-03  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/fileutils.h, datrie/fileutils.c
 	(make_full_path, file_open, file_length): Remove unused codes.
 	* datrie/triedefs.h (TrieIOMode): Remove unused typedef.
