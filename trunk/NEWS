@@ -1,5 +1,11 @@
 libdatrie
 
+0.2.1 (2009-04-05)
+=====
+- Fix errors in documentation
+- Symbol versioning to ease upgrade across SONAME
+- Minor cleanups
+
 0.2.0 (2009-03-24)
 =====
 - New APIs for performance: trie_state_copy(), trie_state_is_single()
