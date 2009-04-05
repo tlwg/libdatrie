@@ -6,6 +6,5 @@ includedir=@includedir@
 Name: datrie
 Description: Double-array trie library
 Version: @VERSION@
-Requires: 
 Libs: -L${libdir} -ldatrie
 Cflags: -I${includedir}

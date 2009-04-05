@@ -1,3 +1,7 @@
+2009-04-05  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie-0.2.pc.in: Remove blank Requires: line.
+
 2009-04-03  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/alpha-map.h, datrie/trie.h: Revise documentation.
