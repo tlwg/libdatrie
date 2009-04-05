@@ -1,0 +1,143 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+ifeq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
+	build_flags = --build=$(DEB_BUILD_GNU_TYPE)
+else
+	build_flags = --build=$(DEB_BUILD_GNU_TYPE) --host=$(DEB_HOST_GNU_TYPE)
+endif
+
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+SHARED_PKG := libdatrie1
+SHLIB_VER := 0.2.0
+
+config.status: configure
+	dh_testdir
+
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	cp -f /usr/share/misc/config.sub config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	cp -f /usr/share/misc/config.guess config.guess
+endif
+
+	# Add here commands to configure the package.
+	./configure $(build_flags) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
+
+
+build-indep: build-indep-stamp
+build-indep-stamp:  config.status
+	dh_testdir
+
+	# Add here commands to compile the package.
+	$(MAKE) -C doc
+
+	touch $@
+
+build-arch: build-arch-stamp
+build-arch-stamp:  config.status
+	dh_testdir
+
+	# Add here commands to compile the package.
+	$(MAKE) -C datrie
+	$(MAKE) -C tools
+	$(MAKE) -C man
+
+	touch $@
+
+build: build-indep build-arch
+
+clean:
+	dh_testdir
+	dh_testroot
+
+	# Add here commands to clean up after the build process.
+	[ ! -f Makefile ] || $(MAKE) distclean
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	rm -f config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	rm -f config.guess
+endif
+
+	dh_clean
+
+install-indep: build-indep
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs --indep
+
+	# Add here commands to install the package into debian/tmp
+	$(MAKE) -C doc install DESTDIR=$(CURDIR)/debian/tmp
+
+install-arch: build-arch
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs --arch
+
+	# Add here commands to install the package into debian/tmp
+	$(MAKE) -C datrie install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C tools  install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C man    install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) install-am DESTDIR=$(CURDIR)/debian/tmp
+
+# Build architecture-independent files here.
+binary-indep: build-indep install-indep
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs --indep ChangeLog
+	dh_installdocs --indep
+	dh_install --indep --sourcedir=debian/tmp
+	dh_link --indep
+	dh_compress --indep
+	dh_fixperms --indep
+	dh_installdeb --indep
+	dh_gencontrol --indep
+	dh_md5sums --indep
+	dh_builddeb --indep
+
+# Build architecture-dependent files here.
+binary-arch: build-arch install-arch
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs --arch ChangeLog
+	dh_installdocs --arch
+	dh_install --arch --sourcedir=debian/tmp
+	dh_installman --arch
+	dh_link --arch
+	dh_strip --arch
+	dh_compress --arch
+	dh_fixperms --arch
+	dh_makeshlibs --arch -p$(SHARED_PKG) -V'$(SHARED_PKG) (>= $(SHLIB_VER))'
+	dh_installdeb --arch
+	dh_shlibdeps --arch
+	dh_gencontrol --arch
+	dh_md5sums --arch
+	dh_builddeb --arch
+
+binary: binary-indep binary-arch
+.PHONY: build build-arch build-indep clean binary-indep binary-arch binary install-arch install-indep
