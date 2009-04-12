@@ -1,3 +1,10 @@
+libdatrie (0.2.1-2) unstable; urgency=low
+
+  * Drop versioned b-dep on dpkg-dev, as Vcs-Cvs: is no more needed.
+  * Upload to unstable.
+
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Sun, 12 Apr 2009 10:02:04 +0700
+
 libdatrie (0.2.1-1) experimental; urgency=low
 
   * Fix broken Vcs-Browser field.
