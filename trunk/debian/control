@@ -2,7 +2,7 @@ Source: libdatrie
 Priority: optional
 Maintainer: Theppitak Karoonboonyanan <thep@linux.thai.net>
 DM-Upload-Allowed: yes
-Build-Depends: dpkg-dev (>= 1.14.13), debhelper (>= 7), autotools-dev
+Build-Depends: debhelper (>= 7), autotools-dev
 Build-Depends-Indep: doxygen
 Standards-Version: 3.8.1
 Section: libs
