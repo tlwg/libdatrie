@@ -1,3 +1,9 @@
+2009-04-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configure.ac: Post-release version suffix added.
+	* configure.ac (AC_CONFIG_MACRO_DIR), Makefile.am (ACLOCAL_AMFLAGS):
+	Add m4 dir as automake includes, as required by the new libtool.
+
 2009-04-05  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.ac: Bump library revision.
