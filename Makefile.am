@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 SUBDIRS = datrie tools man doc
 
 EXTRA_DIST = README.migration
