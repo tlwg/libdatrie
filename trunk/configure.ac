@@ -27,6 +27,15 @@ AC_PROG_MAKE_SET
 AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 
+# Whether linker support --version-script option
+echo '{global:hello; local:*;};' > conftest.ver
+AC_LIBTOOL_LINKER_OPTION(
+  [whether linker supports -version-script],
+  _cv_have_version_script,
+  [-Wl,-version-script -Wl,conftest.ver])
+
+AM_CONDITIONAL(LD_HAS_VERSION_SCRIPT,test "$_cv_have_version_script" = "1")
+
 # Checks for libraries.
 
 # Checks for header files.

@@ -1,5 +1,14 @@
 2009-04-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Fall back to libtool for linkers that do not support -version-script.
+
+	* configure.ac: Check whether linker supports -version-script.
+	* datrie/Makefile.am, +datrie/libdatrie.def:
+	Apply -version-script flag only when linker supports it. Otherwise,
+	fall back to the old method based on libtool -export-symbols flag.
+
+2009-04-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* configure.ac: Post-release version suffix added.
 	* configure.ac (AC_CONFIG_MACRO_DIR), Makefile.am (ACLOCAL_AMFLAGS):
 	Add m4 dir as automake includes, as required by the new libtool.
