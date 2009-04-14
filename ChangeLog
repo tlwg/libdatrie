@@ -1,5 +1,16 @@
 2009-04-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Support locale charset query with libcharset, for mac and mingw.
+	[Thanks Beamer User for the report.]
+
+	* configure.ac: Check for locale_charset() from libiconv and
+	nl_langinfo(CODESET) from libc. If neither is present, ask user to
+	install GNU libiconv.
+	* tools/trietool.c (init_iconv): Use locale_charset() to query locale
+	charset if possible, fall back to nl_langinfo(CODESET) otherwise.
+
+2009-04-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Support alternative iconv implemetations.
 	[Thanks cwt for the report.]
 
