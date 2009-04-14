@@ -123,8 +123,6 @@ SectionGroup /e "${PROGNAME}-components"
   SetOutPath "$INSTDIR\lib\pkgconfig"
   File "${BINSRCDIR}\lib\pkgconfig\*.*"
  
-  SetOutPath "$INSTDIR\share\man\man3"
-  File "${BINSRCDIR}\share\man\man3\*.*"
    ;Write component info.
   WriteRegStr HKLM "SOFTWARE\${PROGNAME}\components" "devel" "1"
  SectionEnd
