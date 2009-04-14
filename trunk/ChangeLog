@@ -1,6 +1,7 @@
 2009-04-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Support alternative iconv implemetations.
+	[Thanks cwt for the report.]
 
 	* configure.ac: Check for GNU libconv or native libiconv if system libc
 	doesn't have iconv().
@@ -9,6 +10,7 @@
 2009-04-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Fall back to libtool for linkers that do not support -version-script.
+	[Thanks bact' for the report. Thanks cwt for the test.]
 
 	* configure.ac: Check whether linker supports -version-script.
 	* datrie/Makefile.am, +datrie/libdatrie.def:
@@ -20,6 +22,7 @@
 	* configure.ac: Post-release version suffix added.
 	* configure.ac (AC_CONFIG_MACRO_DIR), Makefile.am (ACLOCAL_AMFLAGS):
 	Add m4 dir as automake includes, as required by the new libtool.
+	[Thanks cwt for the report and test.]
 
 2009-04-05  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
