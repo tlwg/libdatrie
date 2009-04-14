@@ -5,12 +5,18 @@
  * Author:  Theppitak Karoonboonyanan <thep@linux.thai.net>
  */
 
+#include <config.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <locale.h>
-#include <langinfo.h>
+#if defined(HAVE_LOCALE_CHARSET)
+# include <localcharset.h>
+#elif defined (HAVE_LANGINFO_CODESET)
+# include <langinfo.h>
+# define locale_charset()  nl_langinfo(CODESET)
+#endif
 #include <iconv.h>
 
 #include <assert.h>
@@ -92,11 +98,11 @@ main (int argc, char *argv[])
 static void
 init_conv (ProgEnv *env)
 {
-    char *prev_locale;
-    char *locale_codeset;
+    const char *prev_locale;
+    const char *locale_codeset;
 
     prev_locale = setlocale (LC_CTYPE, "");
-    locale_codeset = nl_langinfo (CODESET);
+    locale_codeset = locale_charset();
     setlocale (LC_CTYPE, prev_locale);
 
     env->to_alpha_conv = iconv_open (ALPHA_ENC, locale_codeset);

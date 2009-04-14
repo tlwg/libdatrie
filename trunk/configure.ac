@@ -63,6 +63,31 @@ case $with_libiconv in
 esac
 AC_SUBST(ICONV_LIBS)
 
+#
+# Checks for locale_charset() and nl_langinfo(CODESET)
+#
+AC_CHECK_LIB(iconv, locale_charset,
+             [have_locale_charset=yes], [have_locale_charset=no])
+if test x$have_locale_charset = xyes; then
+  AC_DEFINE(HAVE_LOCALE_CHARSET,1,[Have locale_charset()])
+fi
+AC_CACHE_CHECK(
+  [for nl_langinfo (CODESET)], datrie_cv_langinfo_codeset,
+  [AC_TRY_COMPILE([#include <langinfo.h>],
+    [char *codeset = nl_langinfo (CODESET);],
+    [datrie_cv_langinfo_codeset=yes],
+    [datrie_cv_langinfo_codeset=no])]
+)
+if test x$datrie_cv_langinfo_codeset = xyes; then
+  AC_DEFINE(HAVE_LANGINFO_CODESET,1,[Have nl_langinfo (CODESET)])
+fi
+if test x$have_locale_charset = xno && test x$datrie_cv_langinfo_codeset = xno
+then
+  AC_MSG_ERROR([*** No locale_charset() nor nl_langinfo(CODESET) found.
+Please consider installing GNU libiconv.])
+fi
+
+
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([limits.h stdlib.h stdio.h string.h])
