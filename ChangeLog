@@ -1,3 +1,11 @@
+2009-04-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Support alternative iconv implemetations.
+
+	* configure.ac: Check for GNU libconv or native libiconv if system libc
+	doesn't have iconv().
+	* tools/Makefile.am: Add ICONV_LIBS to linker options.
+
 2009-04-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Fall back to libtool for linkers that do not support -version-script.

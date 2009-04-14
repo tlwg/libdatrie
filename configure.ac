@@ -38,6 +38,31 @@ AM_CONDITIONAL(LD_HAS_VERSION_SCRIPT,test "$_cv_have_version_script" = "1")
 
 # Checks for libraries.
 
+#
+# Checks for iconv
+#
+found_iconv=no
+# Check in the C library first
+AC_CHECK_FUNC(iconv_open, [with_libiconv=no; found_iconv=yes])
+# Check if we have GNU libiconv
+if test $found_iconv = "no"; then
+  AC_CHECK_LIB(iconv, libiconv_open, [with_libiconv=gnu; found_iconv=yes])
+fi
+# Check if we have a iconv in -liconv, possibly from vendor
+if test $found_iconv = "no"; then
+  AC_CHECK_LIB(iconv, iconv_open, [with_libiconv=native; found_iconv=yes])
+fi
+if test $found_iconv = "no"; then
+  AC_MSG_ERROR([*** No usable iconv() implementation found])
+fi
+
+case $with_libiconv in
+  gnu|native)
+    ICONV_LIBS="-liconv"
+    ;;
+esac
+AC_SUBST(ICONV_LIBS)
+
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([limits.h stdlib.h stdio.h string.h])
