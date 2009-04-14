@@ -1,3 +1,7 @@
+2009-04-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* libdatrie.nsi: Do not install obsolete man3/* for -devel subpackage.
+
 2007-04-06  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Incorporate changes for componentized installation by Taniya Supasin
