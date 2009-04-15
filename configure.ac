@@ -31,10 +31,10 @@ AC_PROG_LIBTOOL
 echo '{global:hello; local:*;};' > conftest.ver
 AC_LIBTOOL_LINKER_OPTION(
   [whether linker supports -version-script],
-  _cv_have_version_script,
+  datrie_cv_have_version_script,
   [-Wl,-version-script -Wl,conftest.ver])
 
-AM_CONDITIONAL(LD_HAS_VERSION_SCRIPT,test "$_cv_have_version_script" = "1")
+AM_CONDITIONAL(LD_HAS_VERSION_SCRIPT,test "$datrie_cv_have_version_script" = "1")
 
 # Checks for libraries.
 

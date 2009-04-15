@@ -1,3 +1,7 @@
+2009-04-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configure.ac: Adjust variable name datrie_cv_have_version_script.
+
 2009-04-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Support locale charset query with libcharset, for mac and mingw.
