@@ -34,7 +34,8 @@ AC_LIBTOOL_LINKER_OPTION(
   datrie_cv_have_version_script,
   [-Wl,-version-script -Wl,conftest.ver])
 
-AM_CONDITIONAL(LD_HAS_VERSION_SCRIPT,test "$datrie_cv_have_version_script" = "1")
+AM_CONDITIONAL(LD_HAS_VERSION_SCRIPT,
+               test "$datrie_cv_have_version_script" = "yes")
 
 # Checks for libraries.
 

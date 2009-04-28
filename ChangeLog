@@ -1,5 +1,10 @@
 2009-04-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* configure.ac: Check $datrie_cv_have_version_script against "yes",
+	not "1", so symbol versioning works on GNU ld again.
+
+2009-04-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/trie.c (trie_state_copy): Use bitwise copy instead of
 	member-wise.
 
