@@ -53,8 +53,8 @@ Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Double-array trie library
- Shared libraries needed to run programs that use the datrie library.
- It is usually automatically installed.
+ This package provides shared libraries needed to run programs that use the
+ datrie library. It is usually automatically installed.
 
 Package: libdatrie-doc
 Section: doc
