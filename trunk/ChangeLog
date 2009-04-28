@@ -1,3 +1,8 @@
+2009-04-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/trie.c (trie_state_copy): Use bitwise copy instead of
+	member-wise.
+
 2009-04-15  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.ac: Adjust variable name datrie_cv_have_version_script.
