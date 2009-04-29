@@ -1,5 +1,11 @@
 libdatrie
 
+0.2.2 (2009-04-29)
+=====
+- Support building with linkers without symbol versioning supports,
+  including Mac, Cygwin, MinGW.
+- Support other iconv implementations than that's in glibc, for Mac and MinGW.
+
 0.2.1 (2009-04-05)
 =====
 - Fix errors in documentation
