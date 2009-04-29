@@ -49,7 +49,6 @@ Description: Programs for double-array trie library
  including trietool, the trie manipulation tool.
 
 Package: libdatrie1
-Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Double-array trie library
