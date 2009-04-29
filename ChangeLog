@@ -1,3 +1,9 @@
+2009-04-29  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configure.ac: Bump library revision.
+	* NEWS, configure.ac:
+	=== Version 0.2.2 ===
+
 2009-04-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.ac: Check $datrie_cv_have_version_script against "yes",
