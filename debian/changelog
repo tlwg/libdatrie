@@ -1,8 +1,10 @@
-libdatrie (0.2.1-3) UNRELEASED; urgency=low
+libdatrie (0.2.2-1) unstable; urgency=low
 
   * Use complete sentences in libdatrie1 long description. (Closes: #525806)
+  * New upstream release, fixing builds on non-GNU systems.
+  * Remove duplicated field "section" for libdatrie1 [lintian].
 
- -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Tue, 28 Apr 2009 14:55:59 +0700
+ -- Theppitak Karoonboonyanan <thep@linux.thai.net>  Wed, 29 Apr 2009 15:24:31 +0700
 
 libdatrie (0.2.1-2) unstable; urgency=low
 
