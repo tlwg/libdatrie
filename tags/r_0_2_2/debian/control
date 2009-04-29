@@ -1,0 +1,75 @@
+Source: libdatrie
+Priority: optional
+Maintainer: Theppitak Karoonboonyanan <thep@linux.thai.net>
+DM-Upload-Allowed: yes
+Build-Depends: debhelper (>= 7), autotools-dev
+Build-Depends-Indep: doxygen
+Standards-Version: 3.8.1
+Section: libs
+Vcs-Svn: http://linux.thai.net/svn/software/datrie
+Vcs-Browser: http://linux.thai.net/websvn/wsvn/software.datrie/?sc=0
+Homepage: http://libthai.sourceforge.net/
+
+Package: libdatrie-dev
+Section: libdevel
+Architecture: any
+Depends: libdatrie1 (= ${binary:Version})
+Suggests: libdatrie-doc (= ${source:Version})
+Conflicts: libdatrie0-dev
+Description: Development files for double-array trie library
+ Trie is a kind of digital search tree, an efficient indexing method with
+ O(1) time complexity for searching. Comparably as efficient as hashing,
+ trie also provides flexibility on incremental matching and key spelling
+ manipulation. This makes it ideal for lexical analyzers, as well as
+ spelling dictionaries.
+ .
+ This library is an implementation of double-array structure for representing 
+ trie, as proposed by Junichi Aoe. The details of the implementation can be 
+ found at http://linux.thai.net/~thep/datrie/datrie.html
+ .
+ This package contains the development libraries, header files and manpages
+ you need to develop your programs using the datrie library.
+
+Package: libdatrie1-bin
+Section: misc
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Programs for double-array trie library
+ Trie is a kind of digital search tree, an efficient indexing method with
+ O(1) time complexity for searching. Comparably as efficient as hashing,
+ trie also provides flexibility on incremental matching and key spelling
+ manipulation. This makes it ideal for lexical analyzers, as well as
+ spelling dictionaries.
+ .
+ This library is an implementation of double-array structure for representing 
+ trie, as proposed by Junichi Aoe. The details of the implementation can be 
+ found at http://linux.thai.net/~thep/datrie/datrie.html
+ .
+ This package contains the program files which is used with the library,
+ including trietool, the trie manipulation tool.
+
+Package: libdatrie1
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Double-array trie library
+ This package provides shared libraries needed to run programs that use the
+ datrie library. It is usually automatically installed.
+
+Package: libdatrie-doc
+Section: doc
+Architecture: all
+Depends: lynx | www-browser
+Conflicts: libdatrie0-doc
+Description: Documentation files for double-array trie library
+ Trie is a kind of digital search tree, an efficient indexing method with
+ O(1) time complexity for searching. Comparably as efficient as hashing,
+ trie also provides flexibility on incremental matching and key spelling
+ manipulation. This makes it ideal for lexical analyzers, as well as
+ spelling dictionaries.
+ .
+ This library is an implementation of double-array structure for representing 
+ trie, as proposed by Junichi Aoe. The details of the implementation can be 
+ found at http://linux.thai.net/~thep/datrie/datrie.html
+ .
+ This package contains some documents about the datrie library.

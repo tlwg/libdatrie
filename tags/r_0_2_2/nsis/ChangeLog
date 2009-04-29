@@ -1,0 +1,41 @@
+2009-04-14  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* libdatrie.nsi: Do not install obsolete man3/* for -devel subpackage.
+
+2007-04-06  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Incorporate changes for componentized installation by Taniya Supasin
+	<taniya.supasin@gmail.com>.
+
+	* libdatrie.nsi: Split section into runtime, devel, doc components.
+	Handle component dependency in UI. Set default directory to
+	c:\libdatrie.
+
+	* contrib/libdatrienv.sh: Set $MANPAGE env.
+
+	* make-nsis: Append '.txt' extension to package docs.
+
+2007-03-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* make-nsis:
+	Explicitly list files to copy from contrib, to prevent failure on
+	presence of the extra CVS directory.
+
+2007-03-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+	
+	First import NSIS-based installer by Taniya Supasin
+	<taniya.supasin@gmail.com>.
+
+	* libdatrie.nsi, SearchReplace.nsh, WriteEnvStr.nsh, WritePathStr.nsh:
+	Import Taniya's NSIS scripts.
+
+	* contrib/libdatrienv.sh:
+	Import Taniya's shell profile for building environment.
+
+	* make-nsis:
+	Write make rules for building the installer using mingw32
+	cross-compilation and nsis.
+
+	* README:
+	Document the build process.
+
