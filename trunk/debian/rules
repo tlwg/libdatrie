@@ -36,12 +36,8 @@ SHLIB_VER := 0.2.0
 config.status: configure
 	dh_testdir
 
-ifneq "$(wildcard /usr/share/misc/config.sub)" ""
-	cp -f /usr/share/misc/config.sub config.sub
-endif
-ifneq "$(wildcard /usr/share/misc/config.guess)" ""
-	cp -f /usr/share/misc/config.guess config.guess
-endif
+	[ ! -d m4 ] && mkdir m4
+	autoreconf --install
 
 	# Add here commands to configure the package.
 	./configure $(build_flags) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
@@ -74,13 +70,7 @@ clean:
 	dh_testroot
 
 	# Add here commands to clean up after the build process.
-	[ ! -f Makefile ] || $(MAKE) distclean
-ifneq "$(wildcard /usr/share/misc/config.sub)" ""
-	rm -f config.sub
-endif
-ifneq "$(wildcard /usr/share/misc/config.guess)" ""
-	rm -f config.guess
-endif
+	[ ! -f Makefile ] || $(MAKE) maintainerclean
 
 	dh_clean
 

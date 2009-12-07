@@ -1,3 +1,23 @@
+libdatrie (0.2.2-2) unstable; urgency=low
+
+  * debian/control:
+    - Update my e-mail address to @debian.org.
+    - Drop DM-Upload-Allowed.
+  * debian/copyright:
+    - Update my e-mail address for debian/* to @debian.org.
+  * debian/rules:
+    - Run autoreconf instead of just updating config.{sub,guess}, as required
+      by libtool
+    - Run 'make maintainerclean' instead of 'make distclean' on clean target,
+      to clear all autoconf-generated files
+  * debian/control:
+    - Build-Depends on libtool, automake, autoconf, for autoreconf.
+    - Drop Build-Depends on autotools-dev
+  * Switch to "3.0 (quilt)" source format.
+  * Bump Standards-Version to 3.8.3 (no changes needed)
+
+ -- Theppitak Karoonboonyanan <thep@debian.org>  Mon, 07 Dec 2009 12:40:05 +0700
+
 libdatrie (0.2.2-1) unstable; urgency=low
 
   * Use complete sentences in libdatrie1 long description. (Closes: #525806)

@@ -1,10 +1,9 @@
 Source: libdatrie
 Priority: optional
-Maintainer: Theppitak Karoonboonyanan <thep@linux.thai.net>
-DM-Upload-Allowed: yes
-Build-Depends: debhelper (>= 7), autotools-dev
+Maintainer: Theppitak Karoonboonyanan <thep@debian.org>
+Build-Depends: debhelper (>= 7), libtool, automake, autoconf
 Build-Depends-Indep: doxygen
-Standards-Version: 3.8.1
+Standards-Version: 3.8.3
 Section: libs
 Vcs-Svn: http://linux.thai.net/svn/software/datrie
 Vcs-Browser: http://linux.thai.net/websvn/wsvn/software.datrie/?sc=0
