@@ -12,7 +12,7 @@ Homepage: http://libthai.sourceforge.net/
 Package: libdatrie-dev
 Section: libdevel
 Architecture: any
-Depends: libdatrie1 (= ${binary:Version})
+Depends: libdatrie1 (= ${binary:Version}), ${misc:Depends}
 Suggests: libdatrie-doc (= ${source:Version})
 Conflicts: libdatrie0-dev
 Description: Development files for double-array trie library
@@ -57,7 +57,7 @@ Description: Double-array trie library
 Package: libdatrie-doc
 Section: doc
 Architecture: all
-Depends: lynx | www-browser
+Depends: lynx | www-browser, ${misc:Depends}
 Conflicts: libdatrie0-doc
 Description: Documentation files for double-array trie library
  Trie is a kind of digital search tree, an efficient indexing method with

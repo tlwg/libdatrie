@@ -1,3 +1,14 @@
+libdatrie (0.2.2-3) unstable; urgency=low
+
+  * debian/rules: Fix failure to build twice in a row (Closes: #564815):
+    - Fix typo '$(MAKE) maintainerclan'
+    - Clean other changed files left over from 'make maintainer-clean'
+    - 'config.status' depends on 'configure.ac' instead of 'configure'
+    - Don't fail if m4/ already exists
+  * Add missing ${misc:Depends} [lintian].
+
+ -- Theppitak Karoonboonyanan <thep@debian.org>  Wed, 13 Jan 2010 20:48:24 +0700
+
 libdatrie (0.2.2-2) unstable; urgency=low
 
   * debian/control:
