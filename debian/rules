@@ -33,10 +33,10 @@ endif
 SHARED_PKG := libdatrie1
 SHLIB_VER := 0.2.0
 
-config.status: configure
+config.status: configure.ac
 	dh_testdir
 
-	[ ! -d m4 ] && mkdir m4
+	[ -d m4 ] || mkdir m4
 	autoreconf --install
 
 	# Add here commands to configure the package.
@@ -70,7 +70,11 @@ clean:
 	dh_testroot
 
 	# Add here commands to clean up after the build process.
-	[ ! -f Makefile ] || $(MAKE) maintainerclean
+	[ ! -f Makefile ] || $(MAKE) maintainer-clean
+	rm -f Makefile.in aclocal.m4 config.h.in configure \
+	  datrie/Makefile.in doc/Makefile.in ltmain.sh \
+	  man/Makefile.in tools/Makefile.in
+	rm -rf m4
 
 	dh_clean
 
