@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #include "tail.h"
@@ -101,6 +102,8 @@ tail_read (FILE *file)
     {
         goto exit_tail_created;
     }
+    if (t->num_tails > SIZE_MAX / sizeof (TailBlock))
+        goto exit_tail_created;
     t->tails = (TailBlock *) malloc (t->num_tails * sizeof (TailBlock));
     if (!t->tails)
         goto exit_tail_created;

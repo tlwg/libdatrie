@@ -1,5 +1,10 @@
 2010-02-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/darray.c (da_read), datrie/tail.c (tail_read):
+	Protect against possible integer overflow on malicious trie file.
+
+2010-02-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* configure.ac: Post-release version suffix added.
 
 	Be more robust against corrupted trie files.
