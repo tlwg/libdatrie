@@ -90,37 +90,51 @@ tail_read (FILE *file)
 
     /* check signature */
     save_pos = ftell (file);
-    if (!file_read_int32 (file, (int32 *) &sig) || TAIL_SIGNATURE != sig) {
-        fseek (file, save_pos, SEEK_SET);
-        return NULL;
+    if (!file_read_int32 (file, (int32 *) &sig) || TAIL_SIGNATURE != sig)
+        goto exit_file_read;
+
+    if (NULL == (t = (Tail *) malloc (sizeof (Tail))))
+        goto exit_file_read;
+
+    if (!file_read_int32 (file, &t->first_free) ||
+        !file_read_int32 (file, &t->num_tails))
+    {
+        goto exit_tail_created;
     }
-
-    t = (Tail *) malloc (sizeof (Tail));
-    if (!t)
-        return NULL;
-
-    file_read_int32 (file, &t->first_free);
-    file_read_int32 (file, &t->num_tails);
     t->tails = (TailBlock *) malloc (t->num_tails * sizeof (TailBlock));
     if (!t->tails)
         goto exit_tail_created;
     for (i = 0; i < t->num_tails; i++) {
         int16   length;
 
-        file_read_int32 (file, &t->tails[i].next_free);
-        file_read_int32 (file, &t->tails[i].data);
+        if (!file_read_int32 (file, &t->tails[i].next_free) ||
+            !file_read_int32 (file, &t->tails[i].data) ||
+            !file_read_int16 (file, &length))
+        {
+            goto exit_in_loop;
+        }
 
-        file_read_int16 (file, &length);
-        t->tails[i].suffix    = (TrieChar *) malloc (length + 1);
-        if (length > 0)
-            file_read_chars (file, (char *)t->tails[i].suffix, length);
+        t->tails[i].suffix = (TrieChar *) malloc (length + 1);
+        if (length > 0) {
+            if (!file_read_chars (file, (char *)t->tails[i].suffix, length)) {
+                free (t->tails[i].suffix);
+                goto exit_in_loop;
+            }
+        }
         t->tails[i].suffix[length] = '\0';
     }
 
     return t;
 
+exit_in_loop:
+    while (i > 0) {
+        free (t->tails[--i].suffix);
+    }
+    free (t->tails);
 exit_tail_created:
     free (t);
+exit_file_read:
+    fseek (file, save_pos, SEEK_SET);
     return NULL;
 }
 

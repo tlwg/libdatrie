@@ -119,28 +119,32 @@ alpha_map_read_bin (FILE *file)
 
     /* check signature */
     save_pos = ftell (file);
-    if (!file_read_int32 (file, (int32 *) &sig) || ALPHAMAP_SIGNATURE != sig) {
-        fseek (file, save_pos, SEEK_SET);
-        return NULL;
-    }
+    if (!file_read_int32 (file, (int32 *) &sig) || ALPHAMAP_SIGNATURE != sig)
+        goto exit_file_read;
 
-    alpha_map = alpha_map_new ();
-    if (!alpha_map)
-        return NULL;
+    if (NULL == (alpha_map = alpha_map_new ()))
+        goto exit_file_read;
 
     /* read number of ranges */
-    file_read_int32 (file, &total);
+    if (!file_read_int32 (file, &total))
+        goto exit_map_created;
 
     /* read character ranges */
     for (i = 0; i < total; i++) {
         int32   b, e;
 
-        file_read_int32 (file, &b);
-        file_read_int32 (file, &e);
+        if (!file_read_int32 (file, &b) || !file_read_int32 (file, &e))
+            goto exit_map_created;
         alpha_map_add_range (alpha_map, b, e);
     }
 
     return alpha_map;
+
+exit_map_created:
+    alpha_map_free (alpha_map);
+exit_file_read:
+    fseek (file, save_pos, SEEK_SET);
+    return NULL;
 }
 
 static int

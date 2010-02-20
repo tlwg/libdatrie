@@ -1,3 +1,15 @@
+2010-02-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configure.ac: Post-release version suffix added.
+
+	Be more robust against corrupted trie files.
+	* datrie/alpha-map.c (alpha_map_read_bin):
+	* datrie/darray.c (da_read):
+	* datrie/tail.c (tail_read):
+	  - Check all returns from file_read_*() and clean up properly on
+	    failures
+	  - Adjust existing clean up codes to the new structure
+
 2009-04-29  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.ac: Bump library revision.
