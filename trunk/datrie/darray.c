@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #include "trie-private.h"
@@ -200,6 +201,8 @@ da_read (FILE *file)
 
     /* read number of cells */
     if (!file_read_int32 (file, &d->num_cells))
+        goto exit_da_created;
+    if (d->num_cells > SIZE_MAX / sizeof (DACell))
         goto exit_da_created;
     d->cells = (DACell *) malloc (d->num_cells * sizeof (DACell));
     if (!d->cells)
