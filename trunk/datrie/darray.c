@@ -192,31 +192,36 @@ da_read (FILE *file)
 
     /* check signature */
     save_pos = ftell (file);
-    if (!file_read_int32 (file, &n) || DA_SIGNATURE != (uint32) n) {
-        fseek (file, save_pos, SEEK_SET);
-        return NULL;
-    }
+    if (!file_read_int32 (file, &n) || DA_SIGNATURE != (uint32) n)
+        goto exit_file_read;
 
-    d = (DArray *) malloc (sizeof (DArray));
-    if (!d)
-        return NULL;
+    if (NULL == (d = (DArray *) malloc (sizeof (DArray))))
+        goto exit_file_read;
 
     /* read number of cells */
-    file_read_int32 (file, &d->num_cells);
-    d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
+    if (!file_read_int32 (file, &d->num_cells))
+        goto exit_da_created;
+    d->cells = (DACell *) malloc (d->num_cells * sizeof (DACell));
     if (!d->cells)
         goto exit_da_created;
     d->cells[0].base = DA_SIGNATURE;
     d->cells[0].check= d->num_cells;
     for (n = 1; n < d->num_cells; n++) {
-        file_read_int32 (file, &d->cells[n].base);
-        file_read_int32 (file, &d->cells[n].check);
+        if (!file_read_int32 (file, &d->cells[n].base) ||
+            !file_read_int32 (file, &d->cells[n].check))
+        {
+            goto exit_da_cells_created;
+        }
     }
 
     return d;
 
+exit_da_cells_created:
+    free (d->cells);
 exit_da_created:
     free (d);
+exit_file_read:
+    fseek (file, save_pos, SEEK_SET);
     return NULL;
 }
 
