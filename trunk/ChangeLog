@@ -1,3 +1,19 @@
+2010-02-23  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Move documentation from *.h to *.c, so libdatrie developers have the
+	doc at hand. Users can still read the doxygen-generated doc BTW.
+
+	* datrie/alpha-map.h:
+	* datrie/alpha-map.c:
+	* datrie/trie.h:
+	* datrie/trie.c:
+	* datrie/darray.h:
+	* datrie/darray.c:
+	* datrie/tail.h:
+	* datrie/tail.c: Move doc comments from *.h to *.c.
+	* doc/Doxyfile.in: Add alpha-map.c, trie.c to INPUT.
+	* doc/Makefile.am: Add *.c to doxygen.stamp dependency.
+
 2010-02-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/darray.c (da_read), datrie/tail.c (tail_read):

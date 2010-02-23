@@ -65,6 +65,11 @@ struct _Tail {
  * BYTES[length]: suffix string (no terminating '\0')
  */
 
+/**
+ * @brief Create a new tail object
+ *
+ * Create a new empty tail object.
+ */
 Tail *
 tail_new ()
 {
@@ -81,6 +86,17 @@ tail_new ()
     return t;
 }
 
+/**
+ * @brief Read tail data from file
+ *
+ * @param file : the file to read
+ *
+ * @return a pointer to the openned tail data, NULL on failure
+ *
+ * Read tail data from the opened file, starting from the current
+ * file pointer until the end of tail data block. On return, the
+ * file pointer is left at the position after the read block.
+ */
 Tail *
 tail_read (FILE *file)
 {
@@ -141,6 +157,15 @@ exit_file_read:
     return NULL;
 }
 
+/**
+ * @brief Free tail data
+ *
+ * @param t : the tail data
+ *
+ * @return 0 on success, non-zero on failure
+ *
+ * Free the given tail data.
+ */
 void
 tail_free (Tail *t)
 {
@@ -155,6 +180,17 @@ tail_free (Tail *t)
     free (t);
 }
 
+/**
+ * @brief Write tail data
+ *
+ * @param t     : the tail data
+ * @param file  : the file to write to
+ *
+ * @return 0 on success, non-zero on failure
+ *
+ * Write tail data to the given @a file, starting from the current file
+ * pointer. On return, the file pointer is left after the tail data block.
+ */
 int
 tail_write (const Tail *t, FILE *file)
 {
@@ -190,6 +226,17 @@ tail_write (const Tail *t, FILE *file)
 }
 
 
+/**
+ * @brief Get suffix
+ *
+ * @param t     : the tail data
+ * @param index : the index of the suffix
+ *
+ * @return an allocated string of the indexed suffix.
+ *
+ * Get suffix from tail with given @a index. The returned string is allocated.
+ * The caller should free it with free().
+ */
 const TrieChar *
 tail_get_suffix (const Tail *t, TrieIndex index)
 {
@@ -197,6 +244,15 @@ tail_get_suffix (const Tail *t, TrieIndex index)
     return (index < t->num_tails) ? t->tails[index].suffix : NULL;
 }
 
+/**
+ * @brief Set suffix of existing entry
+ *
+ * @param t      : the tail data
+ * @param index  : the index of the suffix
+ * @param suffix : the new suffix
+ *
+ * Set suffix of existing entry of given @a index in tail.
+ */
 Bool
 tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix)
 {
@@ -217,6 +273,16 @@ tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix)
     return FALSE;
 }
 
+/**
+ * @brief Add a new suffix
+ *
+ * @param t      : the tail data
+ * @param suffix : the new suffix
+ *
+ * @return the index of the newly added suffix.
+ *
+ * Add a new suffix entry to tail.
+ */
 TrieIndex
 tail_add_suffix (Tail *t, const TrieChar *suffix)
 {
@@ -277,6 +343,16 @@ tail_free_block (Tail *t, TrieIndex block)
         t->first_free = block;
 }
 
+/**
+ * @brief Get data associated to suffix entry
+ *
+ * @param t      : the tail data
+ * @param index  : the index of the suffix
+ *
+ * @return the data associated to the suffix entry
+ *
+ * Get data associated to suffix entry @a index in tail data.
+ */
 TrieData
 tail_get_data (const Tail *t, TrieIndex index)
 {
@@ -284,6 +360,17 @@ tail_get_data (const Tail *t, TrieIndex index)
     return (index < t->num_tails) ? t->tails[index].data : TRIE_DATA_ERROR;
 }
 
+/**
+ * @brief Set data associated to suffix entry
+ *
+ * @param t      : the tail data
+ * @param index  : the index of the suffix
+ * @param data   : the data to set
+ *
+ * @return boolean indicating success
+ *
+ * Set data associated to suffix entry @a index in tail data.
+ */
 Bool
 tail_set_data (Tail *t, TrieIndex index, TrieData data)
 {
@@ -295,12 +382,36 @@ tail_set_data (Tail *t, TrieIndex index, TrieData data)
     return FALSE;
 }
 
+/**
+ * @brief Delete suffix entry
+ *
+ * @param t      : the tail data
+ * @param index  : the index of the suffix to delete
+ *
+ * Delete suffix entry from the tail data.
+ */
 void
 tail_delete (Tail *t, TrieIndex index)
 {
     tail_free_block (t, index);
 }
 
+/**
+ * @brief Walk in tail with a string
+ *
+ * @param t          : the tail data
+ * @param s          : the tail data index
+ * @param suffix_idx : pointer to current character index in suffix
+ * @param str        : the string to use in walking
+ * @param len        : total characters in @a str to walk
+ *
+ * @return total number of characters successfully walked
+ *
+ * Walk in the tail data @a t at entry @a s, from given character position
+ * @a *suffix_idx, using @a len characters of given string @a str. On return,
+ * @a *suffix_idx is updated to the position after the last successful walk,
+ * and the function returns the total number of character succesfully walked.
+ */
 int
 tail_walk_str  (const Tail      *t,
                 TrieIndex        s,
@@ -330,6 +441,21 @@ tail_walk_str  (const Tail      *t,
     return i;
 }
 
+/**
+ * @brief Walk in tail with a character
+ *
+ * @param t          : the tail data
+ * @param s          : the tail data index
+ * @param suffix_idx : pointer to current character index in suffix
+ * @param c          : the character to use in walking
+ *
+ * @return boolean indicating success
+ *
+ * Walk in the tail data @a t at entry @a s, from given character position
+ * @a *suffix_idx, using given character @a c. If the walk is successful,
+ * it returns TRUE, and @a *suffix_idx is updated to the next character.
+ * Otherwise, it returns FALSE, and @a *suffix_idx is left unchanged.
+ */
 Bool
 tail_walk_char (const Tail      *t,
                 TrieIndex        s,
