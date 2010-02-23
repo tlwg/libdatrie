@@ -575,7 +575,9 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  = @top_srcdir@/datrie/alpha-map.h \
+                         @top_srcdir@/datrie/alpha-map.c \
                          @top_srcdir@/datrie/trie.h \
+                         @top_srcdir@/datrie/trie.c \
                          @top_srcdir@/datrie/triedefs.h \
                          @top_srcdir@/datrie/typedefs.h
 

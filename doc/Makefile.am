@@ -2,7 +2,7 @@ if ENABLE_DOXYGEN_DOC
 
 all-local: doxygen.stamp
 
-doxygen.stamp: $(top_srcdir)/datrie/*.h
+doxygen.stamp: $(top_srcdir)/datrie/*.h $(top_srcdir)/datrie/*.c
 	$(DOXYGEN)
 	touch doxygen.stamp
 
