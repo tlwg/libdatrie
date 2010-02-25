@@ -1,7 +1,7 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /*
  * libdatrie - Double-Array Trie Library
- * Copyright (C) 2006  Theppitak Karoonboonyanan
+ * Copyright (C) 2006  Theppitak Karoonboonyanan <thep@linux.thai.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
