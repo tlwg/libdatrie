@@ -1,3 +1,7 @@
+2010-02-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/*.h, datrie/*.c: Add my e-mail address to license header.
+
 2010-02-24  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/*.h, datrie/*.c: Add license header to every source file.
