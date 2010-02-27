@@ -1,3 +1,10 @@
+libdatrie (0.2.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * Bump Standards-Version to 3.8.4 (no changes needed)
+
+ -- Theppitak Karoonboonyanan <thep@debian.org>  Sat, 27 Feb 2010 21:09:46 +0700
+
 libdatrie (0.2.2-3) unstable; urgency=low
 
   * debian/rules: Fix failure to build twice in a row (Closes: #564815):
