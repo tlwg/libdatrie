@@ -1,3 +1,9 @@
+2010-02-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configure.ac: Bump library revision.
+	* NEWS, configure.ac:
+	=== Version 0.2.3 ===
+
 2010-02-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/*.h, datrie/*.c: Add my e-mail address to license header.
