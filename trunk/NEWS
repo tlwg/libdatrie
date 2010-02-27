@@ -1,5 +1,10 @@
 libdatrie
 
+0.2.3 (2010-02-27)
+=====
+- More robustness against corrupted trie files.
+- License clarification in individual source files.
+
 0.2.2 (2009-04-29)
 =====
 - Support building with linkers without symbol versioning supports,
