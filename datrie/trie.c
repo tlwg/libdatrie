@@ -230,7 +230,6 @@ trie_save (Trie *trie, const char *path)
     }
 
     trie->is_dirty = FALSE;
-    return 0;
 
 exit_file_openned:
     fclose (file);
