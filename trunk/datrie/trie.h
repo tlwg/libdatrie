@@ -86,6 +86,8 @@ Bool    trie_retrieve (const Trie      *trie,
 
 Bool    trie_store (Trie *trie, const AlphaChar *key, TrieData data);
 
+Bool    trie_store_if_absent (Trie *trie, const AlphaChar *key, TrieData data);
+
 Bool    trie_delete (Trie *trie, const AlphaChar *key);
 
 Bool    trie_enumerate (const Trie     *trie,
