@@ -68,6 +68,12 @@ static TrieState * trie_state_new (const Trie *trie,
                                    short       suffix_idx,
                                    short       is_suffix);
 
+static Bool
+trie_store_conditionally (Trie            *trie,
+                          const AlphaChar *key,
+                          TrieData         data,
+                          Bool             is_overwrite);
+
 static Bool        trie_branch_in_branch (Trie           *trie,
                                           TrieIndex       sep_node,
                                           const TrieChar *suffix,
@@ -309,7 +315,7 @@ trie_retrieve (const Trie *trie, const AlphaChar *key, TrieData *o_data)
 }
 
 /**
- * @brief Store a value for  an entry to trie
+ * @brief Store a value for an entry to trie
  *
  * @param trie  : the trie
  * @param key   : the key for the entry to retrieve
@@ -323,6 +329,37 @@ trie_retrieve (const Trie *trie, const AlphaChar *key, TrieData *o_data)
  */
 Bool
 trie_store (Trie *trie, const AlphaChar *key, TrieData data)
+{
+    return trie_store_conditionally (trie, key, data, TRUE);
+}
+
+/**
+ * @brief Store a value for an entry to trie only if the key is not present
+ *
+ * @param trie  : the trie
+ * @param key   : the key for the entry to retrieve
+ * @param data  : the data associated to the entry
+ *
+ * @return boolean value indicating the success of the process
+ *
+ * Store a @a data for the given @a key in @a trie. If @a key does not 
+ * exist in @a trie, it will be appended. If it does, the function will
+ * return failure and the existing value will not be touched.
+ *
+ * This can be useful for multi-thread applications, as race condition
+ * can be avoided.
+ */
+Bool
+trie_store_if_absent (Trie *trie, const AlphaChar *key, TrieData data)
+{
+    return trie_store_conditionally (trie, key, data, FALSE);
+}
+
+static Bool
+trie_store_conditionally (Trie            *trie,
+                          const AlphaChar *key,
+                          TrieData         data,
+                          Bool             is_overwrite)
 {
     TrieIndex        s, t;
     short            suffix_idx;
@@ -368,7 +405,10 @@ trie_store (Trie *trie, const AlphaChar *key, TrieData data)
             break;
     }
 
-    /* duplicated key, overwrite val */
+    /* duplicated key, overwrite val if flagged */
+    if (!is_overwrite) {
+        return FALSE;
+    }
     tail_set_data (trie->tail, t, data);
     trie->is_dirty = TRUE;
     return TRUE;

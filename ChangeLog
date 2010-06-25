@@ -1,3 +1,15 @@
+2010-06-24  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Add trie_store_if_absent() interface to avoid race condition in
+	multi-thread applications. Thanks Dan Searle <dan.searle@censornet.com>
+	for the suggestion.
+
+	* trie.h (trie_store_if_absent): Add new API declaration.
+	* trie.c (trie_store_if_absent, trie_store, trie_store_conditionally):
+	Refactor trie_store() into trie_store_conditionally() with extra arg
+	is_overwrite, and make the two public functions mere wrappers to it.
+	* configure.ac: Bump library version according to the added symbol.
+
 2010-03-01  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/trie.c (trie_save): Do not return before closing file.

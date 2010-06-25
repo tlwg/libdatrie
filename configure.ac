@@ -13,9 +13,9 @@ AM_INIT_AUTOMAKE
 # Library code modified:                    REVISION++
 # Interfaces added:              CURRENT++  REVISION=0  AGE++
 # Interfaces changed/removed:    CURRENT++  REVISION=0  AGE=0
-LT_CURRENT=1
-LT_REVISION=3
-LT_AGE=0
+LT_CURRENT=2
+LT_REVISION=0
+LT_AGE=1
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
