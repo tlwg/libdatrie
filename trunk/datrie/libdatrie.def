@@ -5,8 +5,10 @@ alpha_map_add_range
 alpha_char_strlen
 trie_new
 trie_new_from_file
+trie_fread
 trie_free
 trie_save
+trie_fwrite
 trie_is_dirty
 trie_retrieve
 trie_store

@@ -1,3 +1,17 @@
+2010-06-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Add trie_fread() and trie_fwrite() interfaces for reading/writing trie
+	data from an open file. Thanks NIIBE Yutaka <gniibe@fsij.org> for the
+	suggestion.
+
+	* datrie/trie.h (trie_fread, trie_fwrite): Add new API declarations.
+	* datrie/trie.c (trie_new_from_file, trie_fread, trie_save,
+	  trie_fwrite):
+	Refactor open file handling of trie_new_from_file() and trie_save()
+	into trie_fread() and trie_fwrite(), and make the old functions
+	do file opening/closing as wrappers to them.
+	* datrie/libdatrie.def, datrie/libdatrie.map: Add symbol exports.
+
 2010-06-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/trie.c (trie_store_if_absent): Document that it's available

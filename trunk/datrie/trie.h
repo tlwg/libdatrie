@@ -69,9 +69,13 @@ Trie *  trie_new (const AlphaMap *alpha_map);
 
 Trie *  trie_new_from_file (const char *path);
 
+Trie *  trie_fread (FILE *file);
+
 void    trie_free (Trie *trie);
 
 int     trie_save (Trie *trie, const char *path);
+
+int     trie_fwrite (Trie *trie, FILE *file);
 
 Bool    trie_is_dirty (const Trie *trie);
 
