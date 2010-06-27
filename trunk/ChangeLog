@@ -1,11 +1,20 @@
+2010-06-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/trie.c (trie_store_if_absent): Document that it's available
+	since 0.2.4.
+	* datrie/libdatrie.def, datrie/libdatrie.map: Add symbol exports for
+	trie_store_if_absent().
+	* ChangeLog: Fix file locations in previous log.
+
 2010-06-24  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Add trie_store_if_absent() interface to avoid race condition in
 	multi-thread applications. Thanks Dan Searle <dan.searle@censornet.com>
 	for the suggestion.
 
-	* trie.h (trie_store_if_absent): Add new API declaration.
-	* trie.c (trie_store_if_absent, trie_store, trie_store_conditionally):
+	* datrie/trie.h (trie_store_if_absent): Add new API declaration.
+	* datrie/trie.c (trie_store_if_absent, trie_store,
+	  trie_store_conditionally):
 	Refactor trie_store() into trie_store_conditionally() with extra arg
 	is_overwrite, and make the two public functions mere wrappers to it.
 	* configure.ac: Bump library version according to the added symbol.
