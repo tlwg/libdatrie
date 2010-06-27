@@ -156,18 +156,42 @@ trie_new_from_file (const char *path)
     if (!trie_file)
         return NULL;
 
+    trie = trie_fread (trie_file);
+    fclose (trie_file);
+    return trie;
+}
+
+/**
+ * @brief Create a new trie by reading from an open file
+ *
+ * @param file  : the handle of the open file
+ *
+ * @return a pointer to the created trie, NULL on failure
+ *
+ * Create a new trie and initialize its contents by reading from the open
+ * @a file. After reading, the file pointer is left at the end of the trie data.
+ * This can be useful for reading embedded trie index as part of a file data.
+ *
+ * The created object must be freed with trie_free().
+ *
+ * Available since: 0.2.4
+ */
+Trie *
+trie_fread (FILE *file)
+{
+    Trie       *trie;
+
     trie = (Trie *) malloc (sizeof (Trie));
     if (!trie)
-        goto exit_file_openned;
+        return NULL;
 
-    if (NULL == (trie->alpha_map = alpha_map_read_bin (trie_file)))
+    if (NULL == (trie->alpha_map = alpha_map_read_bin (file)))
         goto exit_trie_created;
-    if (NULL == (trie->da   = da_read (trie_file)))
+    if (NULL == (trie->da   = da_read (file)))
         goto exit_alpha_map_created;
-    if (NULL == (trie->tail = tail_read (trie_file)))
+    if (NULL == (trie->tail = tail_read (file)))
         goto exit_da_created;
 
-    fclose (trie_file);
     trie->is_dirty = FALSE;
     return trie;
 
@@ -177,8 +201,6 @@ exit_alpha_map_created:
     alpha_map_free (trie->alpha_map);
 exit_trie_created:
     free (trie);
-exit_file_openned:
-    fclose (trie_file);
     return NULL;
 }
 
@@ -220,26 +242,41 @@ trie_save (Trie *trie, const char *path)
     if (!file)
         return -1;
 
-    if (alpha_map_write_bin (trie->alpha_map, file) != 0) {
-        res = -1;
-        goto exit_file_openned;
-    }
+    res = trie_fwrite (trie, file);
+    fclose (file);
+    return res;
+}
 
-    if (da_write (trie->da, file) != 0) {
-        res = -1;
-        goto exit_file_openned;
-    }
+/**
+ * @brief Write trie data to an open file
+ *
+ * @param trie  : the trie
+ *
+ * @param file  : the open file
+ *
+ * @return 0 on success, non-zero on failure
+ *
+ * Write @a trie data to @a file which is opened for writing.
+ * After writing, the file pointer is left at the end of the trie data.
+ * This can be useful for embedding trie index as part of a file data.
+ *
+ * Available since: 0.2.4
+ */
+int
+trie_fwrite (Trie *trie, FILE *file)
+{
+    if (alpha_map_write_bin (trie->alpha_map, file) != 0)
+        return -1;
 
-    if (tail_write (trie->tail, file) != 0) {
-        res = -1;
-        goto exit_file_openned;
-    }
+    if (da_write (trie->da, file) != 0)
+        return -1;
+
+    if (tail_write (trie->tail, file) != 0)
+        return -1;
 
     trie->is_dirty = FALSE;
 
-exit_file_openned:
-    fclose (file);
-    return res;
+    return 0;
 }
 
 /**
