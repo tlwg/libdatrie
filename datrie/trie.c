@@ -348,6 +348,8 @@ trie_store (Trie *trie, const AlphaChar *key, TrieData data)
  *
  * This can be useful for multi-thread applications, as race condition
  * can be avoided.
+ *
+ * Available since: 0.2.4
  */
 Bool
 trie_store_if_absent (Trie *trie, const AlphaChar *key, TrieData data)

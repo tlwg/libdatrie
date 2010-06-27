@@ -26,3 +26,7 @@ global:
 local: *;
 };
 
+DATRIE_0.2.4 {
+  trie_store_if_absent;
+} DATRIE_0.2;
+

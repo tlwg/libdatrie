@@ -10,6 +10,7 @@ trie_save
 trie_is_dirty
 trie_retrieve
 trie_store
+trie_store_if_absent
 trie_delete
 trie_enumerate
 trie_root
