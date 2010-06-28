@@ -1,5 +1,14 @@
 2010-06-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/alpha-map-private.h, datrie/alpha-map.c:
+	* datrie/darray.h, datrie/darray.c:
+	* datrie/tail.h, datrie/tail.c:
+	* datrie/trie.c (trie_fread, trie_fwrite):
+	Rename *_read() and *_write() functions to *_fread() and *_fwrite(),
+	for consistency with the trie_f{read,write}() function.
+
+2010-06-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Add trie_fread() and trie_fwrite() interfaces for reading/writing trie
 	data from an open file. Thanks NIIBE Yutaka <gniibe@fsij.org> for the
 	suggestion.

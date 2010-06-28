@@ -220,7 +220,7 @@ exit_da_created:
  * file pointer is left at the position after the read block.
  */
 DArray *
-da_read (FILE *file)
+da_fread (FILE *file)
 {
     long        save_pos;
     DArray     *d = NULL;
@@ -290,7 +290,7 @@ da_free (DArray *d)
  * data block.
  */
 int
-da_write (const DArray *d, FILE *file)
+da_fwrite (const DArray *d, FILE *file)
 {
     TrieIndex   i;
 
