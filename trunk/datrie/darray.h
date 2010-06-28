@@ -55,11 +55,11 @@ typedef Bool (*DAEnumFunc) (const TrieChar   *key,
 
 DArray * da_new ();
 
-DArray * da_read (FILE *file);
+DArray * da_fread (FILE *file);
 
 void     da_free (DArray *d);
 
-int      da_write (const DArray *d, FILE *file);
+int      da_fwrite (const DArray *d, FILE *file);
 
 
 TrieIndex  da_get_root (const DArray *d);

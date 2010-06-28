@@ -162,7 +162,7 @@ alpha_map_free (AlphaMap *alpha_map)
 }
 
 AlphaMap *
-alpha_map_read_bin (FILE *file)
+alpha_map_fread_bin (FILE *file)
 {
     long        save_pos;
     uint32      sig;
@@ -213,7 +213,7 @@ alpha_map_get_total_ranges (const AlphaMap *alpha_map)
 }
 
 int
-alpha_map_write_bin (const AlphaMap *alpha_map, FILE *file)
+alpha_map_fwrite_bin (const AlphaMap *alpha_map, FILE *file)
 {
     AlphaRange *range;
 

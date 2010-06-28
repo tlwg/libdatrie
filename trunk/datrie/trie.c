@@ -185,11 +185,11 @@ trie_fread (FILE *file)
     if (!trie)
         return NULL;
 
-    if (NULL == (trie->alpha_map = alpha_map_read_bin (file)))
+    if (NULL == (trie->alpha_map = alpha_map_fread_bin (file)))
         goto exit_trie_created;
-    if (NULL == (trie->da   = da_read (file)))
+    if (NULL == (trie->da   = da_fread (file)))
         goto exit_alpha_map_created;
-    if (NULL == (trie->tail = tail_read (file)))
+    if (NULL == (trie->tail = tail_fread (file)))
         goto exit_da_created;
 
     trie->is_dirty = FALSE;
@@ -265,13 +265,13 @@ trie_save (Trie *trie, const char *path)
 int
 trie_fwrite (Trie *trie, FILE *file)
 {
-    if (alpha_map_write_bin (trie->alpha_map, file) != 0)
+    if (alpha_map_fwrite_bin (trie->alpha_map, file) != 0)
         return -1;
 
-    if (da_write (trie->da, file) != 0)
+    if (da_fwrite (trie->da, file) != 0)
         return -1;
 
-    if (tail_write (trie->tail, file) != 0)
+    if (tail_fwrite (trie->tail, file) != 0)
         return -1;
 
     trie->is_dirty = FALSE;

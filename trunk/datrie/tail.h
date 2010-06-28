@@ -41,11 +41,11 @@ typedef struct _Tail  Tail;
 
 Tail *   tail_new ();
 
-Tail *   tail_read (FILE *file);
+Tail *   tail_fread (FILE *file);
 
 void     tail_free (Tail *t);
 
-int      tail_write (const Tail *t, FILE *file);
+int      tail_fwrite (const Tail *t, FILE *file);
 
 
 const TrieChar *    tail_get_suffix (const Tail *t, TrieIndex index);

@@ -117,7 +117,7 @@ tail_new ()
  * file pointer is left at the position after the read block.
  */
 Tail *
-tail_read (FILE *file)
+tail_fread (FILE *file)
 {
     long        save_pos;
     Tail       *t;
@@ -211,7 +211,7 @@ tail_free (Tail *t)
  * pointer. On return, the file pointer is left after the tail data block.
  */
 int
-tail_write (const Tail *t, FILE *file)
+tail_fwrite (const Tail *t, FILE *file)
 {
     TrieIndex   i;
 
