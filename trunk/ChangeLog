@@ -1,3 +1,8 @@
+2010-06-30  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* NEWS, configure.ac:
+	=== Version 0.2.4 ===
+
 2010-06-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/alpha-map-private.h, datrie/alpha-map.c:
