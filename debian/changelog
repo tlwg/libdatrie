@@ -1,3 +1,11 @@
+libdatrie (0.2.4-1) unstable; urgency=low
+
+  * New upstream release
+    - debian/libdatrie1.symbols: Add new symbols according to upstream.
+  * Bump Standards-Version to 3.9.0 (no changes needed)
+
+ -- Theppitak Karoonboonyanan <thep@debian.org>  Wed, 30 Jun 2010 16:40:33 +0700
+
 libdatrie (0.2.3-1) unstable; urgency=low
 
   * New upstream release.

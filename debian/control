@@ -3,7 +3,7 @@ Priority: optional
 Maintainer: Theppitak Karoonboonyanan <thep@debian.org>
 Build-Depends: debhelper (>= 7), libtool, automake, autoconf
 Build-Depends-Indep: doxygen
-Standards-Version: 3.8.4
+Standards-Version: 3.9.0
 Section: libs
 Vcs-Svn: http://linux.thai.net/svn/software/datrie
 Vcs-Browser: http://linux.thai.net/websvn/wsvn/software.datrie/?sc=0

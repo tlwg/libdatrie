@@ -24,3 +24,7 @@ libdatrie.so.1 libdatrie1 #MINVER#
  trie_state_rewind@DATRIE_0.2 0.2.0
  trie_state_walk@DATRIE_0.2 0.2.0
  trie_store@DATRIE_0.2 0.2.0
+ DATRIE_0.2.4@DATRIE_0.2.4 0.2.4
+ trie_store_if_absent@DATRIE_0.2.4 0.2.4
+ trie_fread@DATRIE_0.2.4 0.2.4
+ trie_fwrite@DATRIE_0.2.4 0.2.4
