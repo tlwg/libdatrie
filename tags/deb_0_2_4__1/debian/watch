@@ -1,0 +1,2 @@
+version=3
+opts=pasv ftp://linux.thai.net/pub/thailinux/software/libthai/libdatrie-([\d+\.]+|\d+)\.tar\.gz debian uupdate
