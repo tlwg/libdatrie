@@ -1,5 +1,15 @@
 libdatrie
 
+0.2.4 (2010-06-30)
+=====
+- Close file on saving trie. [Bug report from Xu Jiandong]
+- Add trie_store_if_absent() API which fails on adding duplicated key.
+  This is useful for preventing race condition in multi-thread applications.
+  [Suggestion from Dan Searle]
+- Add trie_fread() and trie_fwrite() APIs for reading/writing trie data in
+  an open file, allowing trie to be embeded as part of a bigger file.
+  [Suggestion from NIIBE Yutaka]
+
 0.2.3 (2010-02-27)
 =====
 - More robustness against corrupted trie files.
