@@ -1,0 +1,12 @@
+autogen.sh
+Makefile.in
+aclocal.m4
+autom4te.cache
+config.h.in
+configure
+config.h
+config.log
+config.status
+libtool
+Makefile
+stamp-h1
