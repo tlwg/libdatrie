@@ -1,0 +1,17 @@
+Format: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=173
+Upstream-Name: libdatrie
+Upstream-Contact: Theppitak Karoonboonyanan <thep@linux.thai.net>
+Source: ftp://linux.thai.net/pub/thailinux/software/libthai/
+
+Files: *
+Copyright: 2006-2009 Theppitak Karoonboonyanan <thep@linux.thai.net>
+License: LGPL-2+
+ On Debian GNU/Linux systems, the complete text of the GNU Lesser General
+ Public License version 2 can be found in `/usr/share/common-licenses/LGPL-2'.
+
+Files: debian/*
+Copyright: 2006-2011 Theppitak Karoonboonyanan <thep@debian.org> 
+License: GPL-2+
+ On Debian GNU/Linux systems, the complete text of the GNU General Public
+ License version 2 can be found in `/usr/share/common-licenses/GPL-2'.
+

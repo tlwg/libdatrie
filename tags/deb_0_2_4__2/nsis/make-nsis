@@ -1,0 +1,50 @@
+#!/usr/bin/make -f
+
+CURDIR = $(shell pwd)
+INSTALL_DOCS = \
+	$(CURDIR)/../AUTHORS	\
+	$(CURDIR)/../ChangeLog	\
+	$(CURDIR)/../COPYING	\
+	$(CURDIR)/../INSTALL	\
+	$(CURDIR)/../NEWS	\
+	$(CURDIR)/../README
+
+all: binary
+
+distclean:
+	make distclean
+	rm -rf datrie doc man tools
+	rm -rf libdatrie
+	rm -f configure-stamp
+	rm -f *.exe
+
+configure: configure-stamp
+configure-stamp:
+	../configure --prefix=/ --host=i586-mingw32msvc
+	touch $@
+
+build: configure
+	make
+
+install:
+	make install DESTDIR=$(CURDIR)/libdatrie
+
+	# install docs
+	if [ ! -e $(CURDIR)/libdatrie/doc ]; then \
+	  mkdir $(CURDIR)/libdatrie/doc; \
+	fi
+	for file in $(INSTALL_DOCS); do \
+	  cp $$file $(CURDIR)/libdatrie/doc/`basename $$file`.txt; \
+	  todos $(CURDIR)/libdatrie/doc/$$file.txt; \
+	done
+
+	# install contrib files
+	if [ ! -e $(CURDIR)/libdatrie/contrib ]; then \
+	  mkdir $(CURDIR)/libdatrie/contrib; \
+	fi
+	cp contrib/libdatrienv.sh $(CURDIR)/libdatrie/contrib
+
+binary: build install
+	makensis libdatrie.nsi
+
+.PHONY: all distclean configure build install binary
