@@ -3,7 +3,7 @@ Priority: optional
 Maintainer: Theppitak Karoonboonyanan <thep@debian.org>
 Build-Depends: debhelper (>= 7), libtool, automake, autoconf
 Build-Depends-Indep: doxygen
-Standards-Version: 3.9.0
+Standards-Version: 3.9.1
 Section: libs
 Vcs-Svn: http://linux.thai.net/svn/software/datrie
 Vcs-Browser: http://linux.thai.net/websvn/wsvn/software.datrie/?sc=0
@@ -57,6 +57,7 @@ Description: Double-array trie library
 Package: libdatrie-doc
 Section: doc
 Architecture: all
+Multi-Arch: foreign
 Depends: lynx | www-browser, ${misc:Depends}
 Conflicts: libdatrie0-doc
 Description: Documentation files for double-array trie library

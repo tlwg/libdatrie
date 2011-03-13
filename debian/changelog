@@ -1,3 +1,17 @@
+libdatrie (0.2.4-2) unstable; urgency=low
+
+  * debian/copyright:
+    - Updated to DEP-5 rev 173.
+    - Update copyright year for debian/*.
+  * debian/rules:
+    - Drop unnecessary --infodir configure option.
+    - Use short options -i/-a instead of --indep/--arch for dh_ commands.
+  * Mark libdatrie-doc as "Multi-Arch: foreign" in preparation for multi-arch
+    environment to come. This will satisfy Recommends from libdatrie-dev.
+  * Bump Standards-Version to 3.9.1 (no changes needed)
+
+ -- Theppitak Karoonboonyanan <thep@debian.org>  Sun, 13 Mar 2011 21:32:47 +0700
+
 libdatrie (0.2.4-1) unstable; urgency=low
 
   * New upstream release
