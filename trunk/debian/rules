@@ -1,10 +1,5 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# This file was originally written by Joey Hess and Craig Small.
-# As a special exception, when this file is copied by dh-make into a
-# dh-make output file, you may use that output file without restriction.
-# This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -40,7 +35,7 @@ config.status: configure.ac
 	autoreconf --install
 
 	# Add here commands to configure the package.
-	./configure $(build_flags) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
+	./configure $(build_flags) --prefix=/usr --mandir=\$${prefix}/share/man CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
 
 
 build-indep: build-indep-stamp
@@ -82,7 +77,7 @@ install-indep: build-indep
 	dh_testdir
 	dh_testroot
 	dh_prep
-	dh_installdirs --indep
+	dh_installdirs -i
 
 	# Add here commands to install the package into debian/tmp
 	$(MAKE) -C doc install DESTDIR=$(CURDIR)/debian/tmp
@@ -91,7 +86,7 @@ install-arch: build-arch
 	dh_testdir
 	dh_testroot
 	dh_prep
-	dh_installdirs --arch
+	dh_installdirs -a
 
 	# Add here commands to install the package into debian/tmp
 	$(MAKE) -C datrie install DESTDIR=$(CURDIR)/debian/tmp
@@ -103,35 +98,35 @@ install-arch: build-arch
 binary-indep: build-indep install-indep
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs --indep ChangeLog
-	dh_installdocs --indep
-	dh_install --indep --sourcedir=debian/tmp
-	dh_link --indep
-	dh_compress --indep
-	dh_fixperms --indep
-	dh_installdeb --indep
-	dh_gencontrol --indep
-	dh_md5sums --indep
-	dh_builddeb --indep
+	dh_installchangelogs -i ChangeLog
+	dh_installdocs -i
+	dh_install -i --sourcedir=debian/tmp
+	dh_link -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
 
 # Build architecture-dependent files here.
 binary-arch: build-arch install-arch
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs --arch ChangeLog
-	dh_installdocs --arch
-	dh_install --arch --sourcedir=debian/tmp
-	dh_installman --arch
-	dh_link --arch
-	dh_strip --arch
-	dh_compress --arch
-	dh_fixperms --arch
-	dh_makeshlibs --arch -p$(SHARED_PKG) -V'$(SHARED_PKG) (>= $(SHLIB_VER))'
-	dh_installdeb --arch
-	dh_shlibdeps --arch
-	dh_gencontrol --arch
-	dh_md5sums --arch
-	dh_builddeb --arch
+	dh_installchangelogs -a ChangeLog
+	dh_installdocs -a
+	dh_install -a --sourcedir=debian/tmp
+	dh_installman -a
+	dh_link -a
+	dh_strip -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_makeshlibs -a -p$(SHARED_PKG) -V'$(SHARED_PKG) (>= $(SHLIB_VER))'
+	dh_installdeb -a
+	dh_shlibdeps -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
 
 binary: binary-indep binary-arch
 .PHONY: build build-arch build-indep clean binary-indep binary-arch binary install-arch install-indep
