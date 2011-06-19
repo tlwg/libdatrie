@@ -5,6 +5,7 @@
 #export DH_VERBOSE=1
 
 
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 # These are used for cross-compiling and for saving the configure script
 # from having to guess our platform (since we know it already)
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
@@ -32,10 +33,13 @@ config.status: configure.ac
 	dh_testdir
 
 	[ -d m4 ] || mkdir m4
-	autoreconf --install
+	dh_autoreconf
 
 	# Add here commands to configure the package.
-	./configure $(build_flags) --prefix=/usr --mandir=\$${prefix}/share/man CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
+	./configure $(build_flags) --prefix=/usr \
+	  --mandir=\$${prefix}/share/man \
+	  --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
+	  CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
 
 
 build-indep: build-indep-stamp
@@ -65,11 +69,7 @@ clean:
 	dh_testroot
 
 	# Add here commands to clean up after the build process.
-	[ ! -f Makefile ] || $(MAKE) maintainer-clean
-	rm -f Makefile.in aclocal.m4 config.h.in configure \
-	  datrie/Makefile.in doc/Makefile.in ltmain.sh \
-	  man/Makefile.in tools/Makefile.in
-	rm -rf m4
+	dh_autoreconf_clean
 
 	dh_clean
 
