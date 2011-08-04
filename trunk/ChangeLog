@@ -1,3 +1,9 @@
+2011-08-04  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/alpha-map.h: Add missing 'extern "C"' for export functions
+	to fix problem with C++ compiler.
+	Thanks Aurimas Černius <aurisc4@gmail.com> for the patch.
+
 2011-03-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.ac: Post-release version suffix added.
