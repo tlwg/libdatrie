@@ -1,3 +1,13 @@
+libdatrie (0.2.5-1) unstable; urgency=low
+
+  * New upstream release.
+  * Use hardening build flags:
+    - B-Dep on dpkg-dev (>= 0.16.1~) for dpkg-buildflags
+    - Obtain build flags from dpkg-buildflags
+    - Drop old CFLAGS & LDFLAGS, as now overridden by dpkg-buildflags
+
+ -- Theppitak Karoonboonyanan <thep@debian.org>  Fri, 04 Nov 2011 16:03:41 +0700
+
 libdatrie (0.2.4-3) unstable; urgency=low
 
   * Merge Ubuntu changes (build for multiarch)

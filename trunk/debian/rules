@@ -17,14 +17,8 @@ else
 	build_flags = --build=$(DEB_BUILD_GNU_TYPE) --host=$(DEB_HOST_GNU_TYPE)
 endif
 
-
-CFLAGS = -Wall -g
-
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0
-else
-	CFLAGS += -O2
-endif
+dpkg-buildflags = DEB_BUILD_MAINT_OPTIONS="hardening=+pie,+bindnow" dpkg-buildflags
+build_flags += $(shell $(dpkg-buildflags) --export=configure)
 
 SHARED_PKG := libdatrie1
 SHLIB_VER := 0.2.0
@@ -36,10 +30,10 @@ config.status: configure.ac
 	dh_autoreconf
 
 	# Add here commands to configure the package.
-	./configure $(build_flags) --prefix=/usr \
+	./configure --prefix=/usr \
 	  --mandir=\$${prefix}/share/man \
 	  --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
-	  CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
+	  $(build_flags)
 
 
 build-indep: build-indep-stamp
