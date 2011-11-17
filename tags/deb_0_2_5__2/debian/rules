@@ -1,0 +1,127 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+ifeq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
+	build_flags = --build=$(DEB_BUILD_GNU_TYPE)
+else
+	build_flags = --build=$(DEB_BUILD_GNU_TYPE) --host=$(DEB_HOST_GNU_TYPE)
+endif
+
+dpkg-buildflags = DEB_BUILD_MAINT_OPTIONS="hardening=+pie,+bindnow" dpkg-buildflags
+build_flags += $(shell $(dpkg-buildflags) --export=configure)
+
+SHARED_PKG := libdatrie1
+SHLIB_VER := 0.2.0
+
+config.status: configure.ac
+	dh_testdir
+
+	[ -d m4 ] || mkdir m4
+	dh_autoreconf
+
+	# Add here commands to configure the package.
+	./configure --prefix=/usr \
+	  --mandir=\$${prefix}/share/man \
+	  --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
+	  $(build_flags)
+
+
+build-indep: build-indep-stamp
+build-indep-stamp:  config.status
+	dh_testdir
+
+	# Add here commands to compile the package.
+	$(MAKE) -C doc
+
+	touch $@
+
+build-arch: build-arch-stamp
+build-arch-stamp:  config.status
+	dh_testdir
+
+	# Add here commands to compile the package.
+	$(MAKE) -C datrie
+	$(MAKE) -C tools
+	$(MAKE) -C man
+
+	touch $@
+
+build: build-indep build-arch
+
+clean:
+	dh_testdir
+	dh_testroot
+
+	# Add here commands to clean up after the build process.
+	[ ! -f Makefile ] || $(MAKE) distclean
+	dh_autoreconf_clean
+
+	dh_clean
+
+install-indep: build-indep
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs -i
+
+	# Add here commands to install the package into debian/tmp
+	$(MAKE) -C doc install DESTDIR=$(CURDIR)/debian/tmp
+
+install-arch: build-arch
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs -a
+
+	# Add here commands to install the package into debian/tmp
+	$(MAKE) -C datrie install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C tools  install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C man    install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) install-am DESTDIR=$(CURDIR)/debian/tmp
+
+# Build architecture-independent files here.
+binary-indep: build-indep install-indep
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs -i ChangeLog
+	dh_installdocs -i
+	dh_install -i --sourcedir=debian/tmp
+	dh_link -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+# Build architecture-dependent files here.
+binary-arch: build-arch install-arch
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs -a ChangeLog
+	dh_installdocs -a
+	dh_install -a --sourcedir=debian/tmp
+	dh_installman -a
+	dh_link -a
+	dh_strip -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_makeshlibs -a -p$(SHARED_PKG) -V'$(SHARED_PKG) (>= $(SHLIB_VER))'
+	dh_installdeb -a
+	dh_shlibdeps -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+binary: binary-indep binary-arch
+.PHONY: build build-arch build-indep clean binary-indep binary-arch binary install-arch install-indep
