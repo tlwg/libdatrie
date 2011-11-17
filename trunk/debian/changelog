@@ -1,4 +1,4 @@
-libdatrie (0.2.5-2) UNRELEASED; urgency=low
+libdatrie (0.2.5-2) unstable; urgency=low
 
   * debian/copyright:
     - Use non-forwarding format URL. Bump to revision 202.
@@ -8,7 +8,7 @@ libdatrie (0.2.5-2) UNRELEASED; urgency=low
     - Add back upstream 'make distclean' that was lost in 0.2.4-3, so it
       builds twice in a row again.
 
- -- Theppitak Karoonboonyanan <thep@debian.org>  Thu, 17 Nov 2011 15:36:10 +0700
+ -- Theppitak Karoonboonyanan <thep@debian.org>  Thu, 17 Nov 2011 15:44:58 +0700
 
 libdatrie (0.2.5-1) unstable; urgency=low
 
