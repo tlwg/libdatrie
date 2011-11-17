@@ -63,6 +63,7 @@ clean:
 	dh_testroot
 
 	# Add here commands to clean up after the build process.
+	[ ! -f Makefile ] || $(MAKE) distclean
 	dh_autoreconf_clean
 
 	dh_clean
