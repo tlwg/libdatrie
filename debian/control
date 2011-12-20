@@ -7,7 +7,7 @@ Standards-Version: 3.9.2
 Section: libs
 Vcs-Svn: http://linux.thai.net/svn/software/datrie
 Vcs-Browser: http://linux.thai.net/websvn/wsvn/software.datrie/?sc=0
-Homepage: http://libthai.sourceforge.net/
+Homepage: http://linux.thai.net/projects/libthai
 
 Package: libdatrie-dev
 Section: libdevel

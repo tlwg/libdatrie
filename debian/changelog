@@ -1,8 +1,9 @@
 libdatrie (0.2.5-3) UNRELEASED; urgency=low
 
   * debian/control, debian/copyright: Apply wrap-and-sort.
+  * Point Homepage: directly to linux.thai.net.
 
- -- Theppitak Karoonboonyanan <thep@debian.org>  Tue, 20 Dec 2011 13:32:41 +0700
+ -- Theppitak Karoonboonyanan <thep@debian.org>  Tue, 20 Dec 2011 13:34:13 +0700
 
 libdatrie (0.2.5-2) unstable; urgency=low
 
