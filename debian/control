@@ -1,7 +1,7 @@
 Source: libdatrie
 Priority: optional
 Maintainer: Theppitak Karoonboonyanan <thep@debian.org>
-Build-Depends: dpkg-dev (>= 1.16.1~), debhelper (>= 8.1.3), dh-autoreconf
+Build-Depends: debhelper (>= 8.1.3), dh-autoreconf, dpkg-dev (>= 1.16.1~)
 Build-Depends-Indep: doxygen
 Standards-Version: 3.9.2
 Section: libs
@@ -22,8 +22,8 @@ Description: Development files for double-array trie library
  manipulation. This makes it ideal for lexical analyzers, as well as
  spelling dictionaries.
  .
- This library is an implementation of double-array structure for representing 
- trie, as proposed by Junichi Aoe. The details of the implementation can be 
+ This library is an implementation of double-array structure for representing
+ trie, as proposed by Junichi Aoe. The details of the implementation can be
  found at http://linux.thai.net/~thep/datrie/datrie.html
  .
  This package contains the development libraries, header files and manpages
@@ -32,7 +32,7 @@ Description: Development files for double-array trie library
 Package: libdatrie1-bin
 Section: misc
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: Programs for double-array trie library
  Trie is a kind of digital search tree, an efficient indexing method with
  O(1) time complexity for searching. Comparably as efficient as hashing,
@@ -40,8 +40,8 @@ Description: Programs for double-array trie library
  manipulation. This makes it ideal for lexical analyzers, as well as
  spelling dictionaries.
  .
- This library is an implementation of double-array structure for representing 
- trie, as proposed by Junichi Aoe. The details of the implementation can be 
+ This library is an implementation of double-array structure for representing
+ trie, as proposed by Junichi Aoe. The details of the implementation can be
  found at http://linux.thai.net/~thep/datrie/datrie.html
  .
  This package contains the program files which is used with the library,
@@ -49,7 +49,7 @@ Description: Programs for double-array trie library
 
 Package: libdatrie1
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Multi-Arch: same
 Description: Double-array trie library
@@ -69,8 +69,8 @@ Description: Documentation files for double-array trie library
  manipulation. This makes it ideal for lexical analyzers, as well as
  spelling dictionaries.
  .
- This library is an implementation of double-array structure for representing 
- trie, as proposed by Junichi Aoe. The details of the implementation can be 
+ This library is an implementation of double-array structure for representing
+ trie, as proposed by Junichi Aoe. The details of the implementation can be
  found at http://linux.thai.net/~thep/datrie/datrie.html
  .
  This package contains some documents about the datrie library.
