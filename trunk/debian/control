@@ -49,9 +49,9 @@ Description: Programs for double-array trie library
 
 Package: libdatrie1
 Architecture: any
+Multi-Arch: same
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
-Multi-Arch: same
 Description: Double-array trie library
  This package provides shared libraries needed to run programs that use the
  datrie library. It is usually automatically installed.
