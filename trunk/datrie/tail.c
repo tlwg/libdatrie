@@ -26,7 +26,9 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <stdint.h>
+#ifndef _MSC_VER /* for SIZE_MAX */
+# include <stdint.h>
+#endif
 #include <stdio.h>
 
 #include "tail.h"
