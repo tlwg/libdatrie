@@ -1,5 +1,11 @@
 2012-07-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/tail.c (tail_get_suffix): Fix function documentation.
+
+	Thanks Mikhail Korobov <kmike84@gmail.com> for the report.
+
+2012-07-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/darray.c, datrie/tail.c:
 	  - Don't include <stdint.h> when compiled with MSVC, as the header is
 	    missing there, and SIZE_MAX is provided in some other header.
