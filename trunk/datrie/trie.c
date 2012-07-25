@@ -121,7 +121,7 @@ trie_new (const AlphaMap *alpha_map)
     trie->tail = tail_new ();
     if (!trie->tail)
         goto exit_da_created;
- 
+
     trie->is_dirty = TRUE;
     return trie;
 
@@ -360,7 +360,7 @@ trie_retrieve (const Trie *trie, const AlphaChar *key, TrieData *o_data)
  *
  * @return boolean value indicating the success of the process
  *
- * Store a @a data for the given @a key in @a trie. If @a key does not 
+ * Store a @a data for the given @a key in @a trie. If @a key does not
  * exist in @a trie, it will be appended. If it does, its current data will
  * be overwritten.
  */
@@ -379,7 +379,7 @@ trie_store (Trie *trie, const AlphaChar *key, TrieData data)
  *
  * @return boolean value indicating the success of the process
  *
- * Store a @a data for the given @a key in @a trie. If @a key does not 
+ * Store a @a data for the given @a key in @a trie. If @a key does not
  * exist in @a trie, it will be appended. If it does, the function will
  * return failure and the existing value will not be touched.
  *
@@ -615,7 +615,7 @@ trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
  *
  * @return boolean value indicating whether all the keys are visited
  *
- * Enumerate all entries in trie. For each entry, the user-supplied 
+ * Enumerate all entries in trie. For each entry, the user-supplied
  * @a enum_func callback function is called, with the entry key and data.
  * Returning FALSE from such callback will stop enumeration and return FALSE.
  */
@@ -787,7 +787,7 @@ trie_state_is_walkable (const TrieState *s, AlphaChar c)
 
     if (!s->is_suffix)
         return da_is_walkable (s->trie->da, s->index, tc);
-    else 
+    else
         return tail_is_walkable_char (s->trie->tail, s->index, s->suffix_idx,
                                       tc);
 }

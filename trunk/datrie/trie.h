@@ -144,7 +144,7 @@ Bool      trie_state_is_single (const TrieState *s);
  *
  * @return boolean value indicating whether it is a leaf state
  *
- * Check if the given state is a leaf state. A leaf state is a terminal state 
+ * Check if the given state is a leaf state. A leaf state is a terminal state
  * that has no other branch.
  */
 #define   trie_state_is_leaf(s) \
