@@ -1,3 +1,10 @@
+2012-07-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/tail.h, datrie/tail.c:
+	* datrie/alpha-map.c:
+	* datrie/trie.h, datrie/trie.c:
+	* datrie/darray.c: Remove trailing spaces.
+
 2012-07-13  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/tail.c (tail_get_suffix): Fix function documentation.

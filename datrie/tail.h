@@ -81,7 +81,7 @@ Bool     tail_walk_char (const Tail      *t,
  *
  * @return boolean indicating walkability
  *
- * Test if the character @a c can be used to walk from given character 
+ * Test if the character @a c can be used to walk from given character
  * position @a suffix_idx of entry @a s of the tail data @a t.
  */
 /*

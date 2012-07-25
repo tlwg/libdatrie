@@ -332,7 +332,7 @@ tail_alloc_block (Tail *t)
     t->tails[block].next_free = -1;
     t->tails[block].data = TRIE_DATA_ERROR;
     t->tails[block].suffix = NULL;
-    
+
     return block + TAIL_START_BLOCKNO;
 }
 
