@@ -822,8 +822,8 @@ trie_state_is_single (const TrieState *s)
 TrieData
 trie_state_get_data (const TrieState *s)
 {
-    return s->is_suffix ? tail_get_data (s->trie->tail, s->index)
-                        : TRIE_DATA_ERROR;
+    return trie_state_is_leaf (s) ? tail_get_data (s->trie->tail, s->index)
+                                  : TRIE_DATA_ERROR;
 }
 
 /*
