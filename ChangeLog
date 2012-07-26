@@ -1,3 +1,10 @@
+2012-07-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/trie.c (trie_state_get_data):
+	Check if the state is leaf, not just suffix, before getting data.
+
+	Thanks Mikhail Korobov <kmike84@gmail.com> for the report.
+
 2012-07-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* datrie/tail.h, datrie/tail.c:
