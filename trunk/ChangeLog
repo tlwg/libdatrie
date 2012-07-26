@@ -1,5 +1,9 @@
 2012-07-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* darray/darray.c (da_has_children): Accept (const DArray *) arg.
+
+2012-07-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/darray.c (da_has_children, da_output_symbols,
 	  da_relocate_base):
 	Calculate max_c candidate using num_cells - base instead of
