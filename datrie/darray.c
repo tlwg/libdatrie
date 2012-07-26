@@ -63,7 +63,7 @@ static void         symbols_add (Symbols *syms, TrieChar c);
 static Bool         da_check_free_cell (DArray         *d,
                                         TrieIndex       s);
 
-static Bool         da_has_children    (DArray         *d,
+static Bool         da_has_children    (const DArray   *d,
                                         TrieIndex       s);
 
 static Symbols *    da_output_symbols  (const DArray   *d,
@@ -494,7 +494,7 @@ da_check_free_cell (DArray         *d,
 }
 
 static Bool
-da_has_children    (DArray         *d,
+da_has_children    (const DArray   *d,
                     TrieIndex       s)
 {
     TrieIndex   base;
