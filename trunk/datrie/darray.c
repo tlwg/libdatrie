@@ -504,7 +504,7 @@ da_has_children    (DArray         *d,
     if (TRIE_INDEX_ERROR == base || base < 0)
         return FALSE;
 
-    max_c = MIN_VAL (TRIE_CHAR_MAX, TRIE_INDEX_MAX - base);
+    max_c = MIN_VAL (TRIE_CHAR_MAX, d->num_cells - base);
     for (c = 0; c < max_c; c++) {
         if (da_get_check (d, base + c) == s)
             return TRUE;
@@ -524,7 +524,7 @@ da_output_symbols  (const DArray   *d,
     syms = symbols_new ();
 
     base = da_get_base (d, s);
-    max_c = MIN_VAL (TRIE_CHAR_MAX, TRIE_INDEX_MAX - base);
+    max_c = MIN_VAL (TRIE_CHAR_MAX, d->num_cells - base);
     for (c = 0; c < max_c; c++) {
         if (da_get_check (d, base + c) == s)
             symbols_add_fast (syms, (TrieChar) c);
@@ -660,7 +660,7 @@ da_relocate_base   (DArray         *d,
         if (old_next_base > 0) {
             TrieIndex   c, max_c;
 
-            max_c = MIN_VAL (TRIE_CHAR_MAX, TRIE_INDEX_MAX - old_next_base);
+            max_c = MIN_VAL (TRIE_CHAR_MAX, d->num_cells - old_next_base);
             for  (c = 0; c < max_c; c++) {
                 if (da_get_check (d, old_next_base + c) == old_next)
                     da_set_check (d, old_next_base + c, new_next);

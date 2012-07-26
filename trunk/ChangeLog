@@ -1,5 +1,12 @@
 2012-07-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* datrie/darray.c (da_has_children, da_output_symbols,
+	  da_relocate_base):
+	Calculate max_c candidate using num_cells - base instead of
+	TRIE_INDEX_MAX - base, to prevent more unnecessary loops.
+
+2012-07-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* datrie/trie.c (trie_state_get_data):
 	Check if the state is leaf, not just suffix, before getting data.
 
