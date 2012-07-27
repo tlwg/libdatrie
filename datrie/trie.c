@@ -793,6 +793,52 @@ trie_state_is_walkable (const TrieState *s, AlphaChar c)
 }
 
 /**
+ * @brief Get all walkable characters from state
+ *
+ * @param s     : the state to get
+ * @param chars : the storage for the result
+ * @param chars_nelm : the size of @a chars[] in number of elements
+ *
+ * @return total walkable characters
+ *
+ * Get the list of all walkable characters from state @a s. At most
+ * @a chars_nelm walkable characters are stored in @a chars[] on return.
+ *
+ * The function returns the actual number of walkable characters from @a s.
+ * Note that this may not equal the number of characters stored in @a chars[]
+ * if @a chars_nelm is less than the actual number.
+ *
+ * Since: 0.2.6
+ */
+int
+trie_state_walkable_chars (const TrieState *s,
+                           AlphaChar chars[],
+                           int chars_nelm)
+{
+    int syms_num = 0;
+
+    if (!s->is_suffix) {
+        Symbols *syms = da_output_symbols (s->trie->da, s->index);
+        int i;
+
+        syms_num = symbols_num (syms);
+        for (i = 0; i < syms_num && i < chars_nelm; i++) {
+            TrieChar tc = symbols_get (syms, i);
+            chars[i] = alpha_map_trie_to_char (s->trie->alpha_map, tc);
+        }
+
+        symbols_free (syms);
+    } else {
+        const TrieChar *suffix = tail_get_suffix (s->trie->tail, s->index);
+        chars[0] = alpha_map_trie_to_char (s->trie->alpha_map,
+                                           suffix[s->suffix_idx]);
+        syms_num = 1;
+    }
+
+    return syms_num;
+}
+
+/**
  * @brief Check for single path
  *
  * @param s    : the state to check

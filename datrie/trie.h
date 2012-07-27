@@ -123,6 +123,10 @@ Bool      trie_state_walk (TrieState *s, AlphaChar c);
 
 Bool      trie_state_is_walkable (const TrieState *s, AlphaChar c);
 
+int       trie_state_walkable_chars (const TrieState *s,
+                                     AlphaChar chars[],
+                                     int chars_nelm);
+
 /**
  * @brief Check for terminal state
  *
