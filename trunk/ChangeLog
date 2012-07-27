@@ -1,3 +1,20 @@
+2012-07-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Add new API trie_state_walkable_chars() to allow breadth-first
+	traversal.
+
+	* datrie/darray.h, datrie/darray.c:
+	  - Move da_output_symbols() to darray.h, to be called by the new
+	    function.
+	  - Move the Symbols class to darray.h, as required by
+	    da_output_symbols().
+	* datrie/trie.h, datrie/trie.c (+trie_state_walkable_chars):
+	  - Add the new public function.
+	* datrie/libdatrie.map, datrie/libdatrie.def:
+	  - Add the new symbol to export maps.
+	* configure.ac:
+	  - Update library versioning to reflect API addition.
+
 2012-07-26  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* darray/darray.c (da_has_children): Accept (const DArray *) arg.

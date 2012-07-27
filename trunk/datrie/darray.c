@@ -39,19 +39,11 @@
  *    INTERNAL TYPES DECLARATIONS   *
  *----------------------------------*/
 
-typedef struct _Symbols Symbols;
-
 struct _Symbols {
     short       num_symbols;
     TrieChar    symbols[256];
 };
 
-static Symbols *    symbols_new ();
-static void         symbols_free (Symbols *syms);
-static void         symbols_add (Symbols *syms, TrieChar c);
-
-#define symbols_num(s)          ((s)->num_symbols)
-#define symbols_get(s,i)        ((s)->symbols[i])
 #define symbols_add_fast(s,c)   ((s)->symbols[(s)->num_symbols++] = c)
 
 /*-----------------------------------*
@@ -64,9 +56,6 @@ static Bool         da_check_free_cell (DArray         *d,
                                         TrieIndex       s);
 
 static Bool         da_has_children    (const DArray   *d,
-                                        TrieIndex       s);
-
-static Symbols *    da_output_symbols  (const DArray   *d,
                                         TrieIndex       s);
 
 static TrieChar *   da_get_state_key   (const DArray   *d,
@@ -103,7 +92,7 @@ static Bool         da_enumerate_recursive (const DArray   *d,
  *   INTERNAL TYPES IMPLEMENTATIONS   *
  *------------------------------------*/
 
-static Symbols *
+Symbols *
 symbols_new ()
 {
     Symbols *syms;
@@ -118,13 +107,13 @@ symbols_new ()
     return syms;
 }
 
-static void
+void
 symbols_free (Symbols *syms)
 {
     free (syms);
 }
 
-static void
+void
 symbols_add (Symbols *syms, TrieChar c)
 {
     short lower, upper;
@@ -149,6 +138,19 @@ symbols_add (Symbols *syms, TrieChar c)
     syms->symbols[lower] = c;
     syms->num_symbols++;
 }
+
+int
+symbols_num (const Symbols *syms)
+{
+    return syms->num_symbols;
+}
+
+TrieChar
+symbols_get (const Symbols *syms, int index)
+{
+    return syms->symbols[index];
+}
+
 
 /*------------------------------*
  *    PRIVATE DATA DEFINITONS   *
@@ -513,7 +515,7 @@ da_has_children    (const DArray   *d,
     return FALSE;
 }
 
-static Symbols *
+Symbols *
 da_output_symbols  (const DArray   *d,
                     TrieIndex       s)
 {

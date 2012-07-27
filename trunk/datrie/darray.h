@@ -35,6 +35,17 @@
  */
 
 /**
+ * @brief Symbol set structure type
+ */
+typedef struct _Symbols Symbols;
+
+Symbols *    symbols_new ();
+void         symbols_free (Symbols *syms);
+void         symbols_add (Symbols *syms, TrieChar c);
+int          symbols_num (const Symbols *syms);
+TrieChar     symbols_get (const Symbols *syms, int index);
+
+/**
  * @brief Double-array structure type
  */
 typedef struct _DArray  DArray;
@@ -75,6 +86,8 @@ void       da_set_base (DArray *d, TrieIndex s, TrieIndex val);
 void       da_set_check (DArray *d, TrieIndex s, TrieIndex val);
 
 Bool       da_walk (const DArray *d, TrieIndex *s, TrieChar c);
+
+Symbols *  da_output_symbols  (const DArray *d, TrieIndex s);
 
 /**
  * @brief Test walkability in double-array structure
