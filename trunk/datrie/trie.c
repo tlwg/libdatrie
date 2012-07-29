@@ -68,11 +68,10 @@ static TrieState * trie_state_new (const Trie *trie,
                                    short       suffix_idx,
                                    short       is_suffix);
 
-static Bool
-trie_store_conditionally (Trie            *trie,
-                          const AlphaChar *key,
-                          TrieData         data,
-                          Bool             is_overwrite);
+static Bool        trie_store_conditionally (Trie            *trie,
+                                             const AlphaChar *key,
+                                             TrieData         data,
+                                             Bool             is_overwrite);
 
 static Bool        trie_branch_in_branch (Trie           *trie,
                                           TrieIndex       sep_node,
