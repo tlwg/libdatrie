@@ -808,12 +808,12 @@ trie_state_is_walkable (const TrieState *s, AlphaChar c)
  * Note that this may not equal the number of characters stored in @a chars[]
  * if @a chars_nelm is less than the actual number.
  *
- * Since: 0.2.6
+ * Available since: 0.2.6
  */
 int
-trie_state_walkable_chars (const TrieState *s,
-                           AlphaChar chars[],
-                           int chars_nelm)
+trie_state_walkable_chars (const TrieState  *s,
+                           AlphaChar         chars[],
+                           int               chars_nelm)
 {
     int syms_num = 0;
 
