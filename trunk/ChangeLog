@@ -1,3 +1,8 @@
+2012-07-29  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* datrie/trie.h, datrie/trie.c (trie_state_walkable_chars):
+	Reformat source.
+
 2012-07-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Add new API trie_state_walkable_chars() to allow breadth-first
