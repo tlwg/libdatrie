@@ -55,6 +55,15 @@ struct _TrieState {
     short       is_suffix;  /**< whether it is currently in suffix part */
 };
 
+/**
+ * @brief TrieIterator structure
+ */
+struct _TrieIterator {
+    const TrieState *root;  /**< the state to start iteration from */
+    TrieState       *state; /**< the current state */
+};
+
+
 /*------------------------*
  *   INTERNAL FUNCTIONS   *
  *------------------------*/
@@ -869,6 +878,210 @@ trie_state_get_data (const TrieState *s)
 {
     return trie_state_is_leaf (s) ? tail_get_data (s->trie->tail, s->index)
                                   : TRIE_DATA_ERROR;
+}
+
+
+/*---------------------*
+ *   ENTRY ITERATION   *
+ *---------------------*/
+
+/**
+ * @brief Create a new trie iterator
+ *
+ * @param  s  : the TrieState to start iteration from
+ *
+ * @return a pointer to the newly created TrieIterator, or NULL on failure
+ *
+ * Create a new trie iterator for iterating entries of a sub-trie rooted at
+ * state @a s.
+ *
+ * Use it with the result of trie_get_root() to iterate the whole trie.
+ *
+ * The created object must be freed with trie_iterator_free().
+ *
+ * Available since: 0.2.6
+ */
+TrieIterator *
+trie_iterator_new (TrieState *s)
+{
+    TrieIterator *iter;
+
+    iter = (TrieIterator *) malloc (sizeof (TrieIterator));
+    if (!iter)
+        return NULL;
+
+    iter->root = s;
+    iter->state = NULL;
+
+    return iter;
+}
+
+/**
+ * @brief Free a trie iterator
+ *
+ * @param  iter  : the trie iterator to free
+ *
+ * Destruct the iterator @a iter and free its allocated memory.
+ *
+ * Available since: 0.2.6
+ */
+void
+trie_iterator_free (TrieIterator *iter)
+{
+    if (iter->state) {
+        trie_state_free (iter->state);
+    }
+    free (iter);
+}
+
+/**
+ * @brief Move trie iterator to the next entry
+ *
+ * @param  iter  : an iterator
+ *
+ * @return boolean value indicating the availability of the entry
+ *
+ * Move trie iterator to the next entry.
+ * On return, the iterator @a iter is updated to reference to the new entry
+ * if successfully moved.
+ *
+ * Available since: 0.2.6
+ */
+Bool
+trie_iterator_next (TrieIterator *iter)
+{
+    TrieState *s = iter->state;
+    TrieIndex sep;
+
+    /* first iteration */
+    if (!s) {
+        s = iter->state = trie_state_clone (iter->root);
+
+        /* for tail state, we are already at the only entry */
+        if (s->is_suffix)
+            return TRUE;
+
+        sep = da_first_separate (s->trie->da, s->index);
+        if (TRIE_INDEX_ERROR == sep)
+            return FALSE;
+
+        s->index = sep;
+        return TRUE;
+    }
+
+    /* no next entry for tail state */
+    if (s->is_suffix)
+        return FALSE;
+
+    /* iter->state is a separate node */
+    sep = da_next_separate (s->trie->da, iter->root->index, s->index);
+    if (TRIE_INDEX_ERROR == sep)
+        return FALSE;
+
+    s->index = sep;
+    return TRUE;
+}
+
+/**
+ * @brief Get key for a trie iterator
+ *
+ * @param  iter      : an iterator
+ *
+ * @return the allocated key string
+ *
+ * Get key for the current entry referenced by the trie iterator @a iter.
+ *
+ * The return string must be freed with free().
+ *
+ * Available since: 0.2.6
+ */
+AlphaChar *
+trie_iterator_get_key (const TrieIterator *iter)
+{
+    const TrieState *s;
+    TrieChar        *trie_str;
+    const TrieChar  *tail_str;
+    AlphaChar       *alpha_key;
+
+    s = iter->state;
+    if (!s)
+        return NULL;
+
+    /* if s is in tail, root == s */
+    if (s->is_suffix) {
+        tail_str = tail_get_suffix (s->trie->tail, s->index);
+        trie_str = (TrieChar *) malloc (strlen (tail_str) - s->suffix_idx + 1);
+        if (!trie_str)
+            return NULL;
+        strcpy (trie_str, tail_str + s->suffix_idx);
+    } else {
+        TrieIndex  tail_idx;
+        TrieChar  *re_str;
+
+        /* get key from branching zone */
+        trie_str = da_get_transition_key (s->trie->da,
+                                          iter->root->index, s->index);
+        if (!trie_str)
+            return NULL;
+
+        /* get key from tail zone */
+        tail_idx = trie_da_get_tail_index (s->trie->da, s->index);
+        tail_str = tail_get_suffix (s->trie->tail, tail_idx);
+        if (!tail_str)
+            goto error_trie_str_created;
+
+        /* append tail string */
+        re_str = (TrieChar *) realloc (trie_str,
+                                    strlen (trie_str) + strlen (tail_str) + 1);
+        if (!re_str)
+            goto error_trie_str_created;
+        trie_str = re_str;
+        strcat (trie_str, tail_str);
+    }
+
+    alpha_key = alpha_map_trie_to_char_str (s->trie->alpha_map, trie_str);
+
+    free (trie_str);
+    return alpha_key;
+
+error_trie_str_created:
+    free (trie_str);
+    return NULL;
+}
+
+/**
+ * @brief Get data for the entry referenced by an iterator
+ *
+ * @param iter  : an iterator
+ *
+ * @return the data associated with the entry referenced by iterator @a iter,
+ *         or TRIE_DATA_ERROR if @a iter does not reference to a unique entry
+ *
+ * Get value for the entry referenced by an iterator. Getting value from an
+ * un-iterated (or broken for any reason) iterator will result in
+ * TRIE_DATA_ERROR.
+ *
+ * Available since: 0.2.6
+ */
+TrieData
+trie_iterator_get_data (const TrieIterator *iter)
+{
+    const TrieState *s = iter->state;
+    TrieIndex        tail_index;
+
+    if (!s)
+        return TRIE_DATA_ERROR;
+
+    if (!s->is_suffix) {
+        if (!trie_da_is_separate (s->trie->da, s->index))
+            return TRIE_DATA_ERROR;
+
+        tail_index = trie_da_get_tail_index (s->trie->da, s->index);
+    } else {
+        tail_index = s->index;
+    }
+
+    return tail_get_data (s->trie->tail, tail_index);
 }
 
 /*

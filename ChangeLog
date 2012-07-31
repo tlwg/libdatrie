@@ -1,3 +1,24 @@
+2012-07-31  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Add TrieIterator and its operations.
+
+	* datrie/trie.h, datrie/trie.c
+	  (+trie_iterator_new, +trie_iterator_free, +trie_iterator_next,
+	   +trie_iterator_get_key, +trie_iterator_get_data):
+	  - Add TrieIterator class and its methods.
+	* datrie/libdatrie.def, datrie/libdatrie.map:
+	  - Add the new export symbols.
+	* datrie/darray.h, datrie/darray.c
+	  (da_get_state_key -> da_get_transition_key):
+	  - Adjust da_get_state_key() from getting transition key from root
+	    to getting from arbitrary ancestor.
+	* datrie/darray.h, datrie/darray.c
+	  (+da_first_separate, +da_next_separate):
+	  - Add internal functions for iterating from one separate node to
+	    another in double-array structure.
+
+	Thanks Mikhail Korobov <kmike84@gmail.com> for the use case suggestion.
+
 2012-07-30  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* doc/Doxyfile.in: Upgrade to doxygen 1.8.1.2 format.
