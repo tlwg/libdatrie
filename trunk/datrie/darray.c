@@ -538,53 +538,48 @@ da_output_symbols  (const DArray   *d,
  * @param  d         : the double-array structure
  * @param  from      : the node to walk from
  * @param  to        : the node to walk to
+ * @param  res_key   : the storage for storing the result
  *
- * @return the allocated key string
+ * @return boolean indicating success
  *
  * Get key for walking from state @a from to state @a to, assuming @a from
- * is an ancester node of @a to.
- *
- * The return string must be freed with free().
+ * is an ancester node of @a to, and copy it to @a res_key dynamic string.
  *
  * Available since: 0.2.6
  */
-TrieChar *
+Bool
 da_get_transition_key (const DArray *d,
                        TrieIndex     from,
-                       TrieIndex     to)
+                       TrieIndex     to,
+                       TrieString   *res_key)
 {
     TrieChar   *key;
-    int         key_size, key_length;
+    int         key_length;
     int         i;
 
-    key_size = 20;
-    key_length = 0;
-    key = (TrieChar *) malloc (key_size);
+    trie_string_clear (res_key);
 
     /* trace back to root */
     while (to != from) {
-        TrieIndex   parent;
-
-        if (key_length + 1 >= key_size) {
-            key_size += 20;
-            key = (TrieChar *) realloc (key, key_size);
-        }
-        parent = da_get_check (d, to);
-        key[key_length++] = (TrieChar) (to - da_get_base (d, parent));
+        TrieIndex  parent = da_get_check (d, to);
+        TrieChar   tc = (TrieChar )(to - da_get_base (d, parent));
+        if (!trie_string_append_char (res_key, tc))
+            return FALSE;
         to = parent;
     }
-    key[key_length] = '\0';
+    if (!trie_string_terminate (res_key))
+        return FALSE;
 
     /* reverse the string */
+    key = trie_string_get_val_rw (res_key);
+    key_length = trie_string_length (res_key);
     for (i = 0; i < --key_length; i++) {
-        TrieChar temp;
-
-        temp = key[i];
+        TrieChar temp = key[i];
         key[i] = key[key_length];
         key[key_length] = temp;
     }
 
-    return key;
+    return TRUE;
 }
 
 static TrieIndex
@@ -835,11 +830,10 @@ da_enumerate_recursive (const DArray   *d,
     base = da_get_base (d, state);
 
     if (base < 0) {
-        TrieChar   *key;
-
-        key = da_get_transition_key (d, da_get_root (d), state);
-        ret = (*enum_func) (key, state, user_data);
-        free (key);
+        TrieString *key = trie_string_new (20);
+        da_get_transition_key (d, da_get_root (d), state, key);
+        ret = (*enum_func) (trie_string_get_val (key), state, user_data);
+        trie_string_free (key);
     } else {
         Symbols *symbols;
         int      i;
@@ -860,17 +854,23 @@ da_enumerate_recursive (const DArray   *d,
 /**
  * @brief Find first separate node in a sub-trie
  *
- * @param d     : the double-array structure
- * @param root  : the sub-trie root to search from
+ * @param d       : the double-array structure
+ * @param root    : the sub-trie root to search from
+ * @param keybuff : the TrieString buffer for incrementally calcuating key
  *
  * @return index to the first separate node; TRIE_INDEX_ERROR on any failure
  *
  * Find the first separate node under a sub-trie rooted at @a root.
  *
+ * On return, @a keybuff is appended with the key characters which walk from
+ * @a root to the separate node. This is for incrementally calculating the
+ * transition key, which is more efficient than later totally reconstructing
+ * key from the given separate node.
+ *
  * Available since: 0.2.6
  */
 TrieIndex
-da_first_separate (DArray *d, TrieIndex root)
+da_first_separate (DArray *d, TrieIndex root, TrieString *keybuff)
 {
     TrieIndex base;
     TrieChar  c, max_c;
@@ -885,6 +885,7 @@ da_first_separate (DArray *d, TrieIndex root)
         if (c == max_c)
             return TRIE_INDEX_ERROR;
 
+        trie_string_append_char (keybuff, c);
         root = base + c;
     }
 
@@ -897,6 +898,7 @@ da_first_separate (DArray *d, TrieIndex root)
  * @param d     : the double-array structure
  * @param root  : the sub-trie root to search from
  * @param sep   : the current separate node
+ * @param keybuff : the TrieString buffer for incrementally calcuating key
  *
  * @return index to the next separate node; TRIE_INDEX_ERROR if no more
  *         separate node is found
@@ -904,10 +906,16 @@ da_first_separate (DArray *d, TrieIndex root)
  * Find the next separate node under a sub-trie rooted at @a root starting
  * from the current separate node @a sep.
  *
+ * On return, @a keybuff is incrementally updated from the key which walks
+ * to previous separate node to the one which walks to the new separate node.
+ * So, it is assumed to be initialized by at least one da_first_separate()
+ * call before. This incremental key calculation is more efficient than later
+ * totally reconstructing key from the given separate node.
+ *
  * Available since: 0.2.6
  */
 TrieIndex
-da_next_separate (DArray *d, TrieIndex root, TrieIndex sep)
+da_next_separate (DArray *d, TrieIndex root, TrieIndex sep, TrieString *keybuff)
 {
     TrieIndex parent;
     TrieIndex base;
@@ -918,11 +926,15 @@ da_next_separate (DArray *d, TrieIndex root, TrieIndex sep)
         base = da_get_base (d, parent);
         c = sep - base;
 
+        trie_string_cut_last (keybuff);
+
         /* find next sibling of sep */
         max_c = MIN_VAL (TRIE_CHAR_MAX, d->num_cells - base);
         while (++c < max_c) {
-            if (da_get_check (d, base + c) == parent)
-                return da_first_separate (d, base + c);
+            if (da_get_check (d, base + c) == parent) {
+                trie_string_append_char (keybuff, c);
+                return da_first_separate (d, base + c, keybuff);
+            }
         }
 
         sep = parent;

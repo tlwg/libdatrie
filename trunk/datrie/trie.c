@@ -33,6 +33,7 @@
 #include "alpha-map-private.h"
 #include "darray.h"
 #include "tail.h"
+#include "trie-string.h"
 
 /**
  * @brief Trie structure
@@ -61,6 +62,7 @@ struct _TrieState {
 struct _TrieIterator {
     const TrieState *root;  /**< the state to start iteration from */
     TrieState       *state; /**< the current state */
+    TrieString      *key;   /**< buffer for calculating the entry key */
 };
 
 
@@ -912,6 +914,7 @@ trie_iterator_new (TrieState *s)
 
     iter->root = s;
     iter->state = NULL;
+    iter->key = NULL;
 
     return iter;
 }
@@ -930,6 +933,9 @@ trie_iterator_free (TrieIterator *iter)
 {
     if (iter->state) {
         trie_state_free (iter->state);
+    }
+    if (iter->key) {
+        trie_string_free (iter->key);
     }
     free (iter);
 }
@@ -961,7 +967,8 @@ trie_iterator_next (TrieIterator *iter)
         if (s->is_suffix)
             return TRUE;
 
-        sep = da_first_separate (s->trie->da, s->index);
+        iter->key = trie_string_new (20);
+        sep = da_first_separate (s->trie->da, s->index, iter->key);
         if (TRIE_INDEX_ERROR == sep)
             return FALSE;
 
@@ -974,7 +981,8 @@ trie_iterator_next (TrieIterator *iter)
         return FALSE;
 
     /* iter->state is a separate node */
-    sep = da_next_separate (s->trie->da, iter->root->index, s->index);
+    sep = da_next_separate (s->trie->da, iter->root->index, s->index,
+                            iter->key);
     if (TRIE_INDEX_ERROR == sep)
         return FALSE;
 
@@ -987,7 +995,7 @@ trie_iterator_next (TrieIterator *iter)
  *
  * @param  iter      : an iterator
  *
- * @return the allocated key string
+ * @return the allocated key string; NULL on failure
  *
  * Get key for the current entry referenced by the trie iterator @a iter.
  *
@@ -999,9 +1007,8 @@ AlphaChar *
 trie_iterator_get_key (const TrieIterator *iter)
 {
     const TrieState *s;
-    TrieChar        *trie_str;
     const TrieChar  *tail_str;
-    AlphaChar       *alpha_key;
+    AlphaChar       *alpha_key, *alpha_p;
 
     s = iter->state;
     if (!s)
@@ -1010,43 +1017,41 @@ trie_iterator_get_key (const TrieIterator *iter)
     /* if s is in tail, root == s */
     if (s->is_suffix) {
         tail_str = tail_get_suffix (s->trie->tail, s->index);
-        trie_str = (TrieChar *) malloc (strlen (tail_str) - s->suffix_idx + 1);
-        if (!trie_str)
+        if (!tail_str)
             return NULL;
-        strcpy (trie_str, tail_str + s->suffix_idx);
+
+        tail_str += s->suffix_idx;
+
+        alpha_key = (AlphaChar *) malloc (sizeof (AlphaChar)
+                                          * (strlen (tail_str) + 1));
+        alpha_p = alpha_key;
     } else {
         TrieIndex  tail_idx;
-        TrieChar  *re_str;
+        int        i, key_len;
+        const TrieChar  *key_p;
 
-        /* get key from branching zone */
-        trie_str = da_get_transition_key (s->trie->da,
-                                          iter->root->index, s->index);
-        if (!trie_str)
-            return NULL;
-
-        /* get key from tail zone */
         tail_idx = trie_da_get_tail_index (s->trie->da, s->index);
         tail_str = tail_get_suffix (s->trie->tail, tail_idx);
         if (!tail_str)
-            goto error_trie_str_created;
+            return NULL;
 
-        /* append tail string */
-        re_str = (TrieChar *) realloc (trie_str,
-                                    strlen (trie_str) + strlen (tail_str) + 1);
-        if (!re_str)
-            goto error_trie_str_created;
-        trie_str = re_str;
-        strcat (trie_str, tail_str);
+        key_len = trie_string_length (iter->key);
+        key_p = trie_string_get_val (iter->key);
+        alpha_key = (AlphaChar *) malloc (
+                        sizeof (AlphaChar) * (key_len + strlen (tail_str) + 1)
+                    );
+        alpha_p = alpha_key;
+        for (i = key_len; i > 0; i--) {
+            *alpha_p++ = alpha_map_trie_to_char (s->trie->alpha_map, *key_p++);
+        }
     }
 
-    alpha_key = alpha_map_trie_to_char_str (s->trie->alpha_map, trie_str);
+    while (*tail_str) {
+        *alpha_p++ = alpha_map_trie_to_char (s->trie->alpha_map, *tail_str++);
+    }
+    *alpha_p = 0;
 
-    free (trie_str);
     return alpha_key;
-
-error_trie_str_created:
-    free (trie_str);
-    return NULL;
 }
 
 /**
