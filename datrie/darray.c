@@ -78,11 +78,6 @@ static void         da_alloc_cell      (DArray         *d,
 static void         da_free_cell       (DArray         *d,
                                         TrieIndex       cell);
 
-static Bool         da_enumerate_recursive (const DArray   *d,
-                                            TrieIndex       state,
-                                            DAEnumFunc      enum_func,
-                                            void           *user_data);
-
 /* ==================== BEGIN IMPLEMENTATION PART ====================  */
 
 /*------------------------------------*
@@ -532,56 +527,6 @@ da_output_symbols  (const DArray   *d,
     return syms;
 }
 
-/**
- * @brief Get key string which walks from one node to another
- *
- * @param  d         : the double-array structure
- * @param  from      : the node to walk from
- * @param  to        : the node to walk to
- * @param  res_key   : the storage for storing the result
- *
- * @return boolean indicating success
- *
- * Get key for walking from state @a from to state @a to, assuming @a from
- * is an ancester node of @a to, and copy it to @a res_key dynamic string.
- *
- * Available since: 0.2.6
- */
-Bool
-da_get_transition_key (const DArray *d,
-                       TrieIndex     from,
-                       TrieIndex     to,
-                       TrieString   *res_key)
-{
-    TrieChar   *key;
-    int         key_length;
-    int         i;
-
-    trie_string_clear (res_key);
-
-    /* trace back to root */
-    while (to != from) {
-        TrieIndex  parent = da_get_check (d, to);
-        TrieChar   tc = (TrieChar )(to - da_get_base (d, parent));
-        if (!trie_string_append_char (res_key, tc))
-            return FALSE;
-        to = parent;
-    }
-    if (!trie_string_terminate (res_key))
-        return FALSE;
-
-    /* reverse the string */
-    key = trie_string_get_val_rw (res_key);
-    key_length = trie_string_length (res_key);
-    for (i = 0; i < --key_length; i++) {
-        TrieChar temp = key[i];
-        key[i] = key[key_length];
-        key[key_length] = temp;
-    }
-
-    return TRUE;
-}
-
 static TrieIndex
 da_find_free_base  (DArray         *d,
                     const Symbols  *symbols)
@@ -796,59 +741,6 @@ da_free_cell       (DArray         *d,
     da_set_base (d, cell, -prev);
     da_set_check (d, prev, -cell);
     da_set_base (d, i, -cell);
-}
-
-/**
- * @brief Enumerate entries stored in double-array structure
- *
- * @param d          : the double-array structure
- * @param enum_func  : the callback function to be called on each separate node
- * @param user_data  : user-supplied data to send as an argument to @a enum_func
- *
- * @return boolean value indicating whether all the keys are visited
- *
- * Enumerate all keys stored in double-array structure. For each entry, the
- * user-supplied @a enum_func callback function is called, with the entry key,
- * the separate node, and user-supplied data. Returning FALSE from such
- * callback will stop enumeration and return FALSE.
- */
-Bool
-da_enumerate (const DArray *d, DAEnumFunc enum_func, void *user_data)
-{
-    return da_enumerate_recursive (d, da_get_root (d), enum_func, user_data);
-}
-
-static Bool
-da_enumerate_recursive (const DArray   *d,
-                        TrieIndex       state,
-                        DAEnumFunc      enum_func,
-                        void           *user_data)
-{
-    Bool        ret;
-    TrieIndex   base;
-
-    base = da_get_base (d, state);
-
-    if (base < 0) {
-        TrieString *key = trie_string_new (20);
-        da_get_transition_key (d, da_get_root (d), state, key);
-        ret = (*enum_func) (trie_string_get_val (key), state, user_data);
-        trie_string_free (key);
-    } else {
-        Symbols *symbols;
-        int      i;
-
-        ret = TRUE;
-        symbols = da_output_symbols (d, state);
-        for (i = 0; ret && i < symbols_num (symbols); i++) {
-            ret = da_enumerate_recursive (d, base + symbols_get (symbols, i),
-                                          enum_func, user_data);
-        }
-
-        symbols_free (symbols);
-    }
-
-    return ret;
 }
 
 /**

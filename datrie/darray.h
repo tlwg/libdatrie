@@ -51,19 +51,6 @@ TrieChar     symbols_get (const Symbols *syms, int index);
  */
 typedef struct _DArray  DArray;
 
-/**
- * @brief Double-array entry enumeration function
- *
- * @param key       : the key of the entry, up to @a sep_node
- * @param sep_node  : the separate node of the entry
- * @param user_data : user-supplied data
- *
- * @return TRUE to continue enumeration, FALSE to stop
- */
-typedef Bool (*DAEnumFunc) (const TrieChar   *key,
-                            TrieIndex         sep_node,
-                            void             *user_data);
-
 
 DArray * da_new ();
 
@@ -90,11 +77,6 @@ Bool       da_walk (const DArray *d, TrieIndex *s, TrieChar c);
 
 Symbols *  da_output_symbols  (const DArray *d, TrieIndex s);
 
-Bool       da_get_transition_key (const DArray *d,
-                                  TrieIndex     from,
-                                  TrieIndex     to,
-                                  TrieString   *res_key);
-
 /**
  * @brief Test walkability in double-array structure
  *
@@ -117,8 +99,6 @@ TrieIndex  da_insert_branch (DArray *d, TrieIndex s, TrieChar c);
 void       da_prune (DArray *d, TrieIndex s);
 
 void       da_prune_upto (DArray *d, TrieIndex p, TrieIndex s);
-
-Bool    da_enumerate (const DArray *d, DAEnumFunc enum_func, void *user_data);
 
 TrieIndex  da_first_separate (DArray *d, TrieIndex root, TrieString *keybuff);
 

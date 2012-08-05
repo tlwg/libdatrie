@@ -1,5 +1,20 @@
 2012-08-05  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Migrate trie_enumerate() to the new TrieIterator.
+
+	This improves performance by 10%, and recursion stacks are also
+	eliminated.
+
+	* datrie/trie.c (trie_enumerate):
+	  - Replace da_enumerate() call with TrieIterator loop.
+	* datrie/trie.c (-trie_da_enum_func, -_TrieEnumData):
+	* datrie/darray.h, datrie/darray.c
+	  (-da_enumerate, -da_get_transition_key, -DAEnumFunc,
+	   -da_enumerate_recursive):
+	  - Drop now-unused codes.
+
+2012-08-05  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Optimize key calculation for TrieIterator.
 
 	* datrie/Makefile.am +datrie/dstring.h +datrie/dstring-private.h

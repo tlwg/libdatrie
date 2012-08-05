@@ -577,45 +577,6 @@ trie_delete (Trie *trie, const AlphaChar *key)
     return TRUE;
 }
 
-typedef struct {
-    const Trie     *trie;
-    TrieEnumFunc    enum_func;
-    void           *user_data;
-} _TrieEnumData;
-
-static Bool
-trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
-{
-    _TrieEnumData  *enum_data;
-    TrieIndex       t;
-    const TrieChar *suffix;
-    AlphaChar      *full_key, *p;
-    Bool            ret;
-
-    enum_data = (_TrieEnumData *) user_data;
-
-    t = trie_da_get_tail_index (enum_data->trie->da, sep_node);
-    suffix = tail_get_suffix (enum_data->trie->tail, t);
-
-    full_key = (AlphaChar *) malloc ((strlen ((const char *)key)
-                                      + strlen ((const char *)suffix) + 1)
-                                     * sizeof (AlphaChar));
-    for (p = full_key; *key; p++, key++) {
-        *p = alpha_map_trie_to_char (enum_data->trie->alpha_map, *key);
-    }
-    for ( ; *suffix; p++, suffix++) {
-        *p = alpha_map_trie_to_char (enum_data->trie->alpha_map, *suffix);
-    }
-    *p = 0;
-
-    ret = (*enum_data->enum_func) (full_key,
-                                   tail_get_data (enum_data->trie->tail, t),
-                                   enum_data->user_data);
-
-    free (full_key);
-    return ret;
-}
-
 /**
  * @brief Enumerate entries in trie
  *
@@ -632,13 +593,33 @@ trie_da_enum_func (const TrieChar *key, TrieIndex sep_node, void *user_data)
 Bool
 trie_enumerate (const Trie *trie, TrieEnumFunc enum_func, void *user_data)
 {
-    _TrieEnumData   enum_data;
+    TrieState      *root;
+    TrieIterator   *iter;
+    Bool            cont = TRUE;
 
-    enum_data.trie      = trie;
-    enum_data.enum_func = enum_func;
-    enum_data.user_data = user_data;
+    root = trie_root (trie);
+    if (!root)
+        return FALSE;
 
-    return da_enumerate (trie->da, trie_da_enum_func, &enum_data);
+    iter = trie_iterator_new (root);
+    if (!iter)
+        goto exit_root_created;
+
+    while (cont && trie_iterator_next (iter)) {
+        AlphaChar *key = trie_iterator_get_key (iter);
+        TrieData   data = trie_iterator_get_data (iter);
+        cont = (*enum_func) (key, data, user_data);
+        free (key);
+    }
+
+    trie_iterator_free (iter);
+    trie_state_free (root);
+
+    return cont;
+
+exit_root_created:
+    trie_state_free (root);
+    return FALSE;
 }
 
 
