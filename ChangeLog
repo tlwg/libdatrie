@@ -1,3 +1,35 @@
+2012-08-05  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Optimize key calculation for TrieIterator.
+
+	* datrie/Makefile.am +datrie/dstring.h +datrie/dstring-private.h
+	  +datrie/dstring.c +datrie/trie-string.h +datrie/trie-string.c:
+	  - Add dynamic string classes DString and TrieString.
+	* datrie/trie.c:
+	  - (TrieIterator): Add "key" dynamic trie string member for
+	    incrementally gathering the key while iterating.
+	  - Initialize "key" member to NULL on construction. Only allocate and
+	    free it on branching root states.
+	* datrie/darray.h, datrie/darray.c
+	  (da_first_separate, da_next_separate):
+	  - Instead of allocating memory for return string, accept a dynamic
+	    string object and update it while traversing.
+	* datrie/trie.c (trie_iterator_next):
+	  - For branching state, create the "key" dynamic string object on
+	    first iteration and pass it to da_first_separate() and
+	    da_next_separate() along the iterations.
+	* datrie/trie.c (trie_iterator_get_key):
+	  - Replace the total key reconstruction by da_get_transition_key()
+	    with simple string catenation of the dynamic "key" and the suffix
+	    string.
+	* datrie/darray.h, datrie/darray.c (da_get_transition_key):
+	  - Adjust to use dynamic string instead of total allocation.
+	* datrie/darray.c (da_enumerate_recursive):
+	  - Adjust the da_get_transition_key() call accordingly.
+
+	Thanks Mikhail Korobov <kmike84@gmail.com> for the suggested approach
+	and for profiling check.
+
 2012-07-31  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Add TrieIterator and its operations.

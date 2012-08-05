@@ -28,6 +28,7 @@
 #define __DARRAY_H
 
 #include "triedefs.h"
+#include "trie-string.h"
 
 /**
  * @file darray.h
@@ -89,9 +90,10 @@ Bool       da_walk (const DArray *d, TrieIndex *s, TrieChar c);
 
 Symbols *  da_output_symbols  (const DArray *d, TrieIndex s);
 
-TrieChar * da_get_transition_key (const DArray *d,
+Bool       da_get_transition_key (const DArray *d,
                                   TrieIndex     from,
-                                  TrieIndex     to);
+                                  TrieIndex     to,
+                                  TrieString   *res_key);
 
 /**
  * @brief Test walkability in double-array structure
@@ -118,9 +120,12 @@ void       da_prune_upto (DArray *d, TrieIndex p, TrieIndex s);
 
 Bool    da_enumerate (const DArray *d, DAEnumFunc enum_func, void *user_data);
 
-TrieIndex  da_first_separate (DArray *d, TrieIndex root);
+TrieIndex  da_first_separate (DArray *d, TrieIndex root, TrieString *keybuff);
 
-TrieIndex  da_next_separate (DArray *d, TrieIndex root, TrieIndex sep);
+TrieIndex  da_next_separate (DArray     *d,
+                             TrieIndex   root,
+                             TrieIndex   sep,
+                             TrieString *keybuff);
 
 #endif  /* __DARRAY_H */
 
