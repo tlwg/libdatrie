@@ -1,3 +1,13 @@
+2012-08-06  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Improve AlphaMap range merging.
+
+	* datrie/alpha-map.c (alpha_map_add_range):
+	  - Also try to merge adjacent ranges. Otherwise, adding one by one
+	    character will result in linear search on alphabet set.
+
+	Thanks Mikhail Korobov <kmike84@gmail.com> for the report.
+
 2012-08-05  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Migrate trie_enumerate() to the new TrieIterator.
