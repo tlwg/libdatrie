@@ -1,3 +1,10 @@
+2013-01-22  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Use xz compression for release tarball.
+
+	* configure.ac:
+	  - Specify "dist-xz no-dist-gzip" options to AM_INIT_AUTOMAKE.
+
 2012-08-06  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Improve AlphaMap range merging.
