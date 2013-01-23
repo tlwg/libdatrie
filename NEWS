@@ -1,5 +1,14 @@
 libdatrie
 
+0.2.6 (2013-01-23)
+=====
+- New API trie_state_walkable_chars() for breadth-first traversal.
+- New class TrieIterator for callback-free enumeration.
+- Improved performance on key enumeration.
+- Improved AlphaMap range merging.
+- Bug fixes.
+[Many thanks to Mikhail Korobov for improvements in this version.]
+
 0.2.5 (2011-11-04)
 =====
 - Fix missing 'extern "C"' in header file. [Patch from Aurimas Černius]
