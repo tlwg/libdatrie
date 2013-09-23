@@ -1,5 +1,13 @@
 2013-09-23  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Fix compiler warnings.
+	* datrie/trie-string.c (trie_string_append_string):
+	* datrie/trie.c (trie_iterator_get_key):
+	  - Cast strlen() args from (const TrieChar *) to (const char *),
+	    to fix signedness mismatch warnings.
+
+2013-09-23  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Fix automake warnings.
 
 	* datrie/Makefile.am, tools/Makefile.am:

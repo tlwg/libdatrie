@@ -1004,7 +1004,8 @@ trie_iterator_get_key (const TrieIterator *iter)
         tail_str += s->suffix_idx;
 
         alpha_key = (AlphaChar *) malloc (sizeof (AlphaChar)
-                                          * (strlen (tail_str) + 1));
+                                          * (strlen ((const char *)tail_str)
+                                             + 1));
         alpha_p = alpha_key;
     } else {
         TrieIndex  tail_idx;
@@ -1019,7 +1020,8 @@ trie_iterator_get_key (const TrieIterator *iter)
         key_len = trie_string_length (iter->key);
         key_p = trie_string_get_val (iter->key);
         alpha_key = (AlphaChar *) malloc (
-                        sizeof (AlphaChar) * (key_len + strlen (tail_str) + 1)
+                        sizeof (AlphaChar)
+                        * (key_len + strlen ((const char *)tail_str) + 1)
                     );
         alpha_p = alpha_key;
         for (i = key_len; i > 0; i--) {
