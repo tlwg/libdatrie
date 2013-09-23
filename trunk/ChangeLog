@@ -1,5 +1,12 @@
 2013-09-23  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Fix doxygen warning.
+
+	* doc/Doxyfile.in:
+	  - doxygen no longer ships with the FreeSans font. Just drop it.
+
+2013-09-23  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Update Doxyfile.
 
 	* doc/Doxyfile.in:
