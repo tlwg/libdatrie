@@ -1,5 +1,12 @@
 2013-09-23  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Update Doxyfile.
+
+	* doc/Doxyfile.in:
+	  - Updated with 'doxygen -u'.
+
+2013-09-23  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Fix compiler warnings.
 	* datrie/trie-string.c (trie_string_append_string):
 	* datrie/trie.c (trie_iterator_get_key):
