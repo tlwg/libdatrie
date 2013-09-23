@@ -20,6 +20,8 @@ AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
 
+DOXYGEN_REQ_VER=1.8.4
+
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -107,6 +109,15 @@ if test "x$enable_doxygen_doc" = "xyes"; then
   AC_CHECK_PROG(DOXYGEN,doxygen,doxygen,no)
   if test "x$DOXYGEN" = "xno"; then
     enable_doxygen_doc="no"
+  else
+    AC_MSG_CHECKING([doxygen >= $DOXYGEN_REQ_VER])
+    DOXYGEN_VER=$($DOXYGEN --version)
+    if expr $DOXYGEN_VER \< $DOXYGEN_REQ_VER > /dev/null; then
+      AC_MSG_RESULT([$DOXYGEN_VER, no, documentation disabled])
+      enable_doxygen_doc="no"
+    else
+      AC_MSG_RESULT([$DOXYGEN_VER, yes])
+    fi
   fi
 fi
 
