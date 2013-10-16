@@ -241,6 +241,8 @@ alpha_map_fwrite_bin (const AlphaMap *alpha_map, FILE *file)
  * @param begin     : the first character of the range
  * @param end       : the last character of the range
  *
+ * @return 0 on success, non-zero on failure
+ *
  * Add a range of character codes from @a begin to @a end to the
  * alphabet set.
  */
