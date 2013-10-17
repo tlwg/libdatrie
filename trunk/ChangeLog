@@ -1,5 +1,12 @@
 2013-10-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Document availibility of alpha_char_strcmp()
+
+	* datrie/alpha-map.c (alpha_char_strcmp):
+	  - Document that it's available since 0.2.7.
+
+2013-10-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Write a test for trie iterator.
 
 	* tests/test_iterator.c:

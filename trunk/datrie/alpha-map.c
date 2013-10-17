@@ -60,6 +60,8 @@ alpha_char_strlen (const AlphaChar *str)
  * @return negative if @a str1 < @a str2;
  *         0 if @a str1 == @a str2; 
  *         positive if @a str1 > @a str2
+ *
+ * Available since: 0.2.7
  */
 int
 alpha_char_strcmp (const AlphaChar *str1, const AlphaChar *str2)
