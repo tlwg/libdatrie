@@ -1,5 +1,20 @@
 2013-10-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Add skeleton test suites & a test for file I/O.
+
+	* configure.ac, Makefile.am, +tests/, +tests/Makefile.am:
+	  - Add tests/ dir to the build system.
+	* +tests/utils.h, +tests/utils.c:
+	* +tests/test_file.c:
+	* +tests/test_iterator.c:
+	* +tests/test_store-retrieve.c:
+	* +tests/test_walk.c:
+	  - Add skeleton for test suites.
+	* tests/utils.h, tests/utils.c, tests/test_file.c:
+	  - Write test suite for file I/O.
+
+2013-10-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Add alpha_char_strcmp() API.
 
 	* datrie/alpha-map.h, datrie/alpha-map.c (+alpha_char_strcmp):
