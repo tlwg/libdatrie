@@ -1,3 +1,12 @@
+2013-10-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Add alpha_char_strcmp() API.
+
+	* datrie/alpha-map.h, datrie/alpha-map.c (+alpha_char_strcmp):
+	  - Add alpha_char_strcmp() declaration & body.
+	* datrie/libdatrie.def, datrie/libdatrie.map:
+	  - Add alpha_char_strcmp symbols.
+
 2013-10-16  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Add missing info in alpha_map_add_range() doc.

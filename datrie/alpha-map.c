@@ -51,6 +51,29 @@ alpha_char_strlen (const AlphaChar *str)
     return p - str;
 }
 
+/**
+ * @brief Compare alphabet strings
+ *
+ * @param str1, str2  : the arrays of null-terminated AlphaChar strings
+ *                      to compare
+ *
+ * @return negative if @a str1 < @a str2;
+ *         0 if @a str1 == @a str2; 
+ *         positive if @a str1 > @a str2
+ */
+int
+alpha_char_strcmp (const AlphaChar *str1, const AlphaChar *str2)
+{
+    while (*str1 && *str1 == *str2) {
+        str1++; str2++;
+    }
+    if (*str1 < *str2)
+        return -1;
+    if (*str1 > *str2)
+        return 1;
+    return 0;
+}
+
 /*------------------------------*
  *    PRIVATE DATA DEFINITONS   *
  *------------------------------*/

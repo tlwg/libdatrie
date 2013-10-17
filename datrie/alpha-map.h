@@ -57,6 +57,7 @@ int         alpha_map_add_range (AlphaMap  *alpha_map,
                                  AlphaChar  end);
 
 int         alpha_char_strlen (const AlphaChar *str);
+int         alpha_char_strcmp (const AlphaChar *str1, const AlphaChar *str2);
 
 #ifdef __cplusplus
 }
