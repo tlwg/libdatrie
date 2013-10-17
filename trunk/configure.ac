@@ -139,5 +139,6 @@ AC_CONFIG_FILES([Makefile
                  tools/Makefile
                  man/Makefile
                  doc/Makefile
-                 doc/Doxyfile])
+                 doc/Doxyfile
+                 tests/Makefile])
 AC_OUTPUT
