@@ -1,5 +1,12 @@
 2013-10-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Write a test for trie iterator.
+
+	* tests/test_iterator.c:
+	  - Write test suite for trie iterator.
+
+2013-10-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Add skeleton test suites & a test for file I/O.
 
 	* configure.ac, Makefile.am, +tests/, +tests/Makefile.am:
