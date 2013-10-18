@@ -84,10 +84,10 @@ main ()
                     key);
             is_failed = TRUE;
         }
-        /* mark entries found in file */
+        /* mark entries found in trie */
         src_data = dict_src_get_data (key);
         if (TRIE_DATA_ERROR == src_data) {
-            printf ("Extra entry in file: key '%ls', data %d.\n",
+            printf ("Extra entry in trie: key '%ls', data %d.\n",
                     key, key_data);
             is_failed = TRUE;
         } else if (src_data != key_data) {
@@ -101,10 +101,10 @@ main ()
         free (key);
     }
 
-    /* check for unmarked entries, (i.e. missed in file) */
+    /* check for unmarked entries, (i.e. missed in trie) */
     for (dict_p = dict_src; dict_p->key; dict_p++) {
         if (dict_p->data != TRIE_DATA_READ) {
-            printf ("Entry missed in file: key '%ls', data %d.\n",
+            printf ("Entry missed in trie: key '%ls', data %d.\n",
                     dict_p->key, dict_p->data);
             is_failed = TRUE;
         }

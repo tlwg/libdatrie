@@ -1,5 +1,12 @@
 2013-10-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Fix messages in test_iterator.
+
+	* tests/test_iterator.c (main):
+	  - s/file/trie/. No file is written or read in this test.
+
+2013-10-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Skip further iteration tests if key is NULL.
 
 	* tests/test_iterator.c (main):
