@@ -128,6 +128,12 @@ DictRec dict_src[] = {
     {NULL,          TRIE_DATA_ERROR},
 };
 
+int
+dict_src_n_entries ()
+{
+    return sizeof (dict_src) / sizeof (dict_src[0]) - 1;
+}
+
 TrieData
 dict_src_get_data (const AlphaChar *key)
 {

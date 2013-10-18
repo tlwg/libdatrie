@@ -1,5 +1,14 @@
 2013-10-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Write a test suite for trie store/retrieval.
+
+	* tests/utils.h, tests/utils.c (+dict_src_n_entries):
+	  - Add function to get total entries in dict_src[].
+	* tests/test_store-retrieve.c (main):
+	  - Write test code.
+
+2013-10-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Fix messages in test_iterator.
 
 	* tests/test_iterator.c (main):
