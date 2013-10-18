@@ -50,6 +50,7 @@ struct _DictRec {
 
 extern DictRec dict_src[];
 
+int      dict_src_n_entries ();
 TrieData dict_src_get_data (const AlphaChar *key);
 int      dict_src_set_data (const AlphaChar *key, TrieData data);
 
