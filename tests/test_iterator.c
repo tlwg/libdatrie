@@ -76,6 +76,7 @@ main ()
         if (!key) {
             printf ("Failed to get key from trie iterator\n");
             is_failed = TRUE;
+            continue;
         }
         key_data = trie_iterator_get_data (trie_it);
         if (TRIE_DATA_ERROR == key_data) {

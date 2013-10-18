@@ -1,3 +1,10 @@
+2013-10-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Skip further iteration tests if key is NULL.
+
+	* tests/test_iterator.c (main):
+	  - Insert 'continue' if trie_iterator_get_key() returns NULL.
+
 2013-10-17  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Document availibility of alpha_char_strcmp()
