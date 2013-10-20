@@ -1,5 +1,12 @@
 2013-10-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Reorder tests from primitive to applied.
+
+	* tests/Makefile.am:
+	  - Test walk & iterator before store-retrieve & file.
+
+2013-10-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Write a test suite for trie walk.
 
 	* tests/test_walk.c:
