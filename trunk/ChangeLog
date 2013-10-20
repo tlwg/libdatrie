@@ -1,3 +1,10 @@
+2013-10-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Write a test suite for trie walk.
+
+	* tests/test_walk.c:
+	  - Write test code.
+
 2013-10-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Write a test suite for trie store/retrieval.
