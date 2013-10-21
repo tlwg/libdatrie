@@ -1,5 +1,10 @@
 2013-10-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* configure.ac: Bump library versioning to reflect API addition.
+	(Change missing in previous release)
+
+2013-10-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* configure.ac: Post-release version suffix added.
 
 2013-10-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
