@@ -1,3 +1,10 @@
+2013-10-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Add missing distributed file.
+
+	* tests/Makefile.am:
+	  - Add utils.h to distribution.
+
 2013-10-20  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Reorder tests from primitive to applied.
