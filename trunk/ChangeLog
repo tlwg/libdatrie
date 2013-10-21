@@ -1,5 +1,10 @@
 2013-10-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	* NEWS, configure.ac:
+	=== Version 0.2.7 ===
+
+2013-10-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Add missing distributed file.
 
 	* tests/Makefile.am:
