@@ -16,6 +16,10 @@ check_PROGRAMS = \
 	test_file \
 	$(NULL)
 
+noinst_HEADERS = \
+	utils.h \
+	$(NULL)
+
 test_walk_SOURCES = \
 	test_walk.c \
 	utils.c \
