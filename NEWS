@@ -1,5 +1,10 @@
 libdatrie
 
+0.2.7.1 (2013-10-22)
+=======
+- Bump library versioning to reflect API addition.
+  (Change missing in previous release)
+
 0.2.7 (2013-10-21)
 =====
 - Fix portability issue with non-GCC compilers.
