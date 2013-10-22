@@ -1,3 +1,8 @@
+2013-10-22  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* NEWS, configure.ac:
+	=== Version 0.2.7.1 ===
+
 2013-10-21  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.ac: Bump library versioning to reflect API addition.
