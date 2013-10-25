@@ -27,6 +27,7 @@
 #include <datrie/trie.h>
 #include "utils.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 int
 main ()

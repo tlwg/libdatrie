@@ -1,5 +1,18 @@
 2013-10-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Fix comiler warnings in tests.
+
+	* tests/test_walk.c (main):
+	  - Remove unused var i;
+	  - Remove extra printf() args.
+	* tests/test_iterator.c:
+	  - Add missing #include for free().
+	* tests/test_walk.c (walk_dict), tests/utils.c (dict_src):
+	  - Cast string literals to (AlphaChar *) to fix signedness
+	    differences.
+
+2013-10-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	* configure.ac: Post-release version suffix added.
 
 2013-10-22  Theppitak Karoonboonyanan  <thep@linux.thai.net>
