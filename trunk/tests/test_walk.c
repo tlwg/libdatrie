@@ -45,13 +45,13 @@
  *
  */
 DictRec walk_dict[] = {
-    {L"pool",       TRIE_DATA_UNREAD},
-    {L"prize",      TRIE_DATA_UNREAD},
-    {L"preview",    TRIE_DATA_UNREAD},
-    {L"prepare",    TRIE_DATA_UNREAD},
-    {L"produce",    TRIE_DATA_UNREAD},
-    {L"progress",   TRIE_DATA_UNREAD},
-    {NULL,          TRIE_DATA_ERROR},
+    {(AlphaChar *)L"pool",       TRIE_DATA_UNREAD},
+    {(AlphaChar *)L"prize",      TRIE_DATA_UNREAD},
+    {(AlphaChar *)L"preview",    TRIE_DATA_UNREAD},
+    {(AlphaChar *)L"prepare",    TRIE_DATA_UNREAD},
+    {(AlphaChar *)L"produce",    TRIE_DATA_UNREAD},
+    {(AlphaChar *)L"progress",   TRIE_DATA_UNREAD},
+    {(AlphaChar *)NULL,          TRIE_DATA_ERROR},
 };
 
 static Bool
@@ -88,7 +88,7 @@ main ()
     DictRec    *dict_p;
     TrieState  *s, *t, *u;
     AlphaChar   walkables[ALPHABET_SIZE];
-    int         n, i;
+    int         n;
     Bool        is_failed;
     TrieData    data;
 
@@ -151,11 +151,11 @@ main ()
         is_failed = TRUE;
     }
     if (!is_walkables_include (L'o', walkables, n)) {
-        printf ("Walkable chars do not include 'o'\n", n);
+        printf ("Walkable chars do not include 'o'\n");
         is_failed = TRUE;
     }
     if (!is_walkables_include (L'r', walkables, n)) {
-        printf ("Walkable chars do not include 'r'\n", n);
+        printf ("Walkable chars do not include 'r'\n");
         is_failed = TRUE;
     }
     if (is_failed) {
@@ -228,15 +228,15 @@ main ()
         is_failed = TRUE;
     }
     if (!is_walkables_include (L'e', walkables, n)) {
-        printf ("Walkable chars do not include 'e'\n", n);
+        printf ("Walkable chars do not include 'e'\n");
         is_failed = TRUE;
     }
     if (!is_walkables_include (L'i', walkables, n)) {
-        printf ("Walkable chars do not include 'i'\n", n);
+        printf ("Walkable chars do not include 'i'\n");
         is_failed = TRUE;
     }
     if (!is_walkables_include (L'o', walkables, n)) {
-        printf ("Walkable chars do not include 'o'\n", n);
+        printf ("Walkable chars do not include 'o'\n");
         is_failed = TRUE;
     }
     if (is_failed) {
@@ -305,11 +305,11 @@ main ()
         is_failed = TRUE;
     }
     if (!is_walkables_include (L'p', walkables, n)) {
-        printf ("Walkable chars do not include 'p'\n", n);
+        printf ("Walkable chars do not include 'p'\n");
         is_failed = TRUE;
     }
     if (!is_walkables_include (L'v', walkables, n)) {
-        printf ("Walkable chars do not include 'v'\n", n);
+        printf ("Walkable chars do not include 'v'\n");
         is_failed = TRUE;
     }
     if (is_failed) {
@@ -422,11 +422,11 @@ main ()
         is_failed = TRUE;
     }
     if (!is_walkables_include (L'd', walkables, n)) {
-        printf ("Walkable chars do not include 'd'\n", n);
+        printf ("Walkable chars do not include 'd'\n");
         is_failed = TRUE;
     }
     if (!is_walkables_include (L'g', walkables, n)) {
-        printf ("Walkable chars do not include 'g'\n", n);
+        printf ("Walkable chars do not include 'g'\n");
         is_failed = TRUE;
     }
     if (is_failed) {
