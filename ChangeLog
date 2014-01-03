@@ -1,3 +1,20 @@
+2014-01-03  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Fix edge case with TRIE_CHAR_MAX as TrieChar.
+
+	The trie input char with value TRIE_CHAR_MAX (255), was always
+	skipped by double-array algorithms. Let's include it.
+
+	* datrie/darray.c (da_has_children, da_output_symbols,
+	  da_relocate_base, da_first_separate, da_next_separate):
+	  - Include the last char in trie char iterations.
+
+	* datrie/darray.c (da_first_separate, da_next_separate):
+	  - Declare characters as TrieIndex type instead of TrieChar,
+	    to prevent infinite loop due to unsigned char overflow.
+
+	Thanks Naoki Youshinaga for the report, test case, and analysis.
+
 2013-10-25  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Fix comiler warnings in tests.
