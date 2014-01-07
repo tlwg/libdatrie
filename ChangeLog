@@ -1,5 +1,12 @@
 2014-01-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Check for NULL result from AlphaMap string funcs.
+
+	* datrie/trie.c (trie_store_conditionally):
+	  - Return failure on NULL alpha_map_char_to_trie_str().
+
+2014-01-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Return NULL on allocation errors in AlphaMap funcs.
 
 	* datrie/alpha-map.c
