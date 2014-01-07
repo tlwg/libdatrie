@@ -1,3 +1,11 @@
+2014-01-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Return NULL on allocation errors in AlphaMap funcs.
+
+	* datrie/alpha-map.c
+	  (alpha_map_char_to_trie_str, alpha_map_trie_to_char_str):
+	  - Return NULL on malloc() error.
+
 2014-01-03  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Fix edge case with TRIE_CHAR_MAX as TrieChar.
