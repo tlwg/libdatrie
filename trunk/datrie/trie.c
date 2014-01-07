@@ -424,6 +424,8 @@ trie_store_conditionally (Trie            *trie,
             Bool      res;
 
             key_str = alpha_map_char_to_trie_str (trie->alpha_map, p);
+            if (!key_str)
+                return FALSE;
             res = trie_branch_in_branch (trie, s, key_str, data);
             free (key_str);
 
@@ -445,6 +447,8 @@ trie_store_conditionally (Trie            *trie,
             Bool      res;
 
             tail_str = alpha_map_char_to_trie_str (trie->alpha_map, sep);
+            if (!tail_str)
+                return FALSE;
             res = trie_branch_in_tail (trie, s, tail_str, data);
             free (tail_str);
 
