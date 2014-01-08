@@ -1,5 +1,13 @@
 2014-01-08  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Add test on keys with non-alphabet input chars.
+
+	* tests/Makefile.am, +tests/test_nonalpha.c:
+	  - Add test to ensure that operations on keys with non-alphabet
+	    input chars fail.
+
+2014-01-08  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Fail trie operations on non-alphabet inputs.
 
 	alpha_map_char_to_trie() tried to return TRIE_CHAR_MAX to indicate
