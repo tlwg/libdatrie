@@ -1,5 +1,12 @@
 2014-01-08  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
+	Clarify message in test_nonalpha.
+
+	* tests/test_nonalpha.c (main):
+	  - Clarify message on false key duplication.
+
+2014-01-08  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
 	Add test on keys with non-alphabet input chars.
 
 	* tests/Makefile.am, +tests/test_nonalpha.c:
