@@ -1,3 +1,28 @@
+2014-01-08  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Fail trie operations on non-alphabet inputs.
+
+	alpha_map_char_to_trie() tried to return TRIE_CHAR_MAX to indicate
+	out-of-range error. But this value is indeed valid in trie operations.
+	Doing so could allow false key duplication when different non-alphabet
+	chars and TRIE_CHAR_MAX itself were all mapped to TRIE_CHAR_MAX.
+	So, let's fail all trie operations on non-alphabet input chars.
+
+	* datrie/alpha-map-private.h, datrie/alpha-map.c
+	  (alpha_map_char_to_trie):
+	  - Make alpha_map_char_to_trie return TrieIndex type, using
+	    TRIE_INDEX_MAX to indicate out-of-range error.
+	    This allows TRIE_CHAR_MAX to be returned as a valid output.
+	* datrie/alpha-map.c (alpha_map_char_to_trie_str):
+	  - Fail if alpha_map_char_to_trie() returns error code.
+	* datrie/trie.c (trie_retrieve, trie_store_conditionally, trie_delete,
+	  trie_state_walk, trie_state_is_walkable):
+	  - Check return value from alpha_map_char_to_trie() and return
+	    failure status on error.
+	  - Also cast TrieIndex return values to TrieChar on function calls.
+
+	Thanks Naoki Youshinaga for the suggestion.
+
 2014-01-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Check for NULL result from AlphaMap string funcs.
