@@ -64,7 +64,7 @@ main ()
     is_fail = FALSE;
     for (nonalpha_key = nonalpha_src; *nonalpha_key; nonalpha_key++) {
         if (trie_retrieve (test_trie, *nonalpha_key, &trie_data)) {
-            printf ("Duplicated key '%ls', data %d.\n",
+            printf ("False duplication on key '%ls', with existing data %d.\n",
                     *nonalpha_key, trie_data);
             is_fail = TRUE;
         }
