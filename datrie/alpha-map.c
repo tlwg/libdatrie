@@ -369,10 +369,10 @@ alpha_map_add_range (AlphaMap *alpha_map, AlphaChar begin, AlphaChar end)
     return 0;
 }
 
-TrieChar
+TrieIndex
 alpha_map_char_to_trie (const AlphaMap *alpha_map, AlphaChar ac)
 {
-    TrieChar    alpha_begin;
+    TrieIndex   alpha_begin;
     AlphaRange *range;
 
     if (0 == ac)
@@ -386,7 +386,7 @@ alpha_map_char_to_trie (const AlphaMap *alpha_map, AlphaChar ac)
         alpha_begin += range->end - range->begin + 1;
     }
 
-    return TRIE_CHAR_MAX;
+    return TRIE_INDEX_MAX;
 }
 
 AlphaChar
@@ -419,11 +419,18 @@ alpha_map_char_to_trie_str (const AlphaMap *alpha_map, const AlphaChar *str)
         return NULL;
 
     for (p = trie_str; *str; p++, str++) {
-        *p = alpha_map_char_to_trie (alpha_map, *str);
+        TrieIndex tc = alpha_map_char_to_trie (alpha_map, *str);
+        if (TRIE_INDEX_MAX == tc)
+            goto error_str_allocated;
+        *p = (TrieChar) tc;
     }
     *p = 0;
 
     return trie_str;
+
+error_str_allocated:
+    free (trie_str);
+    return NULL;
 }
 
 AlphaChar *

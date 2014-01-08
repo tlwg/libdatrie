@@ -333,11 +333,11 @@ trie_retrieve (const Trie *trie, const AlphaChar *key, TrieData *o_data)
     /* walk through branches */
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
-        if (!da_walk (trie->da, &s,
-                      alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
+        TrieIndex tc = alpha_map_char_to_trie (trie->alpha_map, *p);
+        if (TRIE_INDEX_MAX == tc)
             return FALSE;
-        }
+        if (!da_walk (trie->da, &s, (TrieChar) tc))
+            return FALSE;
         if (0 == *p)
             break;
     }
@@ -346,11 +346,11 @@ trie_retrieve (const Trie *trie, const AlphaChar *key, TrieData *o_data)
     s = trie_da_get_tail_index (trie->da, s);
     suffix_idx = 0;
     for ( ; ; p++) {
-        if (!tail_walk_char (trie->tail, s, &suffix_idx,
-                             alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
+        TrieIndex tc = alpha_map_char_to_trie (trie->alpha_map, *p);
+        if (TRIE_INDEX_MAX == tc)
             return FALSE;
-        }
+        if (!tail_walk_char (trie->tail, s, &suffix_idx, (TrieChar) tc))
+            return FALSE;
         if (0 == *p)
             break;
     }
@@ -417,9 +417,10 @@ trie_store_conditionally (Trie            *trie,
     /* walk through branches */
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
-        if (!da_walk (trie->da, &s,
-                      alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
+        TrieIndex tc = alpha_map_char_to_trie (trie->alpha_map, *p);
+        if (TRIE_INDEX_MAX == tc)
+            return FALSE;
+        if (!da_walk (trie->da, &s, (TrieChar) tc)) {
             TrieChar *key_str;
             Bool      res;
 
@@ -440,9 +441,10 @@ trie_store_conditionally (Trie            *trie,
     t = trie_da_get_tail_index (trie->da, s);
     suffix_idx = 0;
     for ( ; ; p++) {
-        if (!tail_walk_char (trie->tail, t, &suffix_idx,
-                             alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
+        TrieIndex tc = alpha_map_char_to_trie (trie->alpha_map, *p);
+        if (TRIE_INDEX_MAX == tc)
+            return FALSE;
+        if (!tail_walk_char (trie->tail, t, &suffix_idx, (TrieChar) tc)) {
             TrieChar *tail_str;
             Bool      res;
 
@@ -551,11 +553,11 @@ trie_delete (Trie *trie, const AlphaChar *key)
     /* walk through branches */
     s = da_get_root (trie->da);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
-        if (!da_walk (trie->da, &s,
-                      alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
+        TrieIndex tc = alpha_map_char_to_trie (trie->alpha_map, *p);
+        if (TRIE_INDEX_MAX == tc)
             return FALSE;
-        }
+        if (!da_walk (trie->da, &s, (TrieChar) tc))
+            return FALSE;
         if (0 == *p)
             break;
     }
@@ -564,11 +566,11 @@ trie_delete (Trie *trie, const AlphaChar *key)
     t = trie_da_get_tail_index (trie->da, s);
     suffix_idx = 0;
     for ( ; ; p++) {
-        if (!tail_walk_char (trie->tail, t, &suffix_idx,
-                             alpha_map_char_to_trie (trie->alpha_map, *p)))
-        {
+        TrieIndex tc = alpha_map_char_to_trie (trie->alpha_map, *p);
+        if (TRIE_INDEX_MAX == tc)
             return FALSE;
-        }
+        if (!tail_walk_char (trie->tail, t, &suffix_idx, (TrieChar) tc))
+            return FALSE;
         if (0 == *p)
             break;
     }
@@ -746,12 +748,14 @@ trie_state_rewind (TrieState *s)
 Bool
 trie_state_walk (TrieState *s, AlphaChar c)
 {
-    TrieChar tc = alpha_map_char_to_trie (s->trie->alpha_map, c);
+    TrieIndex tc = alpha_map_char_to_trie (s->trie->alpha_map, c);
+    if (TRIE_INDEX_MAX == tc)
+        return FALSE;
 
     if (!s->is_suffix) {
         Bool ret;
 
-        ret = da_walk (s->trie->da, &s->index, tc);
+        ret = da_walk (s->trie->da, &s->index, (TrieChar) tc);
 
         if (ret && trie_da_is_separate (s->trie->da, s->index)) {
             s->index = trie_da_get_tail_index (s->trie->da, s->index);
@@ -761,7 +765,8 @@ trie_state_walk (TrieState *s, AlphaChar c)
 
         return ret;
     } else {
-        return tail_walk_char (s->trie->tail, s->index, &s->suffix_idx, tc);
+        return tail_walk_char (s->trie->tail, s->index, &s->suffix_idx,
+                               (TrieChar) tc);
     }
 }
 
@@ -778,13 +783,15 @@ trie_state_walk (TrieState *s, AlphaChar c)
 Bool
 trie_state_is_walkable (const TrieState *s, AlphaChar c)
 {
-    TrieChar tc = alpha_map_char_to_trie (s->trie->alpha_map, c);
+    TrieIndex tc = alpha_map_char_to_trie (s->trie->alpha_map, c);
+    if (TRIE_INDEX_MAX == tc)
+        return FALSE;
 
     if (!s->is_suffix)
-        return da_is_walkable (s->trie->da, s->index, tc);
+        return da_is_walkable (s->trie->da, s->index, (TrieChar) tc);
     else
         return tail_is_walkable_char (s->trie->tail, s->index, s->suffix_idx,
-                                      tc);
+                                      (TrieChar) tc);
 }
 
 /**
