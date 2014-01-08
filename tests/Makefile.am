@@ -7,6 +7,7 @@ TESTS = \
 	test_iterator \
 	test_store-retrieve \
 	test_file \
+	test_nonalpha \
 	$(NULL)
 
 check_PROGRAMS = \
@@ -14,6 +15,7 @@ check_PROGRAMS = \
 	test_iterator \
 	test_store-retrieve \
 	test_file \
+	test_nonalpha \
 	$(NULL)
 
 noinst_HEADERS = \
@@ -43,4 +45,10 @@ test_file_SOURCES = \
 	utils.c \
 	$(NULL)
 test_file_LDADD = $(top_builddir)/datrie/libdatrie.la
+
+test_nonalpha_SOURCES = \
+	test_nonalpha.c \
+	utils.c \
+	$(NULL)
+test_nonalpha_LDADD = $(top_builddir)/datrie/libdatrie.la
 
