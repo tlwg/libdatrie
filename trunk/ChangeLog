@@ -1,3 +1,16 @@
+2014-01-09  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Improve documentation.
+
+	* datrie/triedefs.h:
+	  - Refine descriptions of data types.
+	* datrie/trie.c (trie_iterator_new):
+	  - Fix typo on trie_root() mentioning.
+	* datrie/trie.c (trie_store, trie_store_if_absent):
+	  - Adjust wording.
+	* datrie/alpha-map.h, datrie/trie.h:
+	  - Add detailed description of AlphaMap and Trie types.
+
 2014-01-08  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Clarify message in test_nonalpha.

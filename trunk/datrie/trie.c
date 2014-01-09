@@ -368,7 +368,7 @@ trie_retrieve (const Trie *trie, const AlphaChar *key, TrieData *o_data)
  * @param key   : the key for the entry to retrieve
  * @param data  : the data associated to the entry
  *
- * @return boolean value indicating the success of the process
+ * @return boolean value indicating the success of the operation
  *
  * Store a @a data for the given @a key in @a trie. If @a key does not
  * exist in @a trie, it will be appended. If it does, its current data will
@@ -387,7 +387,7 @@ trie_store (Trie *trie, const AlphaChar *key, TrieData data)
  * @param key   : the key for the entry to retrieve
  * @param data  : the data associated to the entry
  *
- * @return boolean value indicating the success of the process
+ * @return boolean value indicating the success of the operation
  *
  * Store a @a data for the given @a key in @a trie. If @a key does not
  * exist in @a trie, it will be appended. If it does, the function will
@@ -889,7 +889,7 @@ trie_state_get_data (const TrieState *s)
  * Create a new trie iterator for iterating entries of a sub-trie rooted at
  * state @a s.
  *
- * Use it with the result of trie_get_root() to iterate the whole trie.
+ * Use it with the result of trie_root() to iterate the whole trie.
  *
  * The created object must be freed with trie_iterator_free().
  *
