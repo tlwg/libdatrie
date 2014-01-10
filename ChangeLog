@@ -1,3 +1,11 @@
+2014-01-10  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* configure.ac:
+	  - Bump library revision to reflect code changes.
+
+	* NEWS, configure.ac:
+	=== Version 0.2.8 ===
+
 2014-01-09  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	Improve documentation.

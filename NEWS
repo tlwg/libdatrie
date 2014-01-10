@@ -1,5 +1,15 @@
 libdatrie
 
+0.2.8 (2014-01-10)
+=====
+- Fix compiler warnings in test suites.
+- Fix edge-case error on alphabet set of size 255.
+  (Thanks Naoki Youshinaga for the report, test case, and analysis.)
+- Fail trie operations on non-alphabet inputs, rather than silently allowing
+  them to sneak in as false keys.
+  (Thanks Naoki Youshinaga for the suggestion.)
+- Improved documentation.
+
 0.2.7.1 (2013-10-22)
 =======
 - Bump library versioning to reflect API addition.
