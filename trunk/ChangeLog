@@ -1,3 +1,13 @@
+2015-02-01  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Fix binary file opening on Windows.
+
+	* datrie/trie.c (trie_new_from_file, trie_save):
+	  - Add "b" to fopen() modes, so the binary file is opened properly
+	    on Windows.
+
+	  Thanks phongphan.p for the report and initial patch.
+
 2014-01-10  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.ac:

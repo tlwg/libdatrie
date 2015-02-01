@@ -162,7 +162,7 @@ trie_new_from_file (const char *path)
     Trie       *trie;
     FILE       *trie_file;
 
-    trie_file = fopen (path, "r");
+    trie_file = fopen (path, "rb");
     if (!trie_file)
         return NULL;
 
@@ -248,7 +248,7 @@ trie_save (Trie *trie, const char *path)
     FILE *file;
     int   res = 0;
 
-    file = fopen (path, "w+");
+    file = fopen (path, "wb+");
     if (!file)
         return -1;
 
