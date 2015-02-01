@@ -1,5 +1,9 @@
 2015-02-01  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	* configure.ac: [Belated] post-release version suffix added.
+
+2015-02-01  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Update my e-mail address everywhere.
 
 	* AUTHORS, configure.ac, datrie/*.[ch], tests/*.[ch],
