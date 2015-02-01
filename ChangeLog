@@ -1,5 +1,13 @@
 2015-02-01  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Update my e-mail address everywhere.
+
+	* AUTHORS, configure.ac, datrie/*.[ch], tests/*.[ch],
+	  tools/trietool.c:
+	  - Replace all mentionings of my e-mail address with the gmail one.
+
+2015-02-01  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Fix binary file opening on Windows.
 
 	* datrie/trie.c (trie_new_from_file, trie_save):
