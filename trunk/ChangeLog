@@ -1,3 +1,11 @@
+2015-02-05  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Disable timestamp in Doxygen-generated doc.
+
+	* doc/Doxyfile.in:
+	  - Set HTML_TIMESTAMP to NO to make the document reproducible.
+	    (reported by Debian Reproducible)
+
 2015-02-01  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	* configure.ac: [Belated] post-release version suffix added.
