@@ -91,7 +91,7 @@ symbols_new ()
 
     syms = (Symbols *) malloc (sizeof (Symbols));
 
-    if (!syms)
+    if (UNLIKELY (!syms))
         return NULL;
 
     syms->num_symbols = 0;
@@ -183,12 +183,12 @@ da_new ()
     DArray     *d;
 
     d = (DArray *) malloc (sizeof (DArray));
-    if (!d)
+    if (UNLIKELY (!d))
         return NULL;
 
     d->num_cells = DA_POOL_BEGIN;
     d->cells     = (DACell *) malloc (d->num_cells * sizeof (DACell));
-    if (!d->cells)
+    if (UNLIKELY (!d->cells))
         goto exit_da_created;
     d->cells[0].base = DA_SIGNATURE;
     d->cells[0].check = d->num_cells;
@@ -227,7 +227,8 @@ da_fread (FILE *file)
     if (!file_read_int32 (file, &n) || DA_SIGNATURE != (uint32) n)
         goto exit_file_read;
 
-    if (NULL == (d = (DArray *) malloc (sizeof (DArray))))
+    d = (DArray *) malloc (sizeof (DArray));
+    if (UNLIKELY (!d))
         goto exit_file_read;
 
     /* read number of cells */
@@ -236,7 +237,7 @@ da_fread (FILE *file)
     if (d->num_cells > SIZE_MAX / sizeof (DACell))
         goto exit_da_created;
     d->cells = (DACell *) malloc (d->num_cells * sizeof (DACell));
-    if (!d->cells)
+    if (UNLIKELY (!d->cells))
         goto exit_da_created;
     d->cells[0].base = DA_SIGNATURE;
     d->cells[0].check= d->num_cells;
@@ -332,7 +333,7 @@ da_get_root (const DArray *d)
 TrieIndex
 da_get_base (const DArray *d, TrieIndex s)
 {
-    return (s < d->num_cells) ? d->cells[s].base : TRIE_INDEX_ERROR;
+    return LIKELY (s < d->num_cells) ? d->cells[s].base : TRIE_INDEX_ERROR;
 }
 
 /**
@@ -348,7 +349,7 @@ da_get_base (const DArray *d, TrieIndex s)
 TrieIndex
 da_get_check (const DArray *d, TrieIndex s)
 {
-    return (s < d->num_cells) ? d->cells[s].check : TRIE_INDEX_ERROR;
+    return LIKELY (s < d->num_cells) ? d->cells[s].check : TRIE_INDEX_ERROR;
 }
 
 
@@ -364,7 +365,7 @@ da_get_check (const DArray *d, TrieIndex s)
 void
 da_set_base (DArray *d, TrieIndex s, TrieIndex val)
 {
-    if (s < d->num_cells) {
+    if (LIKELY (s < d->num_cells)) {
         d->cells[s].base = val;
     }
 }
@@ -381,7 +382,7 @@ da_set_base (DArray *d, TrieIndex s, TrieIndex val)
 void
 da_set_check (DArray *d, TrieIndex s, TrieIndex val)
 {
-    if (s < d->num_cells) {
+    if (LIKELY (s < d->num_cells)) {
         d->cells[s].check = val;
     }
 }
@@ -453,7 +454,7 @@ da_insert_branch (DArray *d, TrieIndex s, TrieChar c)
             new_base = da_find_free_base (d, symbols);
             symbols_free (symbols);
 
-            if (TRIE_INDEX_ERROR == new_base)
+            if (UNLIKELY (TRIE_INDEX_ERROR == new_base))
                 return TRIE_INDEX_ERROR;
 
             da_relocate_base (d, s, new_base);
@@ -468,7 +469,7 @@ da_insert_branch (DArray *d, TrieIndex s, TrieChar c)
         new_base = da_find_free_base (d, symbols);
         symbols_free (symbols);
 
-        if (TRIE_INDEX_ERROR == new_base)
+        if (UNLIKELY (TRIE_INDEX_ERROR == new_base))
             return TRIE_INDEX_ERROR;
 
         da_set_base (d, s, new_base);
@@ -555,7 +556,7 @@ da_find_free_base  (DArray         *d,
     while (!da_fit_symbols (d, s - first_sym, symbols)) {
         /* extend pool before getting exhausted */
         if (-da_get_check (d, s) == da_get_free_list (d)) {
-            if (!da_extend_pool (d, d->num_cells))
+            if (UNLIKELY (!da_extend_pool (d, d->num_cells)))
                 return TRIE_INDEX_ERROR;
         }
 
@@ -641,7 +642,7 @@ da_extend_pool     (DArray         *d,
     TrieIndex   i;
     TrieIndex   free_tail;
 
-    if (to_index <= 0 || TRIE_INDEX_MAX <= to_index)
+    if (UNLIKELY (to_index <= 0 || TRIE_INDEX_MAX <= to_index))
         return FALSE;
 
     if (to_index < d->num_cells)
