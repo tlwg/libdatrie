@@ -28,6 +28,7 @@
 #include <string.h>
 
 #include "trie.h"
+#include "trie-private.h"
 #include "fileutils.h"
 #include "alpha-map.h"
 #include "alpha-map-private.h"
@@ -117,19 +118,19 @@ trie_new (const AlphaMap *alpha_map)
     Trie *trie;
 
     trie = (Trie *) malloc (sizeof (Trie));
-    if (!trie)
+    if (UNLIKELY (!trie))
         return NULL;
 
     trie->alpha_map = alpha_map_clone (alpha_map);
-    if (!trie->alpha_map)
+    if (UNLIKELY (!trie->alpha_map))
         goto exit_trie_created;
 
     trie->da = da_new ();
-    if (!trie->da)
+    if (UNLIKELY (!trie->da))
         goto exit_alpha_map_created;
 
     trie->tail = tail_new ();
-    if (!trie->tail)
+    if (UNLIKELY (!trie->tail))
         goto exit_da_created;
 
     trie->is_dirty = TRUE;
@@ -192,7 +193,7 @@ trie_fread (FILE *file)
     Trie       *trie;
 
     trie = (Trie *) malloc (sizeof (Trie));
-    if (!trie)
+    if (UNLIKELY (!trie))
         return NULL;
 
     if (NULL == (trie->alpha_map = alpha_map_fread_bin (file)))
@@ -604,11 +605,11 @@ trie_enumerate (const Trie *trie, TrieEnumFunc enum_func, void *user_data)
     Bool            cont = TRUE;
 
     root = trie_root (trie);
-    if (!root)
+    if (UNLIKELY (!root))
         return FALSE;
 
     iter = trie_iterator_new (root);
-    if (!iter)
+    if (UNLIKELY (!iter))
         goto exit_root_created;
 
     while (cont && trie_iterator_next (iter)) {
@@ -663,7 +664,7 @@ trie_state_new (const Trie *trie,
     TrieState *s;
 
     s = (TrieState *) malloc (sizeof (TrieState));
-    if (!s)
+    if (UNLIKELY (!s))
         return NULL;
 
     s->trie       = trie;
@@ -749,7 +750,7 @@ Bool
 trie_state_walk (TrieState *s, AlphaChar c)
 {
     TrieIndex tc = alpha_map_char_to_trie (s->trie->alpha_map, c);
-    if (TRIE_INDEX_MAX == tc)
+    if (UNLIKELY (TRIE_INDEX_MAX == tc))
         return FALSE;
 
     if (!s->is_suffix) {
@@ -784,7 +785,7 @@ Bool
 trie_state_is_walkable (const TrieState *s, AlphaChar c)
 {
     TrieIndex tc = alpha_map_char_to_trie (s->trie->alpha_map, c);
-    if (TRIE_INDEX_MAX == tc)
+    if (UNLIKELY (TRIE_INDEX_MAX == tc))
         return FALSE;
 
     if (!s->is_suffix)
@@ -901,7 +902,7 @@ trie_iterator_new (TrieState *s)
     TrieIterator *iter;
 
     iter = (TrieIterator *) malloc (sizeof (TrieIterator));
-    if (!iter)
+    if (UNLIKELY (!iter))
         return NULL;
 
     iter->root = s;

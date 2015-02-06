@@ -35,6 +35,19 @@
  */
 
 /**
+ * @brief LIKELY and UNLIKELY macros for hinting the compiler
+ * about the expected result of a Boolean expression, for the sake of
+ * optimization
+ */
+#if defined(__GNUC__) && (__GNUC__ > 2) && defined(__OPTIMIZE__)
+#define LIKELY(expr) (__builtin_expect (!!(expr), 1))
+#define UNLIKELY(expr) (__builtin_expect (!!(expr), 0))
+#else
+#define LIKELY(expr) (expr)
+#define UNLIKELY(expr) (expr)
+#endif
+
+/**
  * @brief Minimum value macro
  */
 #define MIN_VAL(a,b)  ((a)<(b)?(a):(b))

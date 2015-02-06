@@ -38,7 +38,7 @@ dstring_new (int char_size, int n_elm)
     DString *ds;
 
     ds = (DString *) malloc (sizeof (DString));
-    if (!ds)
+    if (UNLIKELY (!ds))
         return NULL;
 
     ds->alloc_size = char_size * n_elm;
@@ -91,7 +91,7 @@ dstring_ensure_space (DString *ds, int size)
     if (ds->alloc_size < size) {
         int   re_size = MAX_VAL (ds->alloc_size * 2, size);
         void *re_ptr = realloc (ds->val, re_size);
-        if (!re_ptr)
+        if (UNLIKELY (!re_ptr))
             return FALSE;
         ds->val = re_ptr;
         ds->alloc_size = re_size;

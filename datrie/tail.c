@@ -32,6 +32,7 @@
 #include <stdio.h>
 
 #include "tail.h"
+#include "trie-private.h"
 #include "fileutils.h"
 
 /*----------------------------------*
@@ -97,7 +98,7 @@ tail_new ()
     Tail       *t;
 
     t = (Tail *) malloc (sizeof (Tail));
-    if (!t)
+    if (UNLIKELY (!t))
         return NULL;
 
     t->first_free = 0;
@@ -131,7 +132,8 @@ tail_fread (FILE *file)
     if (!file_read_int32 (file, (int32 *) &sig) || TAIL_SIGNATURE != sig)
         goto exit_file_read;
 
-    if (NULL == (t = (Tail *) malloc (sizeof (Tail))))
+    t = (Tail *) malloc (sizeof (Tail));
+    if (UNLIKELY (!t))
         goto exit_file_read;
 
     if (!file_read_int32 (file, &t->first_free) ||
@@ -142,7 +144,7 @@ tail_fread (FILE *file)
     if (t->num_tails > SIZE_MAX / sizeof (TailBlock))
         goto exit_tail_created;
     t->tails = (TailBlock *) malloc (t->num_tails * sizeof (TailBlock));
-    if (!t->tails)
+    if (UNLIKELY (!t->tails))
         goto exit_tail_created;
     for (i = 0; i < t->num_tails; i++) {
         int16   length;
@@ -263,7 +265,7 @@ const TrieChar *
 tail_get_suffix (const Tail *t, TrieIndex index)
 {
     index -= TAIL_START_BLOCKNO;
-    return (index < t->num_tails) ? t->tails[index].suffix : NULL;
+    return LIKELY (index < t->num_tails) ? t->tails[index].suffix : NULL;
 }
 
 /**
@@ -279,7 +281,7 @@ Bool
 tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix)
 {
     index -= TAIL_START_BLOCKNO;
-    if (index < t->num_tails) {
+    if (LIKELY (index < t->num_tails)) {
         /* suffix and t->tails[index].suffix may overlap;
          * so, dup it before it's overwritten
          */
@@ -379,7 +381,8 @@ TrieData
 tail_get_data (const Tail *t, TrieIndex index)
 {
     index -= TAIL_START_BLOCKNO;
-    return (index < t->num_tails) ? t->tails[index].data : TRIE_DATA_ERROR;
+    return LIKELY (index < t->num_tails)
+             ? t->tails[index].data : TRIE_DATA_ERROR;
 }
 
 /**
@@ -397,7 +400,7 @@ Bool
 tail_set_data (Tail *t, TrieIndex index, TrieData data)
 {
     index -= TAIL_START_BLOCKNO;
-    if (index < t->num_tails) {
+    if (LIKELY (index < t->num_tails)) {
         t->tails[index].data = data;
         return TRUE;
     }
@@ -446,7 +449,7 @@ tail_walk_str  (const Tail      *t,
     short           j;
 
     suffix = tail_get_suffix (t, s);
-    if (!suffix)
+    if (UNLIKELY (!suffix))
         return FALSE;
 
     i = 0; j = *suffix_idx;
@@ -488,7 +491,7 @@ tail_walk_char (const Tail      *t,
     TrieChar        suffix_char;
 
     suffix = tail_get_suffix (t, s);
-    if (!suffix)
+    if (UNLIKELY (!suffix))
         return FALSE;
 
     suffix_char = suffix[*suffix_idx];

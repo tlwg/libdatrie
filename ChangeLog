@@ -1,3 +1,32 @@
+2015-02-06  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Micro-optimize with likely/unlikely hints.
+
+	* datrie/trie-private.h:
+	  - Add LIKELY() and UNLIKELY() macros based on compiler extension.
+	* datrie/alpha-map.c
+	  (alpha_map_new, alpha_map_clone, alpha_map_fread_bin,
+	   alpha_map_add_range, alpha_map_char_to_trie_str,
+	   alpha_map_trie_to_char_str):
+	* datrie/darray.c
+	  (symbols_new, da_new, da_fread, da_get_base, da_get_check,
+	   da_set_base, da_set_check, da_insert_branch, da_find_free_base,
+	   da_extend_pool):
+	* datrie/dstring.c (dstring_new, dstring_ensure_space):
+	* datrie/tail.c
+	  (tail_new, tail_fread, tail_get_suffix, tail_set_suffix,
+	   tail_get_data, tail_set_data, tail_walk_str, tail_walk_char):
+	* datrie/trie.c
+	  (trie_new, trie_fread, trie_enumerate, trie_state_new,
+	   trie_state_walk, trie_state_is_walkable, trie_iterator_new):
+	  - Use LIKELY() and UNLIKELY() where it is known to be so, mostly
+	    for one-time initialization and failure handling.
+	* datrie/alpha-map.c, datrie/tail.c, datrie/tail.c:
+	  - These are the files that need to include trie-private.h
+	    because of this.
+
+	Callgrind says it does help speed up a little bit.
+
 2015-02-05  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Disable timestamp in Doxygen-generated doc.
