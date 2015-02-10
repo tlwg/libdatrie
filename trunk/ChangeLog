@@ -1,5 +1,12 @@
 2015-02-10  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Fix 'make distcheck' failure.
+
+	* doc/Makefile.am:
+	  - Remove doxygen db file on clean.
+
+2015-02-10  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	More update of my e-mail address.
 
 	* man/trietool.1:
