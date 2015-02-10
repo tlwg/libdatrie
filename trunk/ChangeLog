@@ -1,3 +1,15 @@
+2015-02-10  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Rename trietool-0.2 utility to trietool.
+
+	* configure.ac:
+	  - Check for ln -s
+	* tools/Makefile.am:
+	  - Rename bin target from trietool-0.2 to trietool.
+	  - Add hooks to install/uninstall symlink with old name.
+	* man/Makefile.am, man/trietool-0.2.1 -> man/trietool.1:
+	  - Rename & update manpage accordingly.
+
 2015-02-06  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Micro-optimize with likely/unlikely hints.
