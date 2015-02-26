@@ -377,7 +377,7 @@ alpha_map_char_to_trie (const AlphaMap *alpha_map, AlphaChar ac)
     TrieIndex   alpha_begin;
     AlphaRange *range;
 
-    if (0 == ac)
+    if (UNLIKELY (0 == ac))
         return 0;
 
     alpha_begin = 1;
@@ -397,7 +397,7 @@ alpha_map_trie_to_char (const AlphaMap *alpha_map, TrieChar tc)
     TrieChar    alpha_begin;
     AlphaRange *range;
 
-    if (0 == tc)
+    if (UNLIKELY (0 == tc))
         return 0;
 
     alpha_begin = 1;
