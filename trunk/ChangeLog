@@ -1,3 +1,10 @@
+2015-02-27  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Catch malloc failure.
+
+	* datrie/tail.c (tail_fread):
+	  - Check malloc() result on suffix string and exit properly.
+
 2015-02-26  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	More micro-optimization with LIKELY/UNLIKELY.

@@ -157,6 +157,8 @@ tail_fread (FILE *file)
         }
 
         t->tails[i].suffix = (TrieChar *) malloc (length + 1);
+        if (UNLIKELY (!t->tails[i].suffix))
+            goto exit_in_loop;
         if (length > 0) {
             if (!file_read_chars (file, (char *)t->tails[i].suffix, length)) {
                 free (t->tails[i].suffix);
