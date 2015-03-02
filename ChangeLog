@@ -2,6 +2,18 @@
 
 	Catch realloc failure.
 
+	* datrie/tail.c (tail_alloc_block):
+	  - Check realloc() result on t->tails reallocation and return
+	    failure code if failed.
+	* datrie/tail.c (tail_add_suffix):
+	  - Check return value from tail_alloc_block() and return failure
+	    code if failed.
+	  - Update documentation.
+
+2015-03-02  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Catch realloc failure.
+
 	* datrie/darray.c (da_extend_pool):
 	  - Check realloc() result on d->cells reallocation and handle
 	    failure properly.

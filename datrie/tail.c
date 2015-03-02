@@ -305,7 +305,8 @@ tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix)
  * @param t      : the tail data
  * @param suffix : the new suffix
  *
- * @return the index of the newly added suffix.
+ * @return the index of the newly added suffix,
+ *         or TRIE_INDEX_ERROR on failure.
  *
  * Add a new suffix entry to tail.
  */
@@ -315,6 +316,9 @@ tail_add_suffix (Tail *t, const TrieChar *suffix)
     TrieIndex   new_block;
 
     new_block = tail_alloc_block (t);
+    if (UNLIKELY (TRIE_INDEX_ERROR == new_block))
+        return TRIE_INDEX_ERROR;
+
     tail_set_suffix (t, new_block, suffix);
 
     return new_block;
@@ -329,9 +333,16 @@ tail_alloc_block (Tail *t)
         block = t->first_free;
         t->first_free = t->tails[block].next_free;
     } else {
+        void *new_block;
+
         block = t->num_tails;
-        t->tails = (TailBlock *) realloc (t->tails,
-                                          ++t->num_tails * sizeof (TailBlock));
+
+        new_block = realloc (t->tails, (t->num_tails + 1) * sizeof (TailBlock));
+        if (UNLIKELY (!new_block))
+            return TRIE_INDEX_ERROR;
+
+        t->tails = (TailBlock *) new_block;
+        ++t->num_tails;
     }
     t->tails[block].next_free = -1;
     t->tails[block].data = TRIE_DATA_ERROR;
