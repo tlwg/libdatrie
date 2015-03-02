@@ -1,3 +1,11 @@
+2015-03-02  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Catch realloc failure.
+
+	* datrie/darray.c (da_extend_pool):
+	  - Check realloc() result on d->cells reallocation and handle
+	    failure properly.
+
 2015-02-27  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Catch malloc failure.

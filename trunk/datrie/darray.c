@@ -638,6 +638,7 @@ static Bool
 da_extend_pool     (DArray         *d,
                     TrieIndex       to_index)
 {
+    void       *new_block;
     TrieIndex   new_begin;
     TrieIndex   i;
     TrieIndex   free_tail;
@@ -648,7 +649,11 @@ da_extend_pool     (DArray         *d,
     if (to_index < d->num_cells)
         return TRUE;
 
-    d->cells = (DACell *) realloc (d->cells, (to_index + 1) * sizeof (DACell));
+    new_block = realloc (d->cells, (to_index + 1) * sizeof (DACell));
+    if (UNLIKELY (!new_block))
+        return FALSE;
+
+    d->cells = (DACell *) new_block;
     new_begin = d->num_cells;
     d->num_cells = to_index + 1;
 
