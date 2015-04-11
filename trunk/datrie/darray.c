@@ -41,9 +41,11 @@
 
 struct _Symbols {
     short       num_symbols;
-    TrieChar    symbols[256];
+    TrieChar    symbols[TRIE_CHAR_MAX + 1];
 };
 
+static Symbols *    symbols_new ();
+static void         symbols_add (Symbols *syms, TrieChar c);
 #define symbols_add_fast(s,c)   ((s)->symbols[(s)->num_symbols++] = c)
 
 /*-----------------------------------*
@@ -84,7 +86,7 @@ static void         da_free_cell       (DArray         *d,
  *   INTERNAL TYPES IMPLEMENTATIONS   *
  *------------------------------------*/
 
-Symbols *
+static Symbols *
 symbols_new ()
 {
     Symbols *syms;
@@ -105,7 +107,7 @@ symbols_free (Symbols *syms)
     free (syms);
 }
 
-void
+static void
 symbols_add (Symbols *syms, TrieChar c)
 {
     short lower, upper;
