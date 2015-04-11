@@ -1,3 +1,17 @@
+2015-04-11  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Clarify Symbols' struct & methods.
+
+	* datrie/darray.c (struct _Symbols):
+	  - Use TRIE_CHAR_MAX + 1 instead of hard-coded value for symbols[]
+	    array size.
+
+	Thanks edgehogapp for the suggestion.
+	https://groups.google.com/forum/#!topic/thai-linux-foss-devel/U-O__IfviQ0
+
+	* datrie/darray.h, datrie/darray.c (symbols_new, symbols_add):
+	  - Hide symbols_new() and symbols_add() for internal use.
+
 2015-03-06  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Update Doxyfile.
