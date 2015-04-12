@@ -49,10 +49,15 @@ extern "C" {
  * found at http://linux.thai.net/~thep/datrie/datrie.html
  *
  * A Trie is associated with an AlphaMap, a map between actual alphabet
- * characters and the raw character used to walk through trie.
+ * characters and the raw characters used to walk through trie.
  * You can define the alphabet set by adding ranges of character codes
  * to it before associating it to a trie. And the keys to be added to the trie
- * must be only in such ranges.
+ * must comprise only characters in such ranges. Note that the size of the
+ * alphabet set is limited to 256 (TRIE_CHAR_MAX + 1), and the AlphaMap
+ * will map the alphabet characters to raw codes in the range 0..255
+ * (0..TRIE_CHAR_MAX). The alphabet character ranges need not be continuous,
+ * but the mapped raw codes will be continuous, for the sake of compactness
+ * of the trie.
  *
  * A new Trie can be created in memory using trie_new(), saved to file using
  * trie_save(), and loaded later with trie_new_from_file().
