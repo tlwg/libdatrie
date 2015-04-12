@@ -1,3 +1,14 @@
+2015-04-12  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Document about alphabet size.
+
+	* datrie/trie.h:
+	  - Add to doc comment a description on the alphabet size limit
+	    and the mapped raw codes.
+
+	Thanks edgehogapp for the suggestion.
+	https://groups.google.com/forum/#!topic/thai-linux-foss-devel/U-O__IfviQ0
+
 2015-04-11  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Clarify Symbols' struct & methods.
