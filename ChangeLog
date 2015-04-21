@@ -1,3 +1,18 @@
+2015-04-21  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Fix infinite loop on empty trie iteration.
+
+	* tests/Makefile.am, +tests/test_null_trie.c:
+	  - Add test case for empty trie iteration.
+
+	* datrie/darray.c (da_first_separate):
+	  - Fix error condition after loop ending.
+
+	Thanks Sergei Lebedev <sergei.a.lebedev@gmail.com> for the report
+	via personal mail.
+
+	Original report: https://github.com/kmike/datrie/issues/17
+
 2015-04-12  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Document about alphabet size.
