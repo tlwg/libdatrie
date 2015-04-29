@@ -1,3 +1,11 @@
+2015-04-29  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Bump doxygen required version.
+
+	* configure.ac:
+	  - Bump doxygen required version to 1.8.8, according to recent
+	    Doxyfile update.
+
 2015-04-21  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Fix infinite loop on empty trie iteration.
