@@ -1,3 +1,8 @@
+2015-05-02  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	* configure.ac:
+	  - Bump library revision to reflect code changes.
+
 2015-04-29  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Bump doxygen required version.
