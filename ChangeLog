@@ -1,3 +1,10 @@
+2015-05-03  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Also install symlink for old trietool.
+
+	* man/Makefile.am:
+	  - Add hooks to install/uninstall symlink for old man page.
+
 2015-05-02  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	* configure.ac:
