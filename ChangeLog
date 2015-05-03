@@ -1,5 +1,13 @@
 2015-05-03  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Use relative paths for symlinks.
+
+	* tools/Makefile.am, man/Makefile.am:
+	  - Use relative paths for symlinks to avoid confusion in
+	    installation with DESTDIR.
+
+2015-05-03  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Also install symlink for old trietool.
 
 	* man/Makefile.am:
