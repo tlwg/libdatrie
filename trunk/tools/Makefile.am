@@ -11,7 +11,7 @@ OLD_PROG_NAME=trietool-0.2
 
 install-data-hook:
 	rm -f $(DESTDIR)$(bindir)/$(OLD_PROG_NAME)
-	$(LN_S) $(bindir)/trietool $(DESTDIR)$(bindir)/$(OLD_PROG_NAME)
+	$(LN_S) trietool $(DESTDIR)$(bindir)/$(OLD_PROG_NAME)
 
 uninstall-hook:
 	rm -f $(DESTDIR)$(bindir)/$(OLD_PROG_NAME)
