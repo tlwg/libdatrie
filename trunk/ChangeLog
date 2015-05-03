@@ -1,5 +1,10 @@
 2015-05-03  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	* NEWS, configure.ac:
+	=== Version 0.2.9 ===
+
+2015-05-03  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Use relative paths for symlinks.
 
 	* tools/Makefile.am, man/Makefile.am:
