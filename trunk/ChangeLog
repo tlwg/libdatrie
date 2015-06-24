@@ -1,5 +1,10 @@
 2015-06-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	* datrie/tail.c (tail_set_suffix):
+	  - Catch strdup() failure.
+
+2015-06-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	* configure.ac: Post-release version suffix added.
 
 2015-05-03  Theppitak Karoonboonyanan  <theppitak@gmail.com>

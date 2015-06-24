@@ -288,8 +288,11 @@ tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix)
          * so, dup it before it's overwritten
          */
         TrieChar *tmp = NULL;
-        if (suffix)
+        if (suffix) {
             tmp = (TrieChar *) strdup ((const char *)suffix);
+            if (UNLIKELY (!tmp))
+                return FALSE;
+        }
         if (t->tails[index].suffix)
             free (t->tails[index].suffix);
         t->tails[index].suffix = tmp;
