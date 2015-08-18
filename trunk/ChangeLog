@@ -1,3 +1,13 @@
+2015-08-18  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Fix doxygen version checking.
+
+	* configure.ac:
+	  - Correctly compare doxygen versions. Simple expr comparison
+	    didn't work with version 1.8.10.
+
+	Thanks Petr Gajdos <pgajdos@suse.cz> for the patch.
+
 2015-06-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	* datrie/tail.c (tail_set_suffix):
