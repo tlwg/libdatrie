@@ -90,12 +90,26 @@ typedef struct _AlphaRange {
 
 struct _AlphaMap {
     AlphaRange     *first_range;
+
+    /* work area */
+    /* alpha-to-trie map */
+    AlphaChar  alpha_begin;
+    AlphaChar  alpha_end;
+    int        alpha_map_sz;
+    TrieIndex *alpha_to_trie_map;
+
+    /* trie-to-alpha map */
+    int        trie_map_sz;
+    AlphaChar *trie_to_alpha_map;
 };
 
 /*-----------------------------------*
  *    PRIVATE METHODS DECLARATIONS   *
  *-----------------------------------*/
 static int  alpha_map_get_total_ranges (const AlphaMap *alpha_map);
+static int  alpha_map_add_range_only (AlphaMap *alpha_map,
+                                      AlphaChar begin, AlphaChar end);
+static int  alpha_map_recalc_work_area (AlphaMap *alpha_map);
 
 /*-----------------------------*
  *    METHODS IMPLEMENTAIONS   *
@@ -133,6 +147,15 @@ alpha_map_new ()
 
     alpha_map->first_range = NULL;
 
+    /* work area */
+    alpha_map->alpha_begin = 0;
+    alpha_map->alpha_end = 0;
+    alpha_map->alpha_map_sz = 0;
+    alpha_map->alpha_to_trie_map = NULL;
+
+    alpha_map->trie_map_sz = 0;
+    alpha_map->trie_to_alpha_map = NULL;
+
     return alpha_map;
 }
 
@@ -156,13 +179,18 @@ alpha_map_clone (const AlphaMap *a_map)
         return NULL;
 
     for (range = a_map->first_range; range; range = range->next) {
-        if (alpha_map_add_range (alpha_map, range->begin, range->end) != 0) {
-            alpha_map_free (alpha_map);
-            return NULL;
-        }
+        if (alpha_map_add_range_only (alpha_map, range->begin, range->end) != 0)
+            goto exit_map_created;
     }
 
+    if (alpha_map_recalc_work_area (alpha_map) != 0)
+        goto exit_map_created;
+
     return alpha_map;
+
+exit_map_created:
+    alpha_map_free (alpha_map);
+    return NULL;
 }
 
 /**
@@ -183,6 +211,12 @@ alpha_map_free (AlphaMap *alpha_map)
         free (p);
         p = q;
     }
+
+    /* work area */
+    if (alpha_map->alpha_to_trie_map)
+        free (alpha_map->alpha_to_trie_map);
+    if (alpha_map->trie_to_alpha_map)
+        free (alpha_map->trie_to_alpha_map);
 
     free (alpha_map);
 }
@@ -214,8 +248,12 @@ alpha_map_fread_bin (FILE *file)
 
         if (!file_read_int32 (file, &b) || !file_read_int32 (file, &e))
             goto exit_map_created;
-        alpha_map_add_range (alpha_map, b, e);
+        alpha_map_add_range_only (alpha_map, b, e);
     }
+
+    /* work area */
+    if (UNLIKELY (alpha_map_recalc_work_area (alpha_map) != 0))
+        goto exit_map_created;
 
     return alpha_map;
 
@@ -261,20 +299,8 @@ alpha_map_fwrite_bin (const AlphaMap *alpha_map, FILE *file)
     return 0;
 }
 
-/**
- * @brief Add a range to alphabet map
- *
- * @param alpha_map : the alphabet map object
- * @param begin     : the first character of the range
- * @param end       : the last character of the range
- *
- * @return 0 on success, non-zero on failure
- *
- * Add a range of character codes from @a begin to @a end to the
- * alphabet set.
- */
-int
-alpha_map_add_range (AlphaMap *alpha_map, AlphaChar begin, AlphaChar end)
+static int
+alpha_map_add_range_only (AlphaMap *alpha_map, AlphaChar begin, AlphaChar end)
 {
     AlphaRange *q, *r, *begin_node, *end_node;
 
@@ -371,21 +397,109 @@ alpha_map_add_range (AlphaMap *alpha_map, AlphaChar begin, AlphaChar end)
     return 0;
 }
 
+static int
+alpha_map_recalc_work_area (AlphaMap *alpha_map)
+{
+    AlphaRange *range;
+
+    /* free old existing map */
+    if (alpha_map->alpha_to_trie_map) {
+        free (alpha_map->alpha_to_trie_map);
+        alpha_map->alpha_to_trie_map = NULL;
+    }
+    if (alpha_map->trie_to_alpha_map) {
+        free (alpha_map->trie_to_alpha_map);
+        alpha_map->trie_to_alpha_map = NULL;
+    }
+
+    range = alpha_map->first_range;
+    if (range) {
+        const AlphaChar alpha_begin = range->begin;
+        int       n_cells, i;
+        AlphaChar a;
+        TrieChar  trie_last = 0;
+        TrieChar  tc;
+
+        /* reconstruct alpha-to-trie map */
+        alpha_map->alpha_begin = alpha_begin;
+        while (range->next) {
+            range = range->next;
+        }
+        alpha_map->alpha_end = range->end;
+        alpha_map->alpha_map_sz = n_cells = range->end - alpha_begin + 1;
+        alpha_map->alpha_to_trie_map
+            = (TrieIndex *) malloc (n_cells * sizeof (TrieIndex));
+        if (UNLIKELY (!alpha_map->alpha_to_trie_map))
+            goto error_alpha_map_not_created;
+        for (i = 0; i < n_cells; i++) {
+            alpha_map->alpha_to_trie_map[i] = TRIE_INDEX_MAX;
+        }
+        for (range = alpha_map->first_range; range; range = range->next) {
+            for (a = range->begin; a <= range->end; a++) {
+                alpha_map->alpha_to_trie_map[a - alpha_begin] = ++trie_last;
+            }
+        }
+
+        /* reconstruct trie-to-alpha map */
+        alpha_map->trie_map_sz = n_cells = trie_last + 1;
+        alpha_map->trie_to_alpha_map
+            = (AlphaChar *) malloc (n_cells * sizeof (AlphaChar));
+        if (UNLIKELY (!alpha_map->trie_to_alpha_map))
+            goto error_alpha_map_created;
+        alpha_map->trie_to_alpha_map[0] = 0;
+        tc = 1;
+        for (range = alpha_map->first_range; range; range = range->next) {
+            for (a = range->begin; a <= range->end; a++) {
+                alpha_map->trie_to_alpha_map[tc++] = a;
+            }
+        }
+    }
+
+    return 0;
+
+error_alpha_map_created:
+    free (alpha_map->alpha_to_trie_map);
+    alpha_map->alpha_to_trie_map = NULL;
+error_alpha_map_not_created:
+    return -1;
+}
+
+/**
+ * @brief Add a range to alphabet map
+ *
+ * @param alpha_map : the alphabet map object
+ * @param begin     : the first character of the range
+ * @param end       : the last character of the range
+ *
+ * @return 0 on success, non-zero on failure
+ *
+ * Add a range of character codes from @a begin to @a end to the
+ * alphabet set.
+ */
+int
+alpha_map_add_range (AlphaMap *alpha_map, AlphaChar begin, AlphaChar end)
+{
+    int res = alpha_map_add_range_only (alpha_map, begin, end);
+    if (res != 0)
+        return res;
+    return alpha_map_recalc_work_area (alpha_map);
+}
+
 TrieIndex
 alpha_map_char_to_trie (const AlphaMap *alpha_map, AlphaChar ac)
 {
     TrieIndex   alpha_begin;
-    AlphaRange *range;
 
     if (UNLIKELY (0 == ac))
         return 0;
 
-    alpha_begin = 1;
-    for (range = alpha_map->first_range; range; range = range->next) {
-        if (range->begin <= ac && ac <= range->end)
-            return alpha_begin + (ac - range->begin);
+    if (UNLIKELY (!alpha_map->alpha_to_trie_map))
+        return TRIE_INDEX_MAX;
 
-        alpha_begin += range->end - range->begin + 1;
+    alpha_begin = alpha_map->alpha_begin;
+    if (alpha_begin <= ac && ac <= alpha_map->alpha_end)
+    {
+        return alpha_map->alpha_to_trie_map[ac - alpha_begin];
     }
 
     return TRIE_INDEX_MAX;
@@ -394,19 +508,8 @@ alpha_map_char_to_trie (const AlphaMap *alpha_map, AlphaChar ac)
 AlphaChar
 alpha_map_trie_to_char (const AlphaMap *alpha_map, TrieChar tc)
 {
-    TrieChar    alpha_begin;
-    AlphaRange *range;
-
-    if (UNLIKELY (0 == tc))
-        return 0;
-
-    alpha_begin = 1;
-    for (range = alpha_map->first_range; range; range = range->next) {
-        if (tc <= alpha_begin + (range->end - range->begin))
-            return range->begin + (tc - alpha_begin);
-
-        alpha_begin += range->end - range->begin + 1;
-    }
+    if (tc < alpha_map->trie_map_sz)
+        return alpha_map->trie_to_alpha_map[tc];
 
     return ALPHA_CHAR_ERROR;
 }
