@@ -1,3 +1,35 @@
+2015-10-13  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Optimize AlphaMap mapping.
+
+	alpha_map_char_to_trie() is called everywhere before trie state
+	transition. It's an important bottleneck.
+
+	We won't change the persistent AlphaMap structure, but will add
+	pre-calculated lookup tables for use at run-time.
+
+	* datrie/alpha-map.c (struct _AlphaMap):
+	  - Add members for alpha-to-trie and trie-to-alpha lookup tables.
+	* datrie/alpha-map.c (alpha_map_new, alpha_map_free):
+	  - Initialize & free the tables properly.
+	* datrie/alpha-map.c (alpha_map_add_range -> alpha_map_add_range_only
+	  + alpha_map_recalc_work_area):
+	  - Split alpha_map_add_range() API into two parts: adding the range
+	    as usual and recalculate the lookup tables.
+	* datrie/alpha-map.c (alpha_map_clone, alpha_map_fread_bin):
+	  - Call alpha_map_add_range_only() repeatedly before calling
+	    alpha_map_recalc_work_area() once.
+	* datrie/alpha-map.c (alpha_map_char_to_trie, alpha_map_trie_to_char):
+	  - Look up the pre-calculated tables instead of calculating on
+	    every call.
+
+	This appears to save time by 14.6% for total alpha_char_to_trie()
+	calls and even lower its bottleneck rank by 1 rank on a libthai
+	test case. It reduces 0.2% run time of the total libthai test case.
+
+	Note that the time saved would be even more in case of multiple
+	uncontinuous alphabet ranges, at the expense of more memory used.
+
 2015-08-18  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Fix doxygen version checking.
