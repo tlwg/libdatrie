@@ -1,5 +1,9 @@
 2015-10-20  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	* configure.ac: Post-release version suffix added.
+
+2015-10-20  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	* configure.ac:
 	  - Bump library revision to reflect code changes.
 
