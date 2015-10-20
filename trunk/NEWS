@@ -1,5 +1,12 @@
 libdatrie
 
+0.2.10 (2015-10-20)
+======
+- Correctly check doxygen version on configure.
+  (Thanks Petr Gajdos for the patch.)
+- Optimization on AlphaMap mapping.
+  (contributing to 0.2% less run time for LibThai word breaking)
+
 0.2.9 (2015-05-03)
 =====
 - Fix binary file opening on Windows

@@ -1,3 +1,11 @@
+2015-10-20  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	* configure.ac:
+	  - Bump library revision to reflect code changes.
+
+	* NEWS, configure.ac:
+	=== Version 0.2.10 ===
+
 2015-10-13  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Optimize AlphaMap mapping.
