@@ -1,5 +1,16 @@
 2016-09-21  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Fix iconv() return value checking.
+
+	* tools/trietool.c (conv_to_alpha):
+	  - Check iconv() return value against (size_t) -1, rather than
+	    for its negativity, as size_t can be unsigned.
+
+	Thanks Daniel Macks for the report on Issue #3.
+	https://github.com/tlwg/libdatrie/issues/3
+
+2016-09-21  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Use versioning based on Git snapshot.
 
 	* Makefile.am:

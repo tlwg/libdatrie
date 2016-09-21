@@ -125,7 +125,7 @@ conv_to_alpha (ProgEnv *env, const char *in, AlphaChar *out, size_t out_size)
     res = iconv (env->to_alpha_conv, (char **) &in_p, &in_left,
                  &out_p, &out_left);
 
-    if (res < 0)
+    if (res == (size_t) -1)
         return res;
 
     /* convert UCS-4LE to AlphaChar string */
