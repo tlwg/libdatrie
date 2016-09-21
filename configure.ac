@@ -2,9 +2,12 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libdatrie, 0.2.10, theppitak@gmail.com)
+AC_INIT(libdatrie,
+        m4_esyscmd([build-aux/git-version-gen]),
+        theppitak@gmail.com)
 AC_CONFIG_SRCDIR([datrie/trie.h])
 AC_CONFIG_HEADER([config.h])
+AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE(dist-xz no-dist-gzip)

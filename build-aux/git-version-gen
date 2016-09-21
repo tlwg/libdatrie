@@ -1,0 +1,29 @@
+#!/bin/sh
+
+tarball_version_file=VERSION
+
+# Use tarball version file (included in release tarballs) if present,
+# otherwise, try git-describe
+if test -f $tarball_version_file
+then
+    v=$(cat $tarball_version_file) || v=
+fi
+
+if test "x$v" != "x"
+then
+    : # use $v
+# Make sure it's a Git tree
+elif test "$(git log -1 --pretty=format:x 2>&1)" = "x"
+then
+    v=$(git describe --match 'v[0-9]*' HEAD 2>/dev/null | sed -e 's/^v//') \
+        || v="UNKNOWN"
+
+    # Append "-dirty" suffix if there is local change
+    git update-index --refresh > /dev/null 2>&1
+    if test "x$(git diff-index --name-only HEAD 2>/dev/null)" != "x"
+    then
+        v="$v-dirty"
+    fi
+fi
+
+printf "%s" "$v"
