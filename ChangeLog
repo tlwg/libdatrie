@@ -1,3 +1,10 @@
+2016-12-14  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Include git-version-gen in tarball
+
+	* Makefile.am:
+	  - Add build-aux/git-version-gen to EXTRA_DIST.
+
 2016-09-21  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Fix iconv() return value checking.
