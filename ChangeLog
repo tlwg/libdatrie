@@ -1,3 +1,15 @@
+2017-09-06  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Revise description about search time complexity
+
+	* README:
+	  - Clarify that search time is O(m), where m is the key length,
+	    instead of O(1), while still claim that it's independent of
+	    database size.
+
+	This closes #4.
+	https://github.com/tlwg/libdatrie/issues/4
+
 2016-12-14  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Include git-version-gen in tarball
