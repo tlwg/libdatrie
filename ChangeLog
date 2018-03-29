@@ -1,3 +1,23 @@
+2018-03-29  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Fix trie_state_get_data() at a prefix key
+
+	When getting data from a state which terminates a key that is
+	a prefix of another key, a terminator should be tried, so it
+	jumps from DA to TAIL, where we can get the data.
+
+	* tests/Makefile.am, +tests/test_term_state.c:
+	  - Add a test case with {'ab', 'abc'} dictionary, which fails previous
+	    code when retrieving data for key 'ab'.
+	* datrie/trie.c (trie_state_get_data()):
+	  - Instead of simply checking for leaf state, which only caught a state
+	    in TAIL, also try walking with a terminator when still in DA.
+	  - Replace 'leaf state' with 'terminal state' in documentation,
+	    for more clarity.
+	  - Also return error on null state pointer.
+
+	Thanks Filip Pytloun from the pytries project for the initial patch.
+
 2017-09-06  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Revise description about search time complexity

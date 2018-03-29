@@ -858,21 +858,42 @@ trie_state_is_single (const TrieState *s)
 }
 
 /**
- * @brief Get data from leaf state
+ * @brief Get data from terminal state
  *
- * @param s    : a leaf state
+ * @param s    : a terminal state
  *
- * @return the data associated with the leaf state @a s,
- *         or TRIE_DATA_ERROR if @a s is not a leaf state
+ * @return the data associated with the terminal state @a s,
+ *         or TRIE_DATA_ERROR if @a s is not a terminal state
  *
- * Get value from a leaf state of trie. Getting value from a non-leaf state
- * will result in TRIE_DATA_ERROR.
+ * Get value from a terminal state of trie. Getting value from a non-terminal
+ * state will result in TRIE_DATA_ERROR.
  */
 TrieData
 trie_state_get_data (const TrieState *s)
 {
-    return trie_state_is_leaf (s) ? tail_get_data (s->trie->tail, s->index)
-                                  : TRIE_DATA_ERROR;
+    if (!s) {
+        return TRIE_DATA_ERROR;
+    }
+
+    if (!s->is_suffix) {
+        TrieIndex index = s->index;
+
+        /* walk a terminal char to get the data from tail */
+        if (da_walk (s->trie->da, &index, TRIE_CHAR_TERM)) {
+            if (trie_da_is_separate (s->trie->da, index)) {
+                index = trie_da_get_tail_index (s->trie->da, index);
+                return tail_get_data (s->trie->tail, index);
+            }
+        }
+    } else {
+        if (tail_is_walkable_char (s->trie->tail, s->index, s->suffix_idx,
+                                   TRIE_CHAR_TERM))
+        {
+            return tail_get_data (s->trie->tail, s->index);
+        }
+    }
+
+    return TRIE_DATA_ERROR;
 }
 
 

@@ -9,6 +9,7 @@ TESTS = \
 	test_file \
 	test_nonalpha \
 	test_null_trie \
+	test_term_state \
 	$(NULL)
 
 check_PROGRAMS = \
@@ -18,6 +19,7 @@ check_PROGRAMS = \
 	test_file \
 	test_nonalpha \
 	test_null_trie \
+	test_term_state \
 	$(NULL)
 
 noinst_HEADERS = \
@@ -59,4 +61,10 @@ test_null_trie_SOURCES = \
 	utils.c \
 	$(NULL)
 test_null_trie_LDADD = $(top_builddir)/datrie/libdatrie.la
+
+test_term_state_SOURCES = \
+	test_term_state.c \
+	utils.c \
+	$(NULL)
+test_term_state_LDADD = $(top_builddir)/datrie/libdatrie.la
 
