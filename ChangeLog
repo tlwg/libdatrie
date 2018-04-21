@@ -1,3 +1,17 @@
+2018-04-21  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Fix reported segfault on full-range alpha map
+
+	* tests/Makefile.am, +tests/test_byte_alpha.c:
+	  - Add test case
+	* datrie/alpha-map.c (alpha_map_recalc_work_area()):
+	  - Redeclare trie_last as TrieIndex, to prevent overflow.
+
+	Thanks Xiao Wang for the report, and @nevermatch for the analysis.
+
+	Closes: #6
+	https://github.com/tlwg/libdatrie/issues/6
+
 2018-03-29  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Fix trie_state_get_data() at a prefix key

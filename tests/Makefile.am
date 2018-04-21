@@ -10,6 +10,7 @@ TESTS = \
 	test_nonalpha \
 	test_null_trie \
 	test_term_state \
+	test_byte_alpha \
 	$(NULL)
 
 check_PROGRAMS = \
@@ -20,6 +21,7 @@ check_PROGRAMS = \
 	test_nonalpha \
 	test_null_trie \
 	test_term_state \
+	test_byte_alpha \
 	$(NULL)
 
 noinst_HEADERS = \
@@ -67,4 +69,10 @@ test_term_state_SOURCES = \
 	utils.c \
 	$(NULL)
 test_term_state_LDADD = $(top_builddir)/datrie/libdatrie.la
+
+test_byte_alpha_SOURCES = \
+	test_byte_alpha.c \
+	utils.c \
+	$(NULL)
+test_byte_alpha_LDADD = $(top_builddir)/datrie/libdatrie.la
 
