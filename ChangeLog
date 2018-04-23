@@ -1,3 +1,11 @@
+2018-04-23  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	* configure.ac:
+	  - Bump library revision to reflect code changes.
+
+	* NEWS:
+	=== Version 0.2.11 ===
+
 2018-04-21  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Fix reported segfault on full-range alpha map

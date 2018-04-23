@@ -1,5 +1,19 @@
 libdatrie
 
+0.2.11 (2018-04-23)
+======
+- Detect iconv() error more correctly in trietool.
+  (Thanks Daniel Macks for the report on Issue #3)
+- Clarify package description that search time is O(m), where m is
+  key length, not O(1), while still claiming that it's independent
+  of database size.
+  (Thanks @flackbash for the report on Issue #4)
+- Fix trie_state_get_data() on a prefix key.
+  (Thanks Filip Pytloun from the pytries project for the initial patch)
+- Fix reported segfault on full-range alpha map.
+  (Thanks Xiao Wang for the report on Issue #6,
+  and @nevermatch for the analysis.)
+
 0.2.10 (2015-10-20)
 ======
 - Correctly check doxygen version on configure.
