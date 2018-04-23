@@ -1,5 +1,12 @@
 2018-04-23  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Add missing include in test
+
+	* tests/test_byte_alpha.c:
+	  - Add missing include for utils.h
+
+2018-04-23  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	* configure.ac:
 	  - Bump library revision to reflect code changes.
 
