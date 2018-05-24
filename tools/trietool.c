@@ -21,7 +21,6 @@
 
 #include <assert.h>
 
-#include <config.h>
 #include <datrie/trie.h>
 
 /* iconv encoding name for AlphaChar string */
