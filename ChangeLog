@@ -1,5 +1,17 @@
 2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Rename TRUE/FALSE in Bool enum to avoid clash
+
+	Some other header file may have already define TRUE/FALSE.
+
+	* datrie/typedefs.h (Bool):
+	  - Rename FALSE, TRUE to DA_FALSE, DA_TRUE respectively,
+	    and define FALSE, TRUE macros only if they haven't been defined.
+
+	Thanks Peter Moulder for the patch.
+
+2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Declare argument-less functions with "(void)"
 
 	"f()" declaration form is K&R style, specifying that no information
