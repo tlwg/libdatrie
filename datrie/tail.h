@@ -39,7 +39,7 @@
  */
 typedef struct _Tail  Tail;
 
-Tail *   tail_new ();
+Tail *   tail_new (void);
 
 Tail *   tail_fread (FILE *file);
 

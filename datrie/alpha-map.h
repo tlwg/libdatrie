@@ -65,7 +65,7 @@ extern "C" {
  */
 typedef struct _AlphaMap    AlphaMap;
 
-AlphaMap *  alpha_map_new ();
+AlphaMap *  alpha_map_new (void);
 
 AlphaMap *  alpha_map_clone (const AlphaMap *a_map);
 

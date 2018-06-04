@@ -137,7 +137,7 @@ static int  alpha_map_recalc_work_area (AlphaMap *alpha_map);
  *  The created object must be freed with alpha_map_free().
  */
 AlphaMap *
-alpha_map_new ()
+alpha_map_new (void)
 {
     AlphaMap   *alpha_map;
 

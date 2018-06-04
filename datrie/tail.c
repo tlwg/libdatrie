@@ -93,7 +93,7 @@ struct _Tail {
  * Create a new empty tail object.
  */
 Tail *
-tail_new ()
+tail_new (void)
 {
     Tail       *t;
 

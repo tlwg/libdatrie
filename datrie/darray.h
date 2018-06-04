@@ -50,7 +50,7 @@ TrieChar     symbols_get (const Symbols *syms, int index);
 typedef struct _DArray  DArray;
 
 
-DArray * da_new ();
+DArray * da_new (void);
 
 DArray * da_fread (FILE *file);
 

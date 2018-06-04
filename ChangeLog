@@ -1,3 +1,20 @@
+2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Declare argument-less functions with "(void)"
+
+	"f()" declaration form is K&R style, specifying that no information
+	about the number or types of parameters is supplied. This caused
+	warnings on '-Wstrict-prototypes' gcc option.
+
+	* datrie/alpha-map.h, datrie/alpha-map.c (alpha_map_new):
+	* datrie/darray.h, datrie/darray.c (da_new, symbols_new):
+	* datrie/tail.h, datrie/tail.c (tail_new):
+	* tests/utils.h, tests/utils.c (en_alpha_map_new, en_trie_new):
+	  - Use "(void)" form in declaration
+	  - Also use "(void)" form in definition, for consistency
+
+	Thanks Peter Moulder for the initial patch.
+
 2018-05-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Remove duplicate include

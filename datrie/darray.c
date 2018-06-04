@@ -44,7 +44,7 @@ struct _Symbols {
     TrieChar    symbols[TRIE_CHAR_MAX + 1];
 };
 
-static Symbols *    symbols_new ();
+static Symbols *    symbols_new (void);
 static void         symbols_add (Symbols *syms, TrieChar c);
 #define symbols_add_fast(s,c)   ((s)->symbols[(s)->num_symbols++] = c)
 
@@ -87,7 +87,7 @@ static void         da_free_cell       (DArray         *d,
  *------------------------------------*/
 
 static Symbols *
-symbols_new ()
+symbols_new (void)
 {
     Symbols *syms;
 
@@ -180,7 +180,7 @@ struct _DArray {
  * Create a new empty doubla-array object.
  */
 DArray *
-da_new ()
+da_new (void)
 {
     DArray     *d;
 

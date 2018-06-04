@@ -40,7 +40,7 @@ msg_step (const char *msg)
  *  Trie creation helpers  *
  *-------------------------*/
 static AlphaMap *
-en_alpha_map_new ()
+en_alpha_map_new (void)
 {
     AlphaMap *en_map;
 
@@ -60,7 +60,7 @@ err_map_not_created:
 }
 
 Trie *
-en_trie_new ()
+en_trie_new (void)
 {
     AlphaMap *en_map;
     Trie     *en_trie;
@@ -129,7 +129,7 @@ DictRec dict_src[] = {
 };
 
 int
-dict_src_n_entries ()
+dict_src_n_entries (void)
 {
     return sizeof (dict_src) / sizeof (dict_src[0]) - 1;
 }
