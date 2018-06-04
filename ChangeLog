@@ -1,5 +1,13 @@
 2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Split long string
+
+	* tools/trietool.c (usage):
+	  - Split help message which was too long and required C90 compiler.
+	    Caught by '-Woverlength-strings' gcc option.
+
+2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Remove unused byte, word, dword typedefs
 
 	These are likely to conflict with other uses.

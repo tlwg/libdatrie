@@ -554,27 +554,43 @@ usage (const char *prog_name, int exit_status)
 {
     printf ("%s - double-array trie manipulator\n", prog_name);
     printf ("Usage: %s [OPTION]... TRIE CMD ARG ...\n", prog_name);
+    printf ("Options:\n");
     printf (
-        "Options:\n"
         "  -p, --path DIR           set trie directory to DIR [default=.]\n"
+    );
+    printf (
         "  -h, --help               display this help and exit\n"
+    );
+    printf (
         "  -V, --version            output version information and exit\n"
-        "\n"
-        "Commands:\n"
+    );
+    printf ("\n");
+    printf ("Commands:\n");
+    printf (
         "  add  WORD DATA ...\n"
         "      Add WORD with DATA to trie\n"
+    );
+    printf (
         "  add-list [OPTION] LISTFILE\n"
         "      Add words and data listed in LISTFILE to trie\n"
         "      Options:\n"
         "          -e, --encoding ENC    specify character encoding of LISTFILE\n"
+    );
+    printf (
         "  delete WORD ...\n"
         "      Delete WORD from trie\n"
+    );
+    printf (
         "  delete-list [OPTION] LISTFILE\n"
         "      Delete words listed in LISTFILE from trie\n"
         "      Options:\n"
         "          -e, --encoding ENC    specify character encoding of LISTFILE\n"
+    );
+    printf (
         "  query WORD\n"
         "      Query WORD data from trie\n"
+    );
+    printf (
         "  list\n"
         "      List all words in trie\n"
     );
