@@ -1,5 +1,16 @@
 2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Remove unused byte, word, dword typedefs
+
+	These are likely to conflict with other uses.
+
+	* datrie/typedefs.h (-byte, -word, -dword):
+	  - Remove the unused typedefs
+
+	Thanks Peter Moulder for the patch.
+
+2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Rename TRUE/FALSE in Bool enum to avoid clash
 
 	Some other header file may have already define TRUE/FALSE.

@@ -126,10 +126,6 @@ typedef enum { DA_FALSE = 0, DA_TRUE = 1 } Bool;
 #   error "int32 type is undefined!"
 # endif
 
-typedef uint8  byte;
-typedef uint16 word;
-typedef uint32 dword;
-
 
 #endif /* __TYPEDEFS_H */
 
