@@ -1,5 +1,14 @@
 2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Duplicate TrieChar string in more portable manner
+
+	* datrie/tail.c (tail_set_suffix, +tc_strdup, +tc_strlen):
+	  - Replace cast strdup() with crafted implementation,
+	    allowing TrieChar to be of larger size than char.
+	    Fixing warning from '-Wint-to-pointer-cast' gcc option.
+
+2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Split long string
 
 	* tools/trietool.c (usage):

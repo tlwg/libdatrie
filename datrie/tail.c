@@ -270,6 +270,31 @@ tail_get_suffix (const Tail *t, TrieIndex index)
     return LIKELY (index < t->num_tails) ? t->tails[index].suffix : NULL;
 }
 
+static size_t
+tc_strlen (const TrieChar *str)
+{
+    size_t len = 0;
+    while (*str++) {
+        ++len;
+    }
+    return len;
+}
+
+static TrieChar *
+tc_strdup (const TrieChar *str)
+{
+    TrieChar *dup
+        = (TrieChar *) malloc (sizeof (TrieChar) * (tc_strlen (str) + 1));
+    TrieChar *p = dup;
+
+    while (*str) {
+        *p++ = *str++;
+    }
+    *p = (TrieChar) 0;
+
+    return dup;
+}
+
 /**
  * @brief Set suffix of existing entry
  *
@@ -289,7 +314,7 @@ tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix)
          */
         TrieChar *tmp = NULL;
         if (suffix) {
-            tmp = (TrieChar *) strdup ((const char *)suffix);
+            tmp = tc_strdup (suffix);
             if (UNLIKELY (!tmp))
                 return FALSE;
         }
