@@ -204,7 +204,7 @@ prepare_trie (ProgEnv *env)
         alpha_map = alpha_map_new ();
 
         while (fgets (buff, sizeof (buff), sbm)) {
-            int         b, e;
+            unsigned int    b, e;
 
             /* read the range
              * format: [b,e]

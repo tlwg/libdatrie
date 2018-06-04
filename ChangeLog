@@ -1,5 +1,13 @@
 2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Fix sscanf() string format
+
+	* tools/trietool.c (prepare_trie):
+	  - Define b, e as unsigned int, as required by "%x" format.
+	    Fixing warning from '-Wformat=' gcc option.
+
+2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Fix compiler warnings in tests
 
 	* tests/test_byte_alpha.c (main):
