@@ -82,7 +82,7 @@ print_walkables (const AlphaChar *walkables, int n_elm)
 #define ALPHABET_SIZE 256
 
 int
-main ()
+main (void)
 {
     Trie       *test_trie;
     DictRec    *dict_p;
@@ -111,6 +111,8 @@ main ()
     printf (
         "Now the trie structure is supposed to be:\n"
         "\n"
+    );
+    printf (
         "          +---o-> (3) -o-> (4) -l-> [5]\n"
         "          |\n"
         "          |        +---i-> (7) -z-> (8) -e-> [9]\n"

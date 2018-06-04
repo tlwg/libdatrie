@@ -38,7 +38,7 @@
  *
  */
 int
-main ()
+main (void)
 {
     Trie         *test_trie;
     TrieState    *trie_state;

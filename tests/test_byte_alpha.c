@@ -33,7 +33,7 @@
 
 #define TEST_DATA 255
 int
-main ()
+main (void)
 {
     AlphaMap    *alpha_map;
     Trie        *test_trie;

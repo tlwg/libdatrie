@@ -30,7 +30,7 @@
 #include <stdlib.h>
 
 int
-main ()
+main (void)
 {
     Trie         *test_trie;
     TrieState    *trie_root_state;

@@ -53,7 +53,7 @@ trie_enum_mark_rec (const AlphaChar *key, TrieData key_data, void *user_data)
 }
 
 int
-main ()
+main (void)
 {
     Trie    *test_trie;
     DictRec *dict_p;

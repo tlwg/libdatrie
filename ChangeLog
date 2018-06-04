@@ -1,5 +1,23 @@
 2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Fix compiler warnings in tests
+
+	* tests/test_byte_alpha.c (main):
+	* tests/test_file.c (main):
+	* tests/test_iterator.c (main):
+	* tests/test_nonalpha.c (main):
+	* tests/test_null_trie.c (main):
+	* tests/test_store-retrieve.c (main):
+	* tests/test_term_state.c (main):
+	* tests/test_walk.c (main):
+	  - Declare main function with 'main (void)'.
+	    Fixing warning from '-Wstrict-prototypes' gcc option.
+	* tests/test_walk.c (main):
+	  - Split long string, which required C90 compilers.
+	    Fixing warning from '-Woverlength-strings' gcc option.
+
+2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Duplicate TrieChar string in more portable manner
 
 	* datrie/tail.c (tail_set_suffix, +tc_strdup, +tc_strlen):
