@@ -180,26 +180,37 @@ close_conv (ProgEnv *env)
     iconv_close (env->from_alpha_conv);
 }
 
+static char *
+full_path (const char *path, const char *name, const char *ext)
+{
+    int full_size = strlen (path) + strlen (name) + strlen (ext) + 2;
+    char *full_path_buff = (char *) malloc (full_size);
+    sprintf (full_path_buff, "%s/%s%s", path, name, ext);
+    return full_path_buff;
+}
+
 static int
 prepare_trie (ProgEnv *env)
 {
     char buff[256];
+    char *path_name;
 
-    snprintf (buff, sizeof (buff),
-              "%s/%s.tri", env->path, env->trie_name);
-    env->trie = trie_new_from_file (buff);
+    path_name = full_path (env->path, env->trie_name, ".tri");
+    env->trie = trie_new_from_file (path_name);
+    free (path_name);
 
     if (!env->trie) {
         FILE       *sbm;
         AlphaMap   *alpha_map;
 
-        snprintf (buff, sizeof (buff),
-                  "%s/%s.abm", env->path, env->trie_name);
-        sbm = fopen (buff, "r");
+        path_name = full_path (env->path, env->trie_name, ".abm");
+        sbm = fopen (path_name, "r");
         if (!sbm) {
-            fprintf (stderr, "Cannot open alphabet map file %s\n", buff);
+            fprintf (stderr, "Cannot open alphabet map file %s\n", path_name);
+            free (path_name);
             return -1;
         }
+        free (path_name);
 
         alpha_map = alpha_map_new ();
 
@@ -233,14 +244,13 @@ static int
 close_trie (ProgEnv *env)
 {
     if (trie_is_dirty (env->trie)) {
-        char path[256];
-
-        snprintf (path, sizeof (path),
-                  "%s/%s.tri", env->path, env->trie_name);
+        char *path = full_path (env->path, env->trie_name, ".tri");
         if (trie_save (env->trie, path) != 0) {
             fprintf (stderr, "Cannot save trie to %s\n", path);
+            free (path);
             return -1;
         }
+        free (path);
     }
 
     trie_free (env->trie);

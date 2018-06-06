@@ -1,3 +1,13 @@
+2018-06-06  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Avoid non-ANSI C snprintf()
+
+	* tools/trietool.c (+full_path, prepare_trie, close_trie):
+	  - Instead of preparing full path name with snprintf(), which is
+	    non-ANSI, and still risks path name trimming, do it with
+	    size-calculated malloc().
+	  - free() it as needed.
+
 2018-06-04  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Fix sscanf() string format
