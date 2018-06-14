@@ -1,3 +1,19 @@
+2018-06-14  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Cast (wchar_t *) to fix warnings in tests
+
+	"%ls" printf() format requires (wchar_t *) [aka int *] arg.
+	So, let's cast (AlphaChar *) [aka unsigned int *] to satisfy it.
+
+	* tests/test_walk.c:
+	* tests/test_iterator.c:
+	* tests/test_store-retrieve.c:
+	* tests/test_file.c:
+	* tests/test_nonalpha.c:
+	* tests/test_null_trie.c:
+	  - Add <wchar.h> include, for wchar_t type
+	  - Cast "%ls" args from (AlphaChar *) to (wchar_t *)
+
 2018-06-06  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Avoid non-ANSI C snprintf()

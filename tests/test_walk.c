@@ -27,6 +27,7 @@
 #include <datrie/trie.h>
 #include "utils.h"
 #include <stdio.h>
+#include <wchar.h>
 
 /*
  * Sample trie in http://linux.thai.net/~thep/datrie/datrie.html
@@ -103,7 +104,7 @@ main (void)
     for (dict_p = walk_dict; dict_p->key; dict_p++) {
         if (!trie_store (test_trie, dict_p->key, dict_p->data)) {
             printf ("Failed to add key '%ls', data %d.\n",
-                    dict_p->key, dict_p->data);
+                    (wchar_t *)dict_p->key, dict_p->data);
             goto err_trie_created;
         }
     }

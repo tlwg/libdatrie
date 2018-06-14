@@ -27,6 +27,7 @@
 #include <datrie/trie.h>
 #include "utils.h"
 #include <stdio.h>
+#include <wchar.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -53,7 +54,7 @@ main (void)
     for (dict_p = dict_src; dict_p->key; dict_p++) {
         if (!trie_store (test_trie, dict_p->key, dict_p->data)) {
             printf ("Failed to add key '%ls', data %d.\n",
-                    dict_p->key, dict_p->data);
+                    (wchar_t *)dict_p->key, dict_p->data);
             goto err_trie_created;
         }
     }
@@ -63,12 +64,12 @@ main (void)
     is_failed = FALSE;
     for (dict_p = dict_src; dict_p->key; dict_p++) {
         if (!trie_retrieve (test_trie, dict_p->key, &trie_data)) {
-            printf ("Failed to retrieve key '%ls'.\n", dict_p->key);
+            printf ("Failed to retrieve key '%ls'.\n", (wchar_t *)dict_p->key);
             is_failed = TRUE;
         }
         if (trie_data != dict_p->data) {
             printf ("Wrong data for key '%ls'; expected %d, got %d.\n",
-                    dict_p->key, dict_p->data, trie_data);
+                    (wchar_t *)dict_p->key, dict_p->data, trie_data);
             is_failed = TRUE;
         }
     }
@@ -87,9 +88,9 @@ main (void)
             i = rand () % n_entries;
         } while (TRIE_DATA_READ == dict_src[i].data);
 
-        printf ("Deleting '%ls'\n", dict_src[i].key);
+        printf ("Deleting '%ls'\n", (wchar_t *)dict_src[i].key);
         if (!trie_delete (test_trie, dict_src[i].key)) {
-            printf ("Failed to delete '%ls'\n", dict_src[i].key);
+            printf ("Failed to delete '%ls'\n", (wchar_t *)dict_src[i].key);
             is_failed = TRUE;
         }
         dict_src[i].data = TRIE_DATA_READ;
@@ -107,12 +108,12 @@ main (void)
             continue;
 
         if (!trie_retrieve (test_trie, dict_p->key, &trie_data)) {
-            printf ("Failed to retrieve key '%ls'.\n", dict_p->key);
+            printf ("Failed to retrieve key '%ls'.\n", (wchar_t *)dict_p->key);
             is_failed = TRUE;
         }
         if (trie_data != dict_p->data) {
             printf ("Wrong data for key '%ls'; expected %d, got %d.\n",
-                    dict_p->key, dict_p->data, trie_data);
+                    (wchar_t *)dict_p->key, dict_p->data, trie_data);
             is_failed = TRUE;
         }
     }
@@ -147,18 +148,18 @@ main (void)
         key_data = trie_iterator_get_data (trie_it);
         if (TRIE_DATA_ERROR == key_data) {
             printf ("Failed to get data from trie iterator for key '%ls'\n",
-                    key);
+                    (wchar_t *)key);
             is_failed = TRUE;
         }
         /* mark entries found in trie */
         src_data = dict_src_get_data (key);
         if (TRIE_DATA_ERROR == src_data) {
             printf ("Extra entry in trie: key '%ls', data %d.\n",
-                    key, key_data);
+                    (wchar_t *)key, key_data);
             is_failed = TRUE;
         } else if (src_data != key_data) {
             printf ("Data mismatch for: key '%ls', expected %d, got %d.\n",
-                    key, src_data, key_data);
+                    (wchar_t *)key, src_data, key_data);
             is_failed = TRUE;
         } else {
             dict_src_set_data (key, TRIE_DATA_READ);
@@ -171,7 +172,7 @@ main (void)
     for (dict_p = dict_src; dict_p->key; dict_p++) {
         if (dict_p->data != TRIE_DATA_READ) {
             printf ("Entry missed in trie: key '%ls', data %d.\n",
-                    dict_p->key, dict_p->data);
+                    (wchar_t *)dict_p->key, dict_p->data);
             is_failed = TRUE;
         }
     }

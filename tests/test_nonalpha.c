@@ -27,6 +27,7 @@
 #include <datrie/trie.h>
 #include "utils.h"
 #include <stdio.h>
+#include <wchar.h>
 
 const AlphaChar *nonalpha_src[] = {
     (AlphaChar *)L"a6acus",
@@ -55,7 +56,7 @@ main (void)
     for (dict_p = dict_src; dict_p->key; dict_p++) {
         if (!trie_store (test_trie, dict_p->key, dict_p->data)) {
             printf ("Failed to add key '%ls', data %d.\n",
-                    dict_p->key, dict_p->data);
+                    (wchar_t *)dict_p->key, dict_p->data);
             goto err_trie_created;
         }
     }
@@ -65,12 +66,12 @@ main (void)
     for (nonalpha_key = nonalpha_src; *nonalpha_key; nonalpha_key++) {
         if (trie_retrieve (test_trie, *nonalpha_key, &trie_data)) {
             printf ("False duplication on key '%ls', with existing data %d.\n",
-                    *nonalpha_key, trie_data);
+                    (wchar_t *)*nonalpha_key, trie_data);
             is_fail = TRUE;
         }
         if (trie_store (test_trie, *nonalpha_key, TRIE_DATA_UNREAD)) {
             printf ("Wrongly added key '%ls' containing non-alphanet char\n",
-                    *nonalpha_key);
+                    (wchar_t *)*nonalpha_key);
             is_fail = TRUE;
         }
     }

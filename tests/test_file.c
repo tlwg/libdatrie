@@ -27,6 +27,7 @@
 #include <datrie/trie.h>
 #include "utils.h"
 #include <stdio.h>
+#include <wchar.h>
 #include <unistd.h>
 
 #define TRIE_FILENAME "test.tri"
@@ -39,11 +40,12 @@ trie_enum_mark_rec (const AlphaChar *key, TrieData key_data, void *user_data)
 
     src_data = dict_src_get_data (key);
     if (TRIE_DATA_ERROR == src_data) {
-        printf ("Extra entry in file: key '%ls', data %d.\n", key, key_data);
+        printf ("Extra entry in file: key '%ls', data %d.\n",
+                (wchar_t *)key, key_data);
         *is_failed = TRUE;
     } else if (src_data != key_data) {
         printf ("Data mismatch for: key '%ls', expected %d, got %d.\n",
-                key, src_data, key_data);
+                (wchar_t *)key, src_data, key_data);
         *is_failed = TRUE;
     } else {
         dict_src_set_data (key, TRIE_DATA_READ);
@@ -70,7 +72,7 @@ main (void)
     for (dict_p = dict_src; dict_p->key; dict_p++) {
         if (!trie_store (test_trie, dict_p->key, dict_p->data)) {
             printf ("Failed to add key '%ls', data %d.\n",
-                    dict_p->key, dict_p->data);
+                    (wchar_t *)dict_p->key, dict_p->data);
             goto err_trie_created;
         }
     }
@@ -105,7 +107,7 @@ main (void)
     for (dict_p = dict_src; dict_p->key; dict_p++) {
         if (dict_p->data != TRIE_DATA_READ) {
             printf ("Entry missed in file: key '%ls', data %d.\n",
-                    dict_p->key, dict_p->data);
+                    (wchar_t *)dict_p->key, dict_p->data);
             is_failed = TRUE;
         }
     }
