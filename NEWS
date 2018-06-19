@@ -1,5 +1,14 @@
 libdatrie
 
+0.2.12 (2018-06-19)
+======
+- More C90 (ANSI C) compliance.
+  (Thanks Peter Moulder for the patch)
+- Prevent some compiling conflicts with other sources.
+  (Thanks Peter Moulder for the patch)
+- Fix miscellaneous compiler warnings.
+- Prevent trimming on extremely long dictionary path names.
+
 0.2.11 (2018-04-23)
 ======
 - Detect iconv() error more correctly in trietool.
