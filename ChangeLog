@@ -1,3 +1,10 @@
+2018-06-19  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Use HTTPS in URL
+
+	* README:
+	  - Update document URL to HTTPS
+
 2018-06-14  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Cast (wchar_t *) to fix warnings in tests
