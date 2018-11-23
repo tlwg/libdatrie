@@ -417,8 +417,7 @@ alpha_map_recalc_work_area (AlphaMap *alpha_map)
         const AlphaChar alpha_begin = range->begin;
         int       n_cells, i;
         AlphaChar a;
-        TrieIndex trie_last = 0;
-        TrieChar  tc;
+        TrieIndex trie_last;
 
         /* reconstruct alpha-to-trie map */
         alpha_map->alpha_begin = alpha_begin;
@@ -434,6 +433,7 @@ alpha_map_recalc_work_area (AlphaMap *alpha_map)
         for (i = 0; i < n_cells; i++) {
             alpha_map->alpha_to_trie_map[i] = TRIE_INDEX_MAX;
         }
+        trie_last = 0;
         for (range = alpha_map->first_range; range; range = range->next) {
             for (a = range->begin; a <= range->end; a++) {
                 alpha_map->alpha_to_trie_map[a - alpha_begin] = ++trie_last;
@@ -447,10 +447,10 @@ alpha_map_recalc_work_area (AlphaMap *alpha_map)
         if (UNLIKELY (!alpha_map->trie_to_alpha_map))
             goto error_alpha_map_created;
         alpha_map->trie_to_alpha_map[0] = 0;
-        tc = 1;
+        trie_last = 1;
         for (range = alpha_map->first_range; range; range = range->next) {
             for (a = range->begin; a <= range->end; a++) {
-                alpha_map->trie_to_alpha_map[tc++] = a;
+                alpha_map->trie_to_alpha_map[trie_last++] = a;
             }
         }
     }

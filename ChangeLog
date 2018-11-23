@@ -1,3 +1,19 @@
+2018-11-23  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Fix wrong key listing in byte trie
+
+	* tests/Makefile.am, +tests/test_byte_list.c:
+	  - Add test case
+	* datrie/alpha-map.c (alpha_map_recalc_work_area):
+	  - Index trie_to_alpha_map[] using TrieIndex, not TrieChar type,
+	    to prevent overflow upon incrementing over 0xff.
+	  - Drop tc variable and just reuse trie_last.
+
+	Thanks @legale for the report.
+
+	Closes: #9
+	https://github.com/tlwg/libdatrie/issues/9
+
 2018-06-19  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	* configure.ac:
