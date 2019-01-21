@@ -132,7 +132,7 @@ AC_SUBST(htmldocdir)
 AM_CONDITIONAL(ENABLE_DOXYGEN_DOC,test "x$enable_doxygen_doc" = "xyes")
 
 # Checks for library functions.
-AC_FUNC_MALLOC
+AC_CHECK_FUNCS([malloc])
 
 AC_CONFIG_FILES([Makefile
                  datrie-0.2.pc
