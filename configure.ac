@@ -4,7 +4,7 @@
 AC_PREREQ(2.59)
 AC_INIT(libdatrie,
         m4_esyscmd([build-aux/git-version-gen]),
-        theppitak@gmail.com)
+        [https://github.com/tlwg/libdatrie/issues])
 AC_CONFIG_SRCDIR([datrie/trie.h])
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR(build-aux)
