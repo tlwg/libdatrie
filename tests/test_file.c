@@ -28,7 +28,10 @@
 #include "utils.h"
 #include <stdio.h>
 #include <wchar.h>
+
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 
 #define TRIE_FILENAME "test.tri"
 

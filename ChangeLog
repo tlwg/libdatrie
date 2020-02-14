@@ -1,3 +1,22 @@
+2020-02-11  Chun-wei Fan  <fanc999@yahoo.com.tw>
+
+	Add Visual Studio NMake Makefiles
+
+	* configure.ac:
+	* Makefile.am:
+	* win32/*:
+	  - Support building libdatrie as a DLL with Visual Studio.
+	    building trietool.exe and the tests are also supported.
+
+2020-02-11  Chun-wei Fan  <fanc999@yahoo.com.tw>
+
+	Don't include unistd.h on Windows
+
+	It does not come with all Windows compilers.
+
+	* tests/test_file.c:
+	  - Don't include unistd.h on Windows.
+
 2019-12-20  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Use GitHub issue tracker as bug report address.

@@ -141,5 +141,7 @@ AC_CONFIG_FILES([Makefile
                  man/Makefile
                  doc/Makefile
                  doc/Doxyfile
-                 tests/Makefile])
+                 tests/Makefile
+                 win32/config-msvc.mak
+                 win32/Makefile])
 AC_OUTPUT
