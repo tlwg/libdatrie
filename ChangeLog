@@ -1,3 +1,12 @@
+2020-12-30  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Fix isspace() arg problem on NetBSD.
+
+	* tools/trietool.c (command_add_list, string_trim):
+	  - Cast char to unsigned char before passing to isspace().
+
+	Thanks Sean <scole_mail@gmx.com> for the report via a personal mail.
+
 2019-12-20  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Use GitHub issue tracker as bug report address.
