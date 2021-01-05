@@ -29,8 +29,7 @@
 
 #include <stdio.h>
 
-#include "typedefs.h"
-#include "triedefs.h"
+#include <datrie/triedefs.h>
 
 #ifdef __cplusplus
 extern "C" {

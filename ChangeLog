@@ -1,5 +1,12 @@
 2021-01-05  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Use proper #include form in installed header.
+
+	* datrie/alpha-map.h:
+	  - Use angle quotes form instead of double quotes in #include.
+
+2021-01-05  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Fix some documentations.
 
 	* datrie/trie.c (trie_is_dirty):
