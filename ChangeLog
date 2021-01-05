@@ -1,3 +1,15 @@
+2021-01-05  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Fix some documentations.
+
+	* datrie/trie.c (trie_is_dirty):
+	  - Adjust wording to make clear the file is out of sync,
+	    not the other way around.
+	* datrie/trie.c (trie_store, trie_store_if_absent):
+	  - Fix typo in the description of 'key' parameter.
+	* datrie/trie.c (trie_store_if_absent):
+	  - Minor wording adjustment (inserted, not appended).
+
 2020-12-30  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Fix isspace() arg problem on NetBSD.

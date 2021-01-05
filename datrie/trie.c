@@ -298,7 +298,7 @@ trie_fwrite (Trie *trie, FILE *file)
  * @return TRUE if there are pending changes, FALSE otherwise
  *
  * Check if the @a trie is dirty with some pending changes and needs saving
- * to synchronize with the file.
+ * to keep the file synchronized.
  */
 Bool
 trie_is_dirty (const Trie *trie)
@@ -366,7 +366,7 @@ trie_retrieve (const Trie *trie, const AlphaChar *key, TrieData *o_data)
  * @brief Store a value for an entry to trie
  *
  * @param trie  : the trie
- * @param key   : the key for the entry to retrieve
+ * @param key   : the key for the entry to store
  * @param data  : the data associated to the entry
  *
  * @return boolean value indicating the success of the operation
@@ -385,13 +385,13 @@ trie_store (Trie *trie, const AlphaChar *key, TrieData data)
  * @brief Store a value for an entry to trie only if the key is not present
  *
  * @param trie  : the trie
- * @param key   : the key for the entry to retrieve
+ * @param key   : the key for the entry to store
  * @param data  : the data associated to the entry
  *
  * @return boolean value indicating the success of the operation
  *
  * Store a @a data for the given @a key in @a trie. If @a key does not
- * exist in @a trie, it will be appended. If it does, the function will
+ * exist in @a trie, it will be inserted. If it does, the function will
  * return failure and the existing value will not be touched.
  *
  * This can be useful for multi-thread applications, as race condition
