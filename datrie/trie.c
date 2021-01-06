@@ -482,7 +482,7 @@ trie_branch_in_branch (Trie           *trie,
     if (TRIE_INDEX_ERROR == new_da)
         return FALSE;
 
-    if ('\0' != *suffix)
+    if (0 != *suffix)
         ++suffix;
 
     new_tail = tail_add_suffix (trie->tail, suffix);
@@ -519,7 +519,7 @@ trie_branch_in_tail   (Trie           *trie,
     if (TRIE_INDEX_ERROR == old_da)
         goto fail;
 
-    if ('\0' != *p)
+    if (0 != *p)
         ++p;
     tail_set_suffix (trie->tail, old_tail, p);
     trie_da_set_tail_index (trie->da, old_da, old_tail);
