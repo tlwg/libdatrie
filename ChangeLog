@@ -1,5 +1,19 @@
 2021-01-09  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Use TRIE_CHAR_TERM macro instead of zero.
+
+	* datrie/alpha-map.c
+	  (alpha_map_char_to_trie, alpha_map_char_to_trie_str):
+	* datrie/trie.c (trie_branch_in_branch, trie_branch_in_tail):
+	* datrie/tail.c (tail_walk_str, tail_walk_char):
+	  - Use TRIE_CHAR_TERM instead of hard-wired zero when working
+	    with raw trie string termination.
+	* datrie/trie-string.c (trie_string_terminate):
+	  - Append TRIE_CHAR_TERM instead of simply delegating to
+	    dstring_terminate().
+
+2021-01-09  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Share static trie string functions internally.
 
 	* datrie/trie-string.h, datrie/trie-string.c, datrie/tail.c

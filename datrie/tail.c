@@ -475,7 +475,7 @@ tail_walk_str  (const Tail      *t,
             break;
         ++i;
         /* stop and stay at null-terminator */
-        if (0 == suffix[j])
+        if (TRIE_CHAR_TERM == suffix[j])
             break;
         ++j;
     }
@@ -513,7 +513,7 @@ tail_walk_char (const Tail      *t,
 
     suffix_char = suffix[*suffix_idx];
     if (suffix_char == c) {
-        if (0 != suffix_char)
+        if (TRIE_CHAR_TERM != suffix_char)
             ++*suffix_idx;
         return TRUE;
     }

@@ -492,7 +492,7 @@ alpha_map_char_to_trie (const AlphaMap *alpha_map, AlphaChar ac)
     TrieIndex   alpha_begin;
 
     if (UNLIKELY (0 == ac))
-        return 0;
+        return TRIE_CHAR_TERM;
 
     if (UNLIKELY (!alpha_map->alpha_to_trie_map))
         return TRIE_INDEX_MAX;
@@ -530,7 +530,7 @@ alpha_map_char_to_trie_str (const AlphaMap *alpha_map, const AlphaChar *str)
             goto error_str_allocated;
         *p = (TrieChar) tc;
     }
-    *p = 0;
+    *p = TRIE_CHAR_TERM;
 
     return trie_str;
 

@@ -133,7 +133,8 @@ trie_string_append_char (TrieString *ts, TrieChar tc)
 Bool
 trie_string_terminate (TrieString *ts)
 {
-    return dstring_terminate ((DString *)ts);
+    static const TrieChar term = TRIE_CHAR_TERM;
+    return dstring_append_char ((DString *)ts, &term);
 }
 
 Bool
