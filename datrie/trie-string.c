@@ -29,7 +29,40 @@
 #include "triedefs.h"
 
 #include <string.h>
+#include <stdlib.h>
 
+/*----------------------------*
+ *   STATIC TRIECHAR STRING   *
+ *----------------------------*/
+
+size_t
+trie_char_strlen (const TrieChar *str)
+{
+    size_t len = 0;
+    while (*str++ != TRIE_CHAR_TERM) {
+        ++len;
+    }
+    return len;
+}
+
+TrieChar *
+trie_char_strdup (const TrieChar *str)
+{
+    TrieChar *dup
+        = (TrieChar *) malloc (sizeof (TrieChar) * (trie_char_strlen (str) + 1));
+    TrieChar *p = dup;
+
+    while (*str != TRIE_CHAR_TERM) {
+        *p++ = *str++;
+    }
+    *p = TRIE_CHAR_TERM;
+
+    return dup;
+}
+
+/*-----------------------------*
+ *   DYNAMIC TRIECHAR STRING   *
+ *-----------------------------*/
 
 struct _TrieString {
     DString ds;

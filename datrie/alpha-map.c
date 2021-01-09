@@ -34,6 +34,7 @@
 #include "alpha-map-private.h"
 #include "trie-private.h"
 #include "fileutils.h"
+#include "trie-string.h"
 
 /**
  * @brief Alphabet string length
@@ -543,7 +544,7 @@ alpha_map_trie_to_char_str (const AlphaMap *alpha_map, const TrieChar *str)
 {
     AlphaChar  *alpha_str, *p;
 
-    alpha_str = (AlphaChar *) malloc ((strlen ((const char *)str) + 1)
+    alpha_str = (AlphaChar *) malloc ((trie_char_strlen (str) + 1)
                                       * sizeof (AlphaChar));
     if (UNLIKELY (!alpha_str))
         return NULL;

@@ -30,6 +30,20 @@
 #include "dstring.h"
 #include "triedefs.h"
 
+#include <stddef.h>
+
+/*----------------------------*
+ *   STATIC TRIECHAR STRING   *
+ *----------------------------*/
+
+size_t      trie_char_strlen (const TrieChar *str);
+
+TrieChar *  trie_char_strdup (const TrieChar *str);
+
+/*-----------------------------*
+ *   DYNAMIC TRIECHAR STRING   *
+ *-----------------------------*/
+
 typedef struct _TrieString TrieString;
 
 TrieString * trie_string_new (int n_elm);

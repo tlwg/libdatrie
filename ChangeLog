@@ -1,3 +1,18 @@
+2021-01-09  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Share static trie string functions internally.
+
+	* datrie/trie-string.h, datrie/trie-string.c, datrie/tail.c
+	  (tc_strlen -> trie_char_strlen, tc_strdup -> trie_char_strdup):
+	  - Move private functions in tail.c to trie-string.[ch],
+	    with new full names under new "static trie string" section.
+	  - Check/assign string terminator using TRIE_CHAR_TERM
+	    instead of zero.
+	* datrie/tail.c (tail_set_suffix):
+	  - Call the new trie_char_strdup() instead of tc_strdup().
+	* datrie/alpha-map.c (alpha_map_trie_to_char_str):
+	  - Call trie_char_strlen() instead of strlen().
+
 2021-01-06  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Get rid of char semantics from TrieChar
