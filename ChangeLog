@@ -1,3 +1,12 @@
+2021-01-10  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Rewrite AlphaMap recalc.
+
+	* datrie/alpha-map.c (alpha_map_recalc_work_area):
+	  Rewrite alpha-to-trie & trie-to-alpha maps recalculation
+	  - For clearer relation between the two maps
+	  - To allow other TRIE_CHAR_TERM values than zero
+
 2021-01-09  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Use TRIE_CHAR_TERM macro instead of zero.

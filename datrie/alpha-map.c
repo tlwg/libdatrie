@@ -416,42 +416,52 @@ alpha_map_recalc_work_area (AlphaMap *alpha_map)
     range = alpha_map->first_range;
     if (range) {
         const AlphaChar alpha_begin = range->begin;
-        int       n_cells, i;
+        int       n_alpha, n_trie, i;
         AlphaChar a;
-        TrieIndex trie_last;
+        TrieIndex trie_char;
 
-        /* reconstruct alpha-to-trie map */
         alpha_map->alpha_begin = alpha_begin;
-        while (range->next) {
+        n_trie = 0;
+        for ( ;; ) {
+            n_trie += range->end - range->begin + 1;
+            if (!range->next)
+                break;
             range = range->next;
         }
+        if (n_trie < TRIE_CHAR_TERM) {
+            n_trie = TRIE_CHAR_TERM + 1;
+        } else {
+            n_trie++;
+        }
         alpha_map->alpha_end = range->end;
-        alpha_map->alpha_map_sz = n_cells = range->end - alpha_begin + 1;
+
+        alpha_map->alpha_map_sz = n_alpha = range->end - alpha_begin + 1;
         alpha_map->alpha_to_trie_map
-            = (TrieIndex *) malloc (n_cells * sizeof (TrieIndex));
+            = (TrieIndex *) malloc (n_alpha * sizeof (TrieIndex));
         if (UNLIKELY (!alpha_map->alpha_to_trie_map))
             goto error_alpha_map_not_created;
-        for (i = 0; i < n_cells; i++) {
+        for (i = 0; i < n_alpha; i++) {
             alpha_map->alpha_to_trie_map[i] = TRIE_INDEX_MAX;
         }
-        trie_last = 0;
-        for (range = alpha_map->first_range; range; range = range->next) {
-            for (a = range->begin; a <= range->end; a++) {
-                alpha_map->alpha_to_trie_map[a - alpha_begin] = ++trie_last;
-            }
-        }
 
-        /* reconstruct trie-to-alpha map */
-        alpha_map->trie_map_sz = n_cells = trie_last + 1;
+        alpha_map->trie_map_sz = n_trie;
         alpha_map->trie_to_alpha_map
-            = (AlphaChar *) malloc (n_cells * sizeof (AlphaChar));
+            = (AlphaChar *) malloc (n_trie * sizeof (AlphaChar));
         if (UNLIKELY (!alpha_map->trie_to_alpha_map))
             goto error_alpha_map_created;
-        alpha_map->trie_to_alpha_map[0] = 0;
-        trie_last = 1;
+        for (i = 0; i < n_trie; i++) {
+            alpha_map->trie_to_alpha_map[i] = ALPHA_CHAR_ERROR;
+        }
+
+        alpha_map->trie_to_alpha_map[TRIE_CHAR_TERM] = 0;
+        trie_char = 0;
         for (range = alpha_map->first_range; range; range = range->next) {
             for (a = range->begin; a <= range->end; a++) {
-                alpha_map->trie_to_alpha_map[trie_last++] = a;
+                if (TRIE_CHAR_TERM == trie_char)
+                    trie_char++;
+                alpha_map->alpha_to_trie_map[a - alpha_begin] = trie_char;
+                alpha_map->trie_to_alpha_map[trie_char] = a;
+                trie_char++;
             }
         }
     }
