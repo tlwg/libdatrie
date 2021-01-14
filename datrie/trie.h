@@ -188,7 +188,7 @@ int       trie_state_walkable_chars (const TrieState  *s,
  * Check if the given state is a terminal state. A terminal state is a trie
  * state that terminates a key, and stores a value associated with it.
  */
-#define   trie_state_is_terminal(s) trie_state_is_walkable((s),TRIE_CHAR_TERM)
+#define   trie_state_is_terminal(s) trie_state_is_walkable((s),0)
 
 Bool      trie_state_is_single (const TrieState *s);
 

@@ -1,5 +1,13 @@
 2021-01-14  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Fix wrong TRIE_CHAR_TERM semantics.
+
+	* datrie/trie.h (trie_state_is_terminal):
+	  - Test for terminal state using zero AlphaChar.
+	    TRIE_CHAR_TERM is a TrieChar, although it's also accidentally zero.
+
+2021-01-14  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Reduce loops in alpha_map_recalc_work_area().
 
 	* datrie/alpha-map.c (alpha_map_recalc_work_area):
