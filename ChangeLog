@@ -1,3 +1,13 @@
+2021-01-14  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Reduce loops in alpha_map_recalc_work_area().
+
+	* datrie/alpha-map.c (alpha_map_recalc_work_area):
+	  - Instead of pre-filling trie-to-alpha map with errors
+	    and setting valid cells afterward, just fill error cells
+	    left after valid cells are done. Then, finally set
+	    TRIE_CHAR_TERM cell.
+
 2021-01-10  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Rewrite AlphaMap recalc.

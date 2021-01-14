@@ -449,11 +449,7 @@ alpha_map_recalc_work_area (AlphaMap *alpha_map)
             = (AlphaChar *) malloc (n_trie * sizeof (AlphaChar));
         if (UNLIKELY (!alpha_map->trie_to_alpha_map))
             goto error_alpha_map_created;
-        for (i = 0; i < n_trie; i++) {
-            alpha_map->trie_to_alpha_map[i] = ALPHA_CHAR_ERROR;
-        }
 
-        alpha_map->trie_to_alpha_map[TRIE_CHAR_TERM] = 0;
         trie_char = 0;
         for (range = alpha_map->first_range; range; range = range->next) {
             for (a = range->begin; a <= range->end; a++) {
@@ -464,6 +460,10 @@ alpha_map_recalc_work_area (AlphaMap *alpha_map)
                 trie_char++;
             }
         }
+        while (trie_char < n_trie) {
+            alpha_map->trie_to_alpha_map[trie_char++] = ALPHA_CHAR_ERROR;
+        }
+        alpha_map->trie_to_alpha_map[TRIE_CHAR_TERM] = 0;
     }
 
     return 0;
