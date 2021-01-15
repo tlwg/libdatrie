@@ -1,3 +1,12 @@
+2021-01-15  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Use TRIE_CHAR_TERM in TrieIterator methods.
+
+	* datrie/trie.c (trie_iterator_get_key):
+	  - Replace strlen() with trie_char_strlen() on tail_str,
+	    which is TrieChar string.
+	  - Check tail_str termination against TRIE_CHAR_TERM, not zero.
+
 2021-01-14  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Fix wrong TRIE_CHAR_TERM semantics.
