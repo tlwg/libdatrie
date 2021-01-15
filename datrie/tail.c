@@ -166,7 +166,7 @@ tail_fread (FILE *file)
                 goto exit_in_loop;
             }
         }
-        t->tails[i].suffix[length] = '\0';
+        t->tails[i].suffix[length] = TRIE_CHAR_TERM;
     }
 
     return t;
@@ -237,7 +237,7 @@ tail_fwrite (const Tail *t, FILE *file)
             return -1;
         }
 
-        length = t->tails[i].suffix ? strlen ((const char *)t->tails[i].suffix)
+        length = t->tails[i].suffix ? trie_char_strlen (t->tails[i].suffix)
                                     : 0;
         if (!file_write_int16 (file, length))
             return -1;

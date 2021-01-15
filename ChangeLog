@@ -1,5 +1,16 @@
 2021-01-15  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Use TRIE_CHAR_TERM in TAIL I/O methods.
+
+	* datrie/tail.c (tail_fwrite):
+	  - Replace strlen() with trie_char_strlen() on suffix,
+	    which is TrieChar string.
+	* datrie/tail.c (tail_fread):
+	  - Append TRIE_CHAR_TERM, rather than literal zero,
+	    as suffix terminator.
+
+2021-01-15  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Use TRIE_CHAR_TERM in TrieIterator methods.
 
 	* datrie/trie.c (trie_iterator_get_key):
