@@ -1,3 +1,14 @@
+2021-01-22  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Get rid of <unistd.h> include.
+
+	* tests/test_file.c (main):
+	  - Replace unlink() calls with remove() from <stdio.h> and drop
+	    <unistd.h> include, fixing build issue on Windows.
+
+	Addressing Windows build issue differently from what proposed by
+	@fanc999 in pull request #15. Thanks @fanc999 for first raising this.
+
 2021-01-15  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Use TRIE_CHAR_TERM in TAIL I/O methods.
