@@ -125,6 +125,10 @@ Trie *  trie_fread (FILE *file);
 
 void    trie_free (Trie *trie);
 
+size_t  trie_get_serialized_size (Trie *trie);
+
+void    trie_serialize (Trie *trie, uint8 *ptr);
+
 int     trie_save (Trie *trie, const char *path);
 
 int     trie_fwrite (Trie *trie, FILE *file);

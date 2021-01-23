@@ -45,6 +45,12 @@ trie_char_strlen (const TrieChar *str)
     return len;
 }
 
+size_t
+trie_byte_strlen (const TrieChar *str)
+{
+    return trie_char_strlen(str) * sizeof(TrieChar);
+}
+
 TrieChar *
 trie_char_strdup (const TrieChar *str)
 {

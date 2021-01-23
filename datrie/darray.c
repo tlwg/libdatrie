@@ -305,6 +305,26 @@ da_fwrite (const DArray *d, FILE *file)
 }
 
 
+size_t da_get_serialized_size(const DArray *d){
+    if(d->num_cells > 0)
+        return 4 * d->num_cells * 2; // `base` and `check`
+    else
+        return 0;
+}
+
+
+void
+da_serialize (const DArray *d, uint8 **ptr)
+{
+    TrieIndex   i;
+
+    for (i = 0; i < d->num_cells; i++) {
+        serialize_int32_be_incr(ptr, d->cells[i].base);
+        serialize_int32_be_incr(ptr, d->cells[i].check);
+    }
+}
+
+
 /**
  * @brief Get root state
  *

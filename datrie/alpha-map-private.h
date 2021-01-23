@@ -34,6 +34,11 @@ AlphaMap *  alpha_map_fread_bin (FILE *file);
 
 int         alpha_map_fwrite_bin (const AlphaMap *alpha_map, FILE *file);
 
+size_t      alpha_map_get_serialized_size (const AlphaMap *alpha_map);
+
+void        alpha_map_serialize_bin (const AlphaMap *alpha_map, uint8 **ptr);
+
+
 TrieIndex   alpha_map_char_to_trie (const AlphaMap *alpha_map,
                                     AlphaChar       ac);
 

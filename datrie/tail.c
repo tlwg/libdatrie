@@ -252,6 +252,60 @@ tail_fwrite (const Tail *t, FILE *file)
 }
 
 
+size_t
+tail_get_serialized_size (const Tail *t)
+{
+    size_t static_count = (
+        sizeof(int32) //sizeof(TAIL_SIGNATURE),
+        + sizeof(t->first_free)
+        + sizeof(t->num_tails)
+    );
+    size_t dynamic_count = 0u;
+    if(t->num_tails > 0){
+        TrieIndex   i = 0;
+        dynamic_count += (
+            sizeof(t->tails[i].next_free) + sizeof(t->tails[i].data)
+            + sizeof(int16) // length
+        ) * t->num_tails;
+        for (; i < t->num_tails; i++) {
+            if (t->tails[i].suffix)
+            {
+                dynamic_count += trie_byte_strlen (t->tails[i].suffix);
+            }
+        }
+    }
+    return static_count + dynamic_count;
+}
+
+
+int
+tail_serialize (const Tail *t, uint8 **ptr)
+{
+    TrieIndex   i;
+
+    serialize_int32_be_incr (ptr, TAIL_SIGNATURE);
+    serialize_int32_be_incr (ptr, t->first_free);
+    serialize_int32_be_incr (ptr, t->num_tails);
+
+    for (i = 0; i < t->num_tails; i++) {
+        int16   length;
+        serialize_int32_be_incr (ptr, t->tails[i].next_free);
+        serialize_int32_be_incr (ptr, t->tails[i].data);
+
+        length = t->tails[i].suffix ? trie_byte_strlen (t->tails[i].suffix)
+                                    : 0;
+        serialize_int16_be_incr (ptr, length);
+        if (length)
+        {
+            memcpy (*ptr, (char *)t->tails[i].suffix, length);
+            *ptr += length;
+        }
+    }
+
+    return 0;
+}
+
+
 /**
  * @brief Get suffix
  *

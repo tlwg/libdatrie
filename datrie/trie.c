@@ -258,6 +258,50 @@ trie_save (Trie *trie, const char *path)
     return res;
 }
 
+
+/**
+ * @brief Get trie serialized size
+ *
+ * @param trie  : the trie
+ *
+ * @return size of the trie in bytes
+ *
+ * Returns size that would be occupied by a trie if it was
+ * serialized into a binary blob or file.
+ *
+ * Available since: 0.2.13
+ */
+size_t
+trie_get_serialized_size (Trie *trie)
+{
+    return alpha_map_get_serialized_size(trie->alpha_map) + da_get_serialized_size(trie->da) + tail_get_serialized_size(trie->tail);
+}
+
+
+/**
+ * @brief Serializes trie data into a memory buffer (including mapping)
+ *
+ * @param trie  : the trie
+ *
+ * @param ptr  : a pointer to current position inside of a preallocated buffer. 
+ *
+ * Write @a trie data to a current position in a buffer pointed by @a ptr.
+ * This can be useful for embedding trie index as part of a file data.
+ * The size that the trie will occupy can be calculated using trie_get_serialized_size
+ *
+ * Available since: 0.2.13
+ */
+void
+trie_serialize (Trie *trie, uint8 *ptr)
+{
+    uint8 *ptr1 = ptr;
+    alpha_map_serialize_bin (trie->alpha_map, &ptr1);
+    da_serialize (trie->da, &ptr1);
+    tail_serialize (trie->tail, &ptr1);
+    trie->is_dirty = FALSE;
+}
+
+
 /**
  * @brief Write trie data to an open file
  *

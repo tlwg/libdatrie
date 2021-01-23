@@ -8,6 +8,8 @@ trie_new
 trie_new_from_file
 trie_fread
 trie_free
+trie_get_serialized_size
+trie_serialize
 trie_save
 trie_fwrite
 trie_is_dirty
