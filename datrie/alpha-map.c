@@ -300,6 +300,30 @@ alpha_map_fwrite_bin (const AlphaMap *alpha_map, FILE *file)
     return 0;
 }
 
+size_t
+alpha_map_get_serialized_size (const AlphaMap *alpha_map)
+{
+    int32 ranges_count = alpha_map_get_total_ranges (alpha_map);
+    return (
+        4 //ALPHAMAP_SIGNATURE
+        + sizeof(ranges_count)
+        + (sizeof(AlphaChar) * 2) * ranges_count // range->begin, range->end
+    );
+}
+
+void
+alpha_map_serialize_bin (const AlphaMap *alpha_map, uint8 **ptr)
+{
+    AlphaRange *range;
+    serialize_int32_be_incr (ptr, ALPHAMAP_SIGNATURE);
+    serialize_int32_be_incr (ptr, alpha_map_get_total_ranges (alpha_map));
+
+    for (range = alpha_map->first_range; range; range = range->next) {
+        serialize_int32_be_incr (ptr, range->begin);
+        serialize_int32_be_incr (ptr, range->end);
+    }
+}
+
 static int
 alpha_map_add_range_only (AlphaMap *alpha_map, AlphaChar begin, AlphaChar end)
 {

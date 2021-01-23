@@ -30,9 +30,11 @@
 #include <stdio.h>
 #include <datrie/typedefs.h>
 
+void   serialize_int32_be_incr (uint8 **buff, int32 val);
 Bool   file_read_int32 (FILE *file, int32 *o_val);
 Bool   file_write_int32 (FILE *file, int32 val);
 
+void   serialize_int16_be_incr (uint8 **buff, int16 val);
 Bool   file_read_int16 (FILE *file, int16 *o_val);
 Bool   file_write_int16 (FILE *file, int16 val);
 

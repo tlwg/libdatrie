@@ -35,53 +35,94 @@
  *    FUNCTIONS IMPLEMENTATIONS   *
  *--------------------------------*/
 
+static int32
+parse_int32_be (const uint8 *buff)
+{
+    return (buff[0] << 24) | (buff[1] << 16) |  (buff[2] << 8) | buff[3];
+}
+
 Bool
 file_read_int32 (FILE *file, int32 *o_val)
 {
-    unsigned char   buff[4];
+    uint8   buff[4];
 
     if (fread (buff, 4, 1, file) == 1) {
-        *o_val = (buff[0] << 24) | (buff[1] << 16) |  (buff[2] << 8) | buff[3];
+        *o_val = parse_int32_be(buff);
         return TRUE;
     }
 
     return FALSE;
 }
 
-Bool
-file_write_int32 (FILE *file, int32 val)
+void
+serialize_int32_be (uint8 *buff, int32 val)
 {
-    unsigned char   buff[4];
-
     buff[0] = (val >> 24) & 0xff;
     buff[1] = (val >> 16) & 0xff;
     buff[2] = (val >> 8) & 0xff;
     buff[3] = val & 0xff;
+}
 
+
+void
+serialize_int32_be_incr (uint8 **buff, int32 val)
+{
+    serialize_int32_be(*buff, val);
+    *buff += 4; // don't sizeof!
+}
+
+
+Bool
+file_write_int32 (FILE *file, int32 val)
+{
+    uint8   buff[4];
+    serialize_int32_be(buff, val);
     return (fwrite (buff, 4, 1, file) == 1);
 }
+
+
+int16
+parse_int16_be (uint8 *buff)
+{
+    return (buff[0] << 8) | buff[1];
+}
+
 
 Bool
 file_read_int16 (FILE *file, int16 *o_val)
 {
-    unsigned char   buff[2];
+    uint8   buff[2];
 
     if (fread (buff, 2, 1, file) == 1) {
-        *o_val = (buff[0] << 8) | buff[1];
+        *o_val = parse_int16_be(buff);
         return TRUE;
     }
 
     return FALSE;
 }
 
+
+void
+serialize_int16_be (uint8 *buff, int16 val)
+{
+    buff[0] = val >> 8;
+    buff[1] = val & 0xff;
+}
+
+
+void
+serialize_int16_be_incr (uint8 **buff, int16 val)
+{
+    serialize_int16_be(*buff, val);
+    *buff += 2; // don't sizeof!
+}
+
+
 Bool
 file_write_int16 (FILE *file, int16 val)
 {
-    unsigned char   buff[2];
-
-    buff[0] = val >> 8;
-    buff[1] = val & 0xff;
-
+    uint8   buff[2];
+    serialize_int16_be(buff, val);
     return (fwrite (buff, 2, 1, file) == 1);
 }
 

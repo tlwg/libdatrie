@@ -7,6 +7,7 @@ TESTS = \
 	test_iterator \
 	test_store-retrieve \
 	test_file \
+	test_serialization \
 	test_nonalpha \
 	test_null_trie \
 	test_term_state \
@@ -19,6 +20,7 @@ check_PROGRAMS = \
 	test_iterator \
 	test_store-retrieve \
 	test_file \
+	test_serialization \
 	test_nonalpha \
 	test_null_trie \
 	test_term_state \
@@ -53,6 +55,12 @@ test_file_SOURCES = \
 	utils.c \
 	$(NULL)
 test_file_LDADD = $(top_builddir)/datrie/libdatrie.la
+
+test_serialization_SOURCES = \
+	test_serialization.c \
+	utils.c \
+	$(NULL)
+test_serialization_LDADD = $(top_builddir)/datrie/libdatrie.la
 
 test_nonalpha_SOURCES = \
 	test_nonalpha.c \
