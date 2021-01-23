@@ -1,3 +1,40 @@
+2021-01-23  KOLANICH  <KOLANICH@users.noreply.github.com>
+
+	Added serialization of the trie into a memory buffer.
+
+	* datrie/fileutils.c
+	  (file_write_int32, +serialize_int32,
+	   file_write_int16, +serialize_int16,
+	   file_read_int32, +parse_int32_be,
+	   file_read_int16, +parse_int16_be):
+	  - Split binary read/write operations into separate functions.
+	* datrie/fileutils.h, datrie/fileutils.c
+	  (+serialize_int32_be_incr, +serialize_int16_be_incr):
+	  - Add serialization utility functions with pointer advancement.
+	* datrie/trie-string.h, datrie/trie-string.c
+	  (+trie_byte_strlen):
+	  - Add utility method for calculating TrieChar string size in bytes.
+
+	* datrie/alpha-map-private.h, datrie/alpha-map.c
+	  (+alpha_map_get_serialized_size, +alpha_map_serialize_bin):
+	  - Add AlphaMap serialization methods.
+	* datrie/darray.h, datrie/darray.c
+	  (+da_get_serialized_size, +da_serialize):
+	  - Add DArray serialization methods.
+	* datrie/tail.h, datrie/tail.c
+	  (+tail_get_serialized_size, +tail_serialize):
+	  - Add Tail serialization methods.
+	* datrie/trie.h, datrie/trie.c
+	  (+trie_get_serialized_size, +trie_serialize):
+	  - Add Trie serialization methods.
+	* datrie/libdatrie.map, datrie/libdatrie.def:
+	  - Add export symbols for Trie serialization.
+
+	* tests/Makefile.am, +tests/test_serialization.c:
+	  - Add serialization test.
+
+	Pull Request #12.
+
 2021-01-22  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Get rid of <unistd.h> include.
