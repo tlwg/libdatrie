@@ -256,16 +256,16 @@ size_t
 tail_get_serialized_size (const Tail *t)
 {
     size_t static_count = (
-        sizeof(int32) //sizeof(TAIL_SIGNATURE),
-        + sizeof(t->first_free)
-        + sizeof(t->num_tails)
+        sizeof (int32) /* sizeof (TAIL_SIGNATURE) */
+        + sizeof (t->first_free)
+        + sizeof (t->num_tails)
     );
     size_t dynamic_count = 0u;
-    if(t->num_tails > 0){
+    if (t->num_tails > 0) {
         TrieIndex   i = 0;
         dynamic_count += (
-            sizeof(t->tails[i].next_free) + sizeof(t->tails[i].data)
-            + sizeof(int16) // length
+            sizeof (t->tails[i].next_free) + sizeof (t->tails[i].data)
+            + sizeof (int16) /* length */
         ) * t->num_tails;
         for (; i < t->num_tails; i++) {
             if (t->tails[i].suffix)

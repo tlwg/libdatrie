@@ -220,7 +220,7 @@ prepare_trie (ProgEnv *env)
             /* read the range
              * format: [b,e]
              * where: b = begin char, e = end char; both in hex values
-             */ 
+             */
             if (sscanf (buff, " [ %x , %x ] ", &b, &e) != 2)
                 continue;
             if (b > e) {

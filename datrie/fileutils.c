@@ -47,7 +47,7 @@ file_read_int32 (FILE *file, int32 *o_val)
     uint8   buff[4];
 
     if (fread (buff, 4, 1, file) == 1) {
-        *o_val = parse_int32_be(buff);
+        *o_val = parse_int32_be (buff);
         return TRUE;
     }
 
@@ -67,8 +67,8 @@ serialize_int32_be (uint8 *buff, int32 val)
 void
 serialize_int32_be_incr (uint8 **buff, int32 val)
 {
-    serialize_int32_be(*buff, val);
-    *buff += 4; // don't sizeof!
+    serialize_int32_be (*buff, val);
+    *buff += 4; /* don't sizeof! */
 }
 
 
@@ -76,7 +76,7 @@ Bool
 file_write_int32 (FILE *file, int32 val)
 {
     uint8   buff[4];
-    serialize_int32_be(buff, val);
+    serialize_int32_be (buff, val);
     return (fwrite (buff, 4, 1, file) == 1);
 }
 
@@ -94,7 +94,7 @@ file_read_int16 (FILE *file, int16 *o_val)
     uint8   buff[2];
 
     if (fread (buff, 2, 1, file) == 1) {
-        *o_val = parse_int16_be(buff);
+        *o_val = parse_int16_be (buff);
         return TRUE;
     }
 
@@ -113,8 +113,8 @@ serialize_int16_be (uint8 *buff, int16 val)
 void
 serialize_int16_be_incr (uint8 **buff, int16 val)
 {
-    serialize_int16_be(*buff, val);
-    *buff += 2; // don't sizeof!
+    serialize_int16_be (*buff, val);
+    *buff += 2; /* don't sizeof! */
 }
 
 
@@ -122,7 +122,7 @@ Bool
 file_write_int16 (FILE *file, int16 val)
 {
     uint8   buff[2];
-    serialize_int16_be(buff, val);
+    serialize_int16_be (buff, val);
     return (fwrite (buff, 2, 1, file) == 1);
 }
 

@@ -56,8 +56,7 @@ DArray * da_fread (FILE *file);
 
 void     da_free (DArray *d);
 
-size_t   da_get_serialized_size(const DArray *d);
-
+size_t   da_get_serialized_size (const DArray *d);
 
 void     da_serialize (const DArray *d, uint8 **ptr);
 

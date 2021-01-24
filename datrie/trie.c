@@ -274,7 +274,9 @@ trie_save (Trie *trie, const char *path)
 size_t
 trie_get_serialized_size (Trie *trie)
 {
-    return alpha_map_get_serialized_size(trie->alpha_map) + da_get_serialized_size(trie->da) + tail_get_serialized_size(trie->tail);
+    return alpha_map_get_serialized_size (trie->alpha_map)
+           + da_get_serialized_size (trie->da)
+           + tail_get_serialized_size (trie->tail);
 }
 
 
@@ -283,11 +285,13 @@ trie_get_serialized_size (Trie *trie)
  *
  * @param trie  : the trie
  *
- * @param ptr  : a pointer to current position inside of a preallocated buffer. 
+ * @param ptr  : a pointer to current position inside of a preallocated buffer.
  *
  * Write @a trie data to a current position in a buffer pointed by @a ptr.
  * This can be useful for embedding trie index as part of a file data.
- * The size that the trie will occupy can be calculated using trie_get_serialized_size
+ *
+ * The size that the trie will occupy can be calculated using
+ * trie_get_serialized_size()
  *
  * Available since: 0.2.13
  */

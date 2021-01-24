@@ -48,7 +48,7 @@ trie_char_strlen (const TrieChar *str)
 size_t
 trie_byte_strlen (const TrieChar *str)
 {
-    return trie_char_strlen(str) * sizeof(TrieChar);
+    return trie_char_strlen (str) * sizeof (TrieChar);
 }
 
 TrieChar *

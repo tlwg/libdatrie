@@ -60,7 +60,7 @@ alpha_char_strlen (const AlphaChar *str)
  *                      to compare
  *
  * @return negative if @a str1 < @a str2;
- *         0 if @a str1 == @a str2; 
+ *         0 if @a str1 == @a str2;
  *         positive if @a str1 > @a str2
  *
  * Available since: 0.2.7
@@ -305,9 +305,9 @@ alpha_map_get_serialized_size (const AlphaMap *alpha_map)
 {
     int32 ranges_count = alpha_map_get_total_ranges (alpha_map);
     return (
-        4 //ALPHAMAP_SIGNATURE
-        + sizeof(ranges_count)
-        + (sizeof(AlphaChar) * 2) * ranges_count // range->begin, range->end
+        4 /* ALPHAMAP_SIGNATURE */
+        + sizeof (ranges_count)
+        + (sizeof (AlphaChar) * 2) * ranges_count /* range->begin, range->end */
     );
 }
 

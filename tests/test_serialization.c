@@ -86,38 +86,40 @@ main (void)
         printf ("Failed to save trie to file '%s'.\n", TRIE_FILENAME);
         goto err_trie_created;
     }
+
     msg_step ("Getting serialized trie size");
-    size_t size = trie_get_serialized_size(test_trie);
+    size_t size = trie_get_serialized_size (test_trie);
     printf ("serialized trie size %Ilu\n", size);
     msg_step ("Allocating");
-    uint8 *trieSerializedData = malloc(size);
+    uint8 *trieSerializedData = malloc (size);
     printf ("allocated %p\n", trieSerializedData);
     msg_step ("Serializing");
-    trie_serialize(test_trie, trieSerializedData);
+    trie_serialize (test_trie, trieSerializedData);
     msg_step ("Serialized");
     trie_free (test_trie);
 
-    FILE *f = fopen(TRIE_FILENAME, "rb");
-    fseek(f, 0, SEEK_END);
-    size_t file_size = ftell(f);
-    fseek(f, 0, SEEK_SET);
+    FILE *f = fopen (TRIE_FILENAME, "rb");
+    fseek (f, 0, SEEK_END);
+    size_t file_size = ftell (f);
+    fseek (f, 0, SEEK_SET);
 
-   if(size != file_size) {
-        printf("Trie serialized data doesn't match size of the file");
+   if (size != file_size) {
+        printf ("Trie serialized data doesn't match size of the file");
         goto err_trie_saved;
     }
 
-    unsigned char *trieFileData = malloc(size);
-    fread(trieFileData, 1, size, f);
-    fclose(f);
-    if(memcmp(trieSerializedData, trieFileData, size)) {
-        printf("Trie serialized data doesn't match contents of the file");
+    unsigned char *trieFileData = malloc (size);
+    fread (trieFileData, 1, size, f);
+    fclose (f);
+    if (memcmp (trieSerializedData, trieFileData, size)) {
+        printf ("Trie serialized data doesn't match contents of the file");
     } else {
         msg_step ("PASS!");
     }
-    free(trieFileData);
+    free (trieFileData);
     unlink (TRIE_FILENAME);
     return 0;
+
 err_trie_saved:
     unlink (TRIE_FILENAME);
 err_trie_not_created:

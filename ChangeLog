@@ -1,3 +1,22 @@
+2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Cosmetic changes.
+
+	* datrie/fileutils.c:
+	* datrie/trie-string.c:
+	* datrie/alpha-map.c:
+	* datrie/darray.h:
+	* datrie/darray.c:
+	* datrie/tail.h:
+	* datrie/tail.c:
+	* datrie/trie.c:
+	* tools/trie-tool.c:
+	* tests/test_serialization.c:
+	  - Use space before left parenthesis.
+	  - Use old-style C comments.
+	  - Remove trailing spaces.
+	  - Re-wrap lines.
+
 2021-01-23  KOLANICH  <KOLANICH@users.noreply.github.com>
 
 	Added serialization of the trie into a memory buffer.
