@@ -33,34 +33,11 @@
 
 #define TRIE_FILENAME "test.tri"
 
-static Bool
-trie_enum_mark_rec (const AlphaChar *key, TrieData key_data, void *user_data)
-{
-    Bool *is_failed = (Bool *)user_data;
-    TrieData src_data;
-
-    src_data = dict_src_get_data (key);
-    if (TRIE_DATA_ERROR == src_data) {
-        printf ("Extra entry in file: key '%ls', data %d.\n",
-                (wchar_t *)key, key_data);
-        *is_failed = TRUE;
-    } else if (src_data != key_data) {
-        printf ("Data mismatch for: key '%ls', expected %d, got %d.\n",
-                (wchar_t *)key, src_data, key_data);
-        *is_failed = TRUE;
-    } else {
-        dict_src_set_data (key, TRIE_DATA_READ);
-    }
-
-    return TRUE;
-}
-
 int
 main (void)
 {
     Trie    *test_trie;
     DictRec *dict_p;
-    Bool     is_failed;
 
     msg_step ("Preparing trie");
     test_trie = en_trie_new ();
@@ -88,43 +65,62 @@ main (void)
 
     msg_step ("Getting serialized trie size");
     size_t size = trie_get_serialized_size (test_trie);
-    printf ("serialized trie size %Ilu\n", size);
+    printf ("serialized trie size %lu\n", size);
     msg_step ("Allocating");
     uint8 *trieSerializedData = malloc (size);
+    if (!trieSerializedData) {
+        printf ("Failed to allocate trieSerializedData.\n");
+        goto err_trie_saved;
+    }
     printf ("allocated %p\n", trieSerializedData);
     msg_step ("Serializing");
     trie_serialize (test_trie, trieSerializedData);
     msg_step ("Serialized");
-    trie_free (test_trie);
 
     FILE *f = fopen (TRIE_FILENAME, "rb");
+    if (!f) {
+        printf ("Failed to reopen trie file " TRIE_FILENAME ".\n");
+        goto err_serial_data_allocated;
+    }
     fseek (f, 0, SEEK_END);
     size_t file_size = ftell (f);
     fseek (f, 0, SEEK_SET);
 
-   if (size != file_size) {
-        printf ("Trie serialized data doesn't match size of the file");
-        goto err_trie_saved;
+    if (size != file_size) {
+        printf ("Trie serialized data doesn't match size of the file.\n");
+        goto err_file_reopened;
     }
 
     unsigned char *trieFileData = malloc (size);
-    fread (trieFileData, 1, size, f);
-    fclose (f);
-    if (memcmp (trieSerializedData, trieFileData, size)) {
-        printf ("Trie serialized data doesn't match contents of the file");
-    } else {
-        msg_step ("PASS!");
+    if (!trieFileData) {
+        printf ("Failed to allocate trieFileData.\n");
+        goto err_file_reopened;
     }
+    fread (trieFileData, 1, size, f);
+    if (memcmp (trieSerializedData, trieFileData, size) != 0) {
+        printf ("Trie serialized data doesn't match contents of the file.\n");
+        goto err_file_data_allocated;
+    }
+    printf ("PASS!\n");
+
     free (trieFileData);
+    fclose (f);
+    free (trieSerializedData);
     remove (TRIE_FILENAME);
+    trie_free (test_trie);
     return 0;
 
+err_file_data_allocated:
+    free (trieFileData);
+err_file_reopened:
+    fclose (f);
+err_serial_data_allocated:
+    free (trieSerializedData);
 err_trie_saved:
     remove (TRIE_FILENAME);
-err_trie_not_created:
-    return 1;
 err_trie_created:
     trie_free (test_trie);
+err_trie_not_created:
     return 1;
 }
 

@@ -1,5 +1,22 @@
 2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Revise test_serialization.
+
+	* tests/test_serialization.c (-trie_enum_mark_rec):
+	  - Drop unused callback function.
+	* tests/test_serialization (main):
+	  - Drop unused 'is_failed' variable.
+	  - "%Ilu" -> "%lu" printf format.
+	  - Rearrange error handling in stack unwinding style.
+	  - Add '\n' to printf messages.
+	  - Free 'trieSerializedData'.
+
+	We're not moving to C99 yet, but the declaration amid code is
+	too useful to remove. And it's just in the test code, not in
+	the main source. So we still allow it.
+
+2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Get rid of <unistd.h> include in the new test.
 
 	* tests/test_serialization.c (main):
