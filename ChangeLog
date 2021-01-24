@@ -1,5 +1,17 @@
 2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Adjust file-internal function declarations.
+
+	* datrie/fileutils.c
+	  (parse_int16_be, serialize_int32_be, serialize_int16_be):
+	  - Re-declare functions as static.
+	* datrie/fileutils.c (parse_int16_be):
+	  - Make the 'buff' arg const pointer.
+	* datrie/fileutils.c:
+	  - Remove some blank lines in source.
+
+2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Fix documentation.
 
 	* datrie/tail.h (Tail typedef):
