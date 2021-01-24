@@ -1,5 +1,11 @@
 2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Update library versioning
+
+	* configure.ac: Bump library versioning to reflect API addition.
+
+2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Rename trie_byte_strlen() to trie_char_strsize().
 
 	The object of the function is TrieChar string. Let's keep
