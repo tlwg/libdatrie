@@ -35,7 +35,7 @@
  */
 
 /**
- * @brief Double-array structure type
+ * @brief Tail structure type
  */
 typedef struct _Tail  Tail;
 

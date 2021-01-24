@@ -1,5 +1,12 @@
 2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Fix documentation.
+
+	* datrie/tail.h (Tail typedef):
+	  - Fix comment (Double-array -> Tail).
+
+2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Cosmetic changes.
 
 	* datrie/fileutils.c:
