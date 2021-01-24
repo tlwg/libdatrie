@@ -38,7 +38,7 @@
 
 size_t      trie_char_strlen (const TrieChar *str);
 
-size_t      trie_byte_strlen (const TrieChar *str);
+size_t      trie_char_strsize (const TrieChar *str);
 
 TrieChar *  trie_char_strdup (const TrieChar *str);
 

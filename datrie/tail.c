@@ -270,7 +270,7 @@ tail_get_serialized_size (const Tail *t)
         for (; i < t->num_tails; i++) {
             if (t->tails[i].suffix)
             {
-                dynamic_count += trie_byte_strlen (t->tails[i].suffix);
+                dynamic_count += trie_char_strsize (t->tails[i].suffix);
             }
         }
     }
@@ -292,7 +292,7 @@ tail_serialize (const Tail *t, uint8 **ptr)
         serialize_int32_be_incr (ptr, t->tails[i].next_free);
         serialize_int32_be_incr (ptr, t->tails[i].data);
 
-        length = t->tails[i].suffix ? trie_byte_strlen (t->tails[i].suffix)
+        length = t->tails[i].suffix ? trie_char_strsize (t->tails[i].suffix)
                                     : 0;
         serialize_int16_be_incr (ptr, length);
         if (length)

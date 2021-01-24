@@ -1,5 +1,18 @@
 2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Rename trie_byte_strlen() to trie_char_strsize().
+
+	The object of the function is TrieChar string. Let's keep
+	that semantics in the name.
+
+	* datrie/trie-string.h, datrie/trie-string.c
+	  (trie_byte_strlen -> trie_char_strsize):
+	  - Rename the function.
+	* datrie/tail.c (tail_get_serialized_size, tail_serialize):
+	  - Replace trie_byte_strlen() calls with the new name.
+
+2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Revise test_serialization.
 
 	* tests/test_serialization.c (-trie_enum_mark_rec):
