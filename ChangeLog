@@ -1,5 +1,13 @@
 2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Get rid of <unistd.h> include in the new test.
+
+	* tests/test_serialization.c (main):
+	  - Replace unlink() calls with remove() from <stdio.h> and drop
+	    <unistd.h> include.
+
+2021-01-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Adjust file-internal function declarations.
 
 	* datrie/fileutils.c

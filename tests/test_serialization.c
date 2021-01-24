@@ -30,7 +30,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
-#include <unistd.h>
 
 #define TRIE_FILENAME "test.tri"
 
@@ -81,7 +80,7 @@ main (void)
 
     /* save & close */
     msg_step ("Saving trie to file");
-    unlink (TRIE_FILENAME);  /* error ignored */
+    remove (TRIE_FILENAME);  /* error ignored */
     if (trie_save (test_trie, TRIE_FILENAME) != 0) {
         printf ("Failed to save trie to file '%s'.\n", TRIE_FILENAME);
         goto err_trie_created;
@@ -117,11 +116,11 @@ main (void)
         msg_step ("PASS!");
     }
     free (trieFileData);
-    unlink (TRIE_FILENAME);
+    remove (TRIE_FILENAME);
     return 0;
 
 err_trie_saved:
-    unlink (TRIE_FILENAME);
+    remove (TRIE_FILENAME);
 err_trie_not_created:
     return 1;
 err_trie_created:
