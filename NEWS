@@ -1,5 +1,22 @@
 libdatrie
 
+0.2.13 (2021-01-29)
+======
+- Fix wrong key listing in byte trie
+  (Issue #9, Thanks @legale for the report.)
+- Fix cross-compiling issue caused by AC_FUNC_MALLOC
+  (Issue #11, Thanks Vanessa McHale for the report.)
+- Fix isspace() arg problem on NetBSD.
+  (Personal mail, Thanks Sean for the report;
+   PR #8, Thanks OBATA Akio for an individual pull request.)
+- Fix some documentations.
+- Really use TRIE_CHAR_TERM in TrieChar string termination.
+  Changing TRIE_CHAR_TERM definition now won't break the code.
+- Fix Windows build issue by avoiding <unistd.h> include.
+  (Partially addressing PR #15, Thanks @fanc999 for first raising this.)
+- [New APIs] Add serialization of the trie into memory buffer.
+  (PR #12, Thanks KOLANICH for the contribution.)
+
 0.2.12 (2018-06-19)
 ======
 - More C90 (ANSI C) compliance.
