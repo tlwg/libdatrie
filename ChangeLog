@@ -1,3 +1,13 @@
+2021-02-08  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Provide our own version of INSTALL instruction.
+
+	* INSTALL:
+	  - Explain simple installation steps and build requirements.
+
+	This is to address a frequently found issue when
+	'autoconf-archive' is missing, like in issue #17, issue #18.
+
 2021-01-29  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	* NEWS:

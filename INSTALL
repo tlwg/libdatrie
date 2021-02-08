@@ -1,0 +1,27 @@
+Basic Installation
+==================
+
+# Build requirements:
+# - libtool
+# - iconv support (normally from glibc on GNU systems; some systems might
+#   provide libiconv)
+# - doxygen (optional, for documentation generation)
+# - autoconf-archive (for Git snapshot, for 'configure' script generation)
+
+# When downloaded from the Github repo (Skip for released tarballs)
+./autogen.sh
+
+./configure
+# Or to install elsewhere: ./configure --prefix=...
+
+make
+
+# Recommended
+make check
+
+# With elevated permissions if required
+make install
+
+# In order to uninstall
+make uninstall
+
