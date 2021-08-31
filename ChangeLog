@@ -1,5 +1,12 @@
 2021-08-31  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Fix PAPER_TYPE in Doxyfile.
+
+	* doc/Doxyfile.in:
+	  - Fix invalid PAPER_TYPE 'a4wide' to 'a4'.
+
+2021-08-31  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Update Doxyfile for doxygen 1.9.1.
 
 	* doc/Doxyfile.in:
