@@ -1,3 +1,21 @@
+2021-08-31  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Apply 'autoupdate' for autoconf 2.71
+
+	* configure.ac:
+	  - Quote m4 strings in AC_INIT() parameters.
+	  - Replace AC_CONFIG_HEADER() with AC_CONFIG_HEADERS().
+	  - Replace AC_PROG_LIBTOOL with LT_INIT. With this, drop
+	    AC_LIBTOOL_WIN32_DLL, as we haven't really declared
+	    dllexport anywhere yet.
+	  - Replace obsolete AC_LIBTOOL_LINKER_OPTION() with
+	    _LT_LINKER_OPTION(). Also quote an m4 string.
+	  - Replace obsolete AC_TRY_COMPILE() with AC_COMPILE_IFELSE().
+	    Use AC_LANG_PROGRAM() as 'autoupdate' suggests.
+	  - Drop AC_HEADER_STDC as 'autoupdate' suggests.
+	  - Replace deprecated AC_HELP_STRING() with AS_HELP_STRING().
+	  - Update AC_PREREQ() from 2.59 to 2.71.
+
 2021-02-08  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Provide our own version of INSTALL instruction.

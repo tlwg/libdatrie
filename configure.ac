@@ -1,12 +1,12 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
-AC_INIT(libdatrie,
-        m4_esyscmd([build-aux/git-version-gen]),
+AC_PREREQ([2.71])
+AC_INIT([libdatrie],
+        [m4_esyscmd(build-aux/git-version-gen)],
         [https://github.com/tlwg/libdatrie/issues])
 AC_CONFIG_SRCDIR([datrie/trie.h])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -30,14 +30,13 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_LIBTOOL_WIN32_DLL
-AC_PROG_LIBTOOL
+LT_INIT
 
 # Whether linker support --version-script option
 echo '{global:hello; local:*;};' > conftest.ver
-AC_LIBTOOL_LINKER_OPTION(
+_LT_LINKER_OPTION(
   [whether linker supports -version-script],
-  datrie_cv_have_version_script,
+  [datrie_cv_have_version_script],
   [-Wl,-version-script -Wl,conftest.ver])
 
 AM_CONDITIONAL(LD_HAS_VERSION_SCRIPT,
@@ -80,8 +79,11 @@ if test x$have_locale_charset = xyes; then
 fi
 AC_CACHE_CHECK(
   [for nl_langinfo (CODESET)], datrie_cv_langinfo_codeset,
-  [AC_TRY_COMPILE([#include <langinfo.h>],
-    [char *codeset = nl_langinfo (CODESET);],
+  [AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+      [[#include <langinfo.h>]],
+      [[char *codeset = nl_langinfo (CODESET);]]
+     )],
     [datrie_cv_langinfo_codeset=yes],
     [datrie_cv_langinfo_codeset=no])]
 )
@@ -96,7 +98,6 @@ fi
 
 
 # Checks for header files.
-AC_HEADER_STDC
 AC_CHECK_HEADERS([limits.h stdlib.h stdio.h string.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -105,7 +106,7 @@ AC_TYPE_SIZE_T
 
 dnl Disable doc generation with doxygen option
 AC_ARG_ENABLE(doxygen-doc,
-              [AC_HELP_STRING([--disable-doxygen-doc],
+              [AS_HELP_STRING([--disable-doxygen-doc],
                               [disable document generation with doxygen])],
               , enable_doxygen_doc="yes")
 
@@ -124,7 +125,7 @@ fi
 
 dnl where to install the doxygen-generated HTML doc
 AC_ARG_WITH(html-docdir,
-            [AC_HELP_STRING([--with-html-docdir=DIR],
+            [AS_HELP_STRING([--with-html-docdir=DIR],
                             [where to install the doxyten-generated HTML doc [PREFIX/share/doc/datrie/html]])],
             [htmldocdir="$withval"], [htmldocdir=\$\{prefix\}/share/doc/datrie/html])
 AC_SUBST(htmldocdir)
