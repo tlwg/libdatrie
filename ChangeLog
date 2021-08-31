@@ -1,5 +1,12 @@
 2021-08-31  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Fix documentation typo.
+
+	* datrie/trie.h (TrieEnumFunc):
+	  - Fix 'data' param to 'key_data' in doc comment.
+
+2021-08-31  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Apply 'autoupdate' for autoconf 2.71
 
 	* configure.ac:
