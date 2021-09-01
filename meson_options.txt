@@ -1,0 +1,1 @@
+option('iconv_pkgconfig', type : 'feature', value : 'auto', description : 'Search for iconv with pkg-config or equivalent')
