@@ -1,3 +1,12 @@
+ldflags = [
+	'-Wl,-no-undefined',
+]
+if ld_has_version_script
+	ldflags += [
+		'-Wl,--version-script,@0@/libdatrie.map'.format(meson.current_source_dir())
+	]
+endif
+
 datrie = library(
 	'datrie',
 
@@ -23,6 +32,9 @@ datrie = library(
 	
 	dependencies : deps,
 	install : true,
+	link_args : ldflags,
+	link_depends : ['libdatrie.map', 'libdatrie.def'],
+	version : meson.project_version(),
 )
 
 install_headers(
@@ -32,16 +44,3 @@ install_headers(
 	'trie.h',
 	subdir : 'datrie',
 )
-# TODO: gen pkgconfig
-
-# if LD_HAS_VERSION_SCRIPT
-# EXPORTS_FLAGS = -Wl,-version-script -Wl,$(srcdir)/libdatrie.map
-# EXPORTS_DEPS = libdatrie.map
-# else
-# EXPORTS_FLAGS = -export-symbols $(srcdir)/libdatrie.def
-# EXPORTS_DEPS = libdatrie.def
-# endif
-
-# libdatrie_la_LDFLAGS =	-no-undefined \
-# 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
-# 	$(EXPORTS_FLAGS)

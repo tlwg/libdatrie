@@ -1,13 +1,15 @@
-project('datrie', 'c', version : '0.2.13') # TODO: How to get this??
-conf_data = configuration_data()
+project('datrie', 'c', version: '1.4.0')
 
-conf_data.set_quoted('VERSION', meson.project_version())
+sh = find_program('sh')
+
+version = run_command(files('build-aux/git-version-gen'), check : true)
+# FIXME: Make thid work
+meson.add_dist_script(sh, '-c', 'echo "@0@" > $MESON_DIST_ROOT/VERSION'.format(version))
+
+conf_data = configuration_data()
+conf_data.set_quoted('VERSION', version.stdout())
 
 # TODO: Doxygen
-
-# LT_CURRENT=5
-# LT_REVISION=0
-# LT_AGE=4
 
 compiler = meson.get_compiler('c')
 
@@ -44,7 +46,8 @@ if not have_locale_charset and not have_langinfo_codeset
 	error('No locale_charset() nor nl_langinfo(CODESET) found.\nPlease consider installing GNU libiconv')
 endif
 
-# LD_HAS_VERSION_SCRIPT? whether linker supports -version-script
+ld_has_version_script = compiler.has_link_argument('-Wl,-version-script,@0@/build-aux/test.map'.format(meson.global_source_root()))
+# TODO: gen pkgconfig
 
 configure_file(output : 'config.h', configuration: conf_data)
 configuration_inc = include_directories('.')
