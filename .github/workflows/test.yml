@@ -1,0 +1,17 @@
+name: Test
+on: [push, pull_request]
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - run: cd ${{ github.workspace }}
+      - run: ./autogen.sh
+      - run: ./configure
+      - run: make
+      - run: make check
