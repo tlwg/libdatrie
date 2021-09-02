@@ -3,13 +3,11 @@ ldflags = [
 ]
 if ld_has_version_script
 	ldflags += [
-		'-Wl,--version-script,@0@/libdatrie.map'.format(meson.current_source_dir())
+		'-Wl,--version-script,@0@'.format(meson.current_source_dir() / 'libdatrie.map')
 	]
 endif
 
-datrie = library(
-	'datrie',
-
+datrie_src = files(
 	'typedefs.h',
 	'triedefs.h',
 	'trie-private.h',
@@ -29,6 +27,10 @@ datrie = library(
 	'alpha-map.h',
 	'alpha-map-private.h',
 	'alpha-map.c',
+)
+
+datrie = library(
+	'datrie', datrie_src,
 	
 	dependencies : deps,
 	install : true,

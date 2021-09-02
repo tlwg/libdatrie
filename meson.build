@@ -1,15 +1,12 @@
-project('datrie', 'c', version: '1.4.0')
+project('libdatrie', 'c', version: '1.4.0', meson_version : '>=0.49.0')
 
 sh = find_program('sh')
 
 version = run_command(files('build-aux/git-version-gen'), check : true)
-# FIXME: Make thid work
-meson.add_dist_script(sh, '-c', 'echo "@0@" > $MESON_DIST_ROOT/VERSION'.format(version))
+# meson.add_dist_script(sh, '-c', 'echo "@0@" > $MESON_DIST_ROOT/VERSION'.format(version))
 
 conf_data = configuration_data()
 conf_data.set_quoted('VERSION', version.stdout())
-
-# TODO: Doxygen
 
 compiler = meson.get_compiler('c')
 
@@ -46,14 +43,18 @@ if not have_locale_charset and not have_langinfo_codeset
 	error('No locale_charset() nor nl_langinfo(CODESET) found.\nPlease consider installing GNU libiconv')
 endif
 
-ld_has_version_script = compiler.has_link_argument('-Wl,-version-script,@0@/build-aux/test.map'.format(meson.global_source_root()))
+ld_has_version_script = compiler.has_link_argument(
+	'-Wl,-version-script,@0@'.format(meson.source_root() / 'build-aux' / 'test.map')
+)
 # TODO: gen pkgconfig
 
 configure_file(output : 'config.h', configuration: conf_data)
 configuration_inc = include_directories('.')
 
-# Subdir: man doc tests
 subdir('datrie')
+subdir('tests')
 subdir('tools')
+subdir('man')
+subdir('doc')
 
 # FIXME: Dist
