@@ -23,3 +23,5 @@ build-aux/test-driver
 *~
 datrie-*.pc
 doc/Doxyfile
+*.o
+
