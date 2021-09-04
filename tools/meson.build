@@ -1,10 +1,10 @@
 trietool = executable(
-	'trietool',
-	'trietool.c',
-	dependencies : deps,
-	link_with : datrie,
-	install : true,
-	include_directories : configuration_inc,
+    'trietool',
+    'trietool.c',
+    dependencies : deps,
+    link_with : datrie,
+    install : true,
+    include_directories : configuration_inc,
 )
 
 bindir_abs = '$DESTDIR' + get_option('prefix') + '/' + get_option('bindir')
