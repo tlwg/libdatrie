@@ -16,11 +16,10 @@ jobs:
           ./configure
           make
           sudo make install
-          export PATH=/usr/local/bin/:$PATH
       - name: Check out repository code
         uses: actions/checkout@v2
       - run: cd ${{ github.workspace }}
-      - run: ./autogen.sh
+      - run: PATH=/usr/local/bin/:$PATH ./autogen.sh
       - run: ./configure
       - run: make
       - run: make check
