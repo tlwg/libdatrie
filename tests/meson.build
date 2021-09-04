@@ -5,6 +5,12 @@ tests = [
 ]
 
 foreach item : tests
-	exe = executable('test_' + item, 'test_@0@.c'.format(item), 'utils.c', link_with : datrie)
+	exe = executable(
+		'test_' + item,
+		'test_@0@.c'.format(item),
+		'utils.c',
+		link_with : datrie,
+		include_directories : configuration_inc,
+	)
 	test(item, exe)
 endforeach
