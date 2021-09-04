@@ -1,6 +1,8 @@
 project('libdatrie', 'c', version: '1.4.0', meson_version : '>=0.49.0')
 
 sh = find_program('sh')
+compiler = meson.get_compiler('c')
+deps = []
 
 version = run_command(files('build-aux/git-version-gen'), check : true)
 # meson.add_dist_script(sh, '-c', 'echo "@0@" > $MESON_DIST_ROOT/VERSION'.format(version))
@@ -8,10 +10,7 @@ version = run_command(files('build-aux/git-version-gen'), check : true)
 conf_data = configuration_data()
 conf_data.set_quoted('VERSION', version.stdout())
 
-compiler = meson.get_compiler('c')
-
-deps = []
-
+# Detect for iconv
 compiler_has_iconv = compiler.has_function('iconv_open')
 iconv_pkgconfig = get_option('iconv_pkgconfig')
 if iconv_pkgconfig.auto()
@@ -26,11 +25,13 @@ elif iconv_pkgconfig.disabled()
 	endif
 endif
 
+# Detect for locale_charset
 have_locale_charset = compiler.has_function('locale_charset', dependencies : deps)
 if have_locale_charset
 	conf_data.set('HAVE_LOCALE_CHARSET', 1)
 endif
 
+# Detect for nl_langinfo(CODESET)
 have_langinfo_codeset = compiler.compiles('''
 #include <langinfo.h>
 void func() { char *codeset = nl_langinfo (CODESET); }
@@ -43,14 +44,16 @@ if not have_locale_charset and not have_langinfo_codeset
 	error('No locale_charset() nor nl_langinfo(CODESET) found.\nPlease consider installing GNU libiconv')
 endif
 
+# Detect for version-script support
 ld_has_version_script = compiler.has_link_argument(
 	'-Wl,-version-script,@0@'.format(meson.source_root() / 'build-aux' / 'test.map')
 )
-# TODO: gen pkgconfig
 
+# Generate config.h
 configure_file(output : 'config.h', configuration: conf_data)
 configuration_inc = include_directories('.')
 
+# Build!
 subdir('datrie')
 subdir('tests')
 subdir('tools')

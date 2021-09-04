@@ -46,3 +46,11 @@ install_headers(
 	'trie.h',
 	subdir : 'datrie',
 )
+
+pkg = import('pkgconfig')
+pkg.generate(
+	datrie,
+	description : 'Double-array trie library',
+	url : 'https://github.com/tlwg/libdatrie',
+	version : version.stdout(),
+)
