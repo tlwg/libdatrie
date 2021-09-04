@@ -37,6 +37,7 @@ datrie = library(
 	link_args : ldflags,
 	link_depends : ['libdatrie.map', 'libdatrie.def'],
 	version : meson.project_version(),
+	include_directories : configuration_inc,
 )
 
 install_headers(
