@@ -8,6 +8,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y doxygen
+      - name: Install latest autoconf
+        run: |
+          wget https://ftpmirror.gnu.org/gnu/autoconf/autoconf-latest.tar.xz
+          tar xf autoconf-latest.tar.xz
+          cd autoconf-*/
+          ./configure
+          make
+          sudo make install
       - name: Check out repository code
         uses: actions/checkout@v2
       - run: cd ${{ github.workspace }}
