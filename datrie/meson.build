@@ -1,5 +1,5 @@
 ldflags = [
-    '-Wl,-no-undefined',
+    ld_no_undefined,
 ]
 if ld_has_version_script
     ldflags += [
