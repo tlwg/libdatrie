@@ -55,6 +55,7 @@ install_headers(
 pkg = import('pkgconfig')
 pkg.generate(
     datrie,
+    filebase : 'datrie-0.2',
     description : 'Double-array trie library',
     url : 'https://github.com/tlwg/libdatrie',
     version : version.stdout(),
