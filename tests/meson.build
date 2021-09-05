@@ -9,8 +9,7 @@ foreach item : tests
         'test_' + item,
         'test_@0@.c'.format(item),
         'utils.c',
-        link_with : datrie,
-        include_directories : configuration_inc,
+        dependencies : libdatrie_dep,
     )
     test(item, exe)
 endforeach

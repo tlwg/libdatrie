@@ -39,6 +39,10 @@ datrie = library(
     version : meson.project_version(),
     include_directories : configuration_inc,
 )
+libdatrie_dep = declare_dependency(
+    include_directories : configuration_inc,
+    link_with : datrie
+)
 
 install_headers(
     'alpha-map.h',
