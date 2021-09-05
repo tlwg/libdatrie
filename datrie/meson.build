@@ -1,10 +1,28 @@
-ldflags = [
-    ld_no_undefined,
-]
+ldflags = []
+link_depends = ['libdatrie.map']
+
+if ld_no_undefined != ''
+    ldflags += [ld_no_undefined]
+endif
+
 if ld_has_version_script
     ldflags += [
         '-Wl,--version-script,@0@'.format(meson.current_source_dir() / 'libdatrie.map')
     ]
+endif
+
+if compiler.get_id() == 'msvc'
+    link_def = custom_target(
+        'link-def',
+        input : ['libdatrie.def'],
+        command : [find_program('powershell'), '-Command', '''& {
+            Write-Output "EXPORTS" > @OUTPUT0@
+            Get-Content -Path @INPUT0@ >> @OUTPUT0@
+        }'''],
+        output : 'libdatrie.def',
+    )
+    ldflags += [ '/def:@0@'.format(link_def.full_path()) ]
+    link_depends += [link_def]
 endif
 
 datrie_src = files(
@@ -35,9 +53,10 @@ datrie = library(
     dependencies : deps,
     install : true,
     link_args : ldflags,
-    link_depends : ['libdatrie.map', 'libdatrie.def'],
+    link_depends : link_depends,
     version : meson.project_version(),
     include_directories : configuration_inc,
+    vs_module_defs : 'libdatrie.def',
 )
 libdatrie_dep = declare_dependency(
     include_directories : configuration_inc,
@@ -58,5 +77,5 @@ pkg.generate(
     filebase : 'datrie-0.2',
     description : 'Double-array trie library',
     url : 'https://github.com/tlwg/libdatrie',
-    version : version.stdout(),
+    version : version,
 )

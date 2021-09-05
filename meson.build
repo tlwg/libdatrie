@@ -1,14 +1,18 @@
 project('libdatrie', 'c', version: '1.4.0', meson_version : '>=0.49.0')
 
-sh = find_program('sh')
+sh = find_program('sh', required : false)
 compiler = meson.get_compiler('c')
 deps = []
 
-version = run_command(files('build-aux/git-version-gen'), check : true)
-# meson.add_dist_script(sh, '-c', 'echo "@0@" > $MESON_DIST_ROOT/VERSION'.format(version))
+if sh.found()
+    version = run_command(files('build-aux/git-version-gen'), check : true).stdout()
+    # meson.add_dist_script(sh, '-c', 'echo "@0@" > $MESON_DIST_ROOT/VERSION'.format(version))
+else
+    version = '0.0.0'
+endif
 
 conf_data = configuration_data()
-conf_data.set_quoted('VERSION', version.stdout())
+conf_data.set_quoted('VERSION', version)
 
 # Detect for iconv
 compiler_has_iconv = compiler.has_function('iconv_open')
@@ -41,7 +45,7 @@ if have_langinfo_codeset
 endif
 
 if not have_locale_charset and not have_langinfo_codeset
-    error('No locale_charset() nor nl_langinfo(CODESET) found.\nPlease consider installing GNU libiconv')
+    warning('No locale_charset() nor nl_langinfo(CODESET) found. Please consider installing GNU libiconv')
 endif
 
 # Detect for version-script support

@@ -20,7 +20,7 @@ if not doxygen_version.stdout().version_compare(required_doxygen_version)
 endif
 
 doxyfile_data = configuration_data()
-doxyfile_data.set('VERSION', version.stdout())
+doxyfile_data.set('VERSION', version)
 doxyfile_data.set('PACKAGE', meson.project_name())
 doxyfile_data.set('top_builddir', meson.build_root())
 doxyfile_data.set('top_srcdir', meson.source_root())
