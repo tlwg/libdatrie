@@ -1,5 +1,7 @@
 AM_CPPFLAGS = -I$(top_srcdir)
 
+EXTRA_DIST = meson.build
+
 TESTS_ENVIRONMENT = top_builddir=$(top_builddir)
 
 TESTS = \
