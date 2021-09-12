@@ -2,21 +2,9 @@ if get_option('docs').disabled()
     subdir_done()
 endif
 
-required_doxygen_version = '>=1.9.1'
-
-doxygen = find_program('doxygen', required : get_option('docs'))
+doxygen = find_program('doxygen', required : get_option('docs'), version : '>=1.9.1')
 if not doxygen.found()
     subdir_done()
-endif
-doxygen_version = run_command(doxygen, '--version')
-if not doxygen_version.stdout().version_compare(required_doxygen_version)
-    message = 'Doxygen version @0@ is under requirements @1@'.format(doxygen_version, required_doxygen_version)
-    if get_option('docs').enabled()
-        error(message)
-    else
-        warning(message)
-        subdir_done()
-    endif
 endif
 
 doxyfile_data = configuration_data()

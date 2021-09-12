@@ -15,7 +15,7 @@ if compiler.get_id() == 'msvc'
     link_def = custom_target(
         'link-def',
         input : ['libdatrie.def'],
-        command : [find_program('powershell'), '-Command', '''& {
+        command : [powershell, '-Command', '''& {
             Write-Output "EXPORTS" > @OUTPUT0@
             Get-Content -Path @INPUT0@ >> @OUTPUT0@
         }'''],

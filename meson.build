@@ -1,15 +1,19 @@
-project('libdatrie', 'c', version: '1.4.0', meson_version : '>=0.49.0')
+project('libdatrie', 'c', version: '1.4.0', meson_version : '>=0.53.0')
 
-sh = find_program('sh', required : false)
+fs = import('fs')
+
+sh = find_program('sh')
 compiler = meson.get_compiler('c')
+powershell = find_program('powershell', required : compiler.get_id() == 'msvc')
+cat = find_program('cat')
 deps = []
 
-if sh.found()
-    version = run_command(files('build-aux/git-version-gen'), check : true).stdout()
-    # meson.add_dist_script(sh, '-c', 'echo "@0@" > $MESON_DIST_ROOT/VERSION'.format(version))
+if fs.exists('VERSION')
+    version = run_command(cat, files('VERSION'), check : true).stdout().strip()
 else
-    version = '0.0.0'
+    version = run_command(files('build-aux/git-version-gen'), check : true).stdout().strip()
 endif
+meson.add_dist_script(sh, '-c', 'echo "@0@" > $MESON_DIST_ROOT/VERSION'.format(version))
 
 conf_data = configuration_data()
 conf_data.set_quoted('VERSION', version)
