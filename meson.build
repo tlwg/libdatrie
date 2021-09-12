@@ -14,6 +14,7 @@ else
     version = run_command(files('build-aux/git-version-gen'), check : true).stdout().strip()
 endif
 meson.add_dist_script(sh, '-c', 'echo "@0@" > $MESON_DIST_ROOT/VERSION'.format(version))
+meson.add_dist_script(sh, '-c', 'cd $MESON_DIST_ROOT && ./autogen.sh')
 
 conf_data = configuration_data()
 conf_data.set_quoted('VERSION', version)
