@@ -1,10 +1,6 @@
 ldflags = []
 link_depends = ['libdatrie.map']
 
-if ld_no_undefined != ''
-    ldflags += [ld_no_undefined]
-endif
-
 if ld_has_version_script
     ldflags += [
         '-Wl,--version-script,@0@'.format(meson.current_source_dir() / 'libdatrie.map')
