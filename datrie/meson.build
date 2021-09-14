@@ -52,7 +52,6 @@ datrie = library(
     link_depends : link_depends,
     version : meson.project_version(),
     include_directories : configuration_inc,
-    vs_module_defs : 'libdatrie.def',
 )
 libdatrie_dep = declare_dependency(
     include_directories : configuration_inc,
