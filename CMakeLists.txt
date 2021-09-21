@@ -84,8 +84,6 @@ if(Iconv_FOUND)
 endif()
 list(APPEND EXTRA_TARGET_LINK_LIBRARIES ${THIRD_PARTY_LIBS})
 
-find_package(Threads REQUIRED)
-
 if(WITH_COVERAGE)
     add_compile_options("--coverage")
     add_link_options("--coverage")
@@ -110,9 +108,6 @@ endif()
 if(WIN32)
   add_compile_definitions(_CRT_SECURE_NO_WARNINGS _SCL_SECURE_NO_WARNINGS)
   add_compile_definitions(WIN32_LEAN_AND_MEAN UNICODE _UNICODE STRICT NOMINMAX)
-#elseif(UNIX)
-  #add_compile_options(-pthread)
-  #list(APPEND EXTRA_TARGET_LINK_LIBRARIES -pthread)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -132,7 +127,6 @@ add_library(datrie SHARED ${LIBDATRIE_SOURCES})
 add_library(Datrie::Datrie ALIAS datrie)
 target_link_libraries(datrie
   ${EXTRA_TARGET_LINK_LIBRARIES}
-  ${CMAKE_THREAD_LIBS_INIT}
   )
 
 # SCM_VERSION_INFO can be defined by cmake args and passed into the code as a
@@ -173,7 +167,6 @@ if(LIBDATRIE_BUILD_TESTING)
       testing
       datrie
       ${EXTRA_TARGET_LINK_LIBRARIES}
-      ${CMAKE_THREAD_LIBS_INIT}
       )
 
     add_test(NAME ${target} COMMAND ${target})
@@ -187,10 +180,7 @@ target_compile_definitions(trietool PRIVATE
   NO_AUTOCONF
   )
 
-target_link_libraries(trietool
-  datrie
-  ${CMAKE_THREAD_LIBS_INIT}
-  )
+target_link_libraries(trietool datrie)
 
 set(LIBDATRIE_HEADERS
   datrie/alpha-map.h
