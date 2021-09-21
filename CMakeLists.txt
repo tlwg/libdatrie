@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.18)
 
 # used for both library and pkgconfig file
 # Library versioning
@@ -6,16 +6,17 @@ cmake_minimum_required(VERSION 3.10)
 # Interfaces added:              CURRENT++  REVISION=0  AGE++
 # Interfaces changed/removed:    CURRENT++  REVISION=0  AGE=0
 #
-# as of package version 0.2.12; note not all of the ABI bits are
+# as of package version 0.2.13; note not all of the ABI bits are
 # used for building/packaging shared libs, and the (package) VERSION
 # is expected to be defined for trietool:
-# LT_CURRENT=4
-# LT_REVISION=5
-# LT_AGE=3
-set(PACKAGE_VERSION 0.2.12)
+# LT_CURRENT=5
+# LT_REVISION=0
+# LT_AGE=4
+
+set(PACKAGE_VERSION 0.2.13)
+set(LIBRARY_ABI_REV 4.0)
+set(LIBRARY_ABI_VERSION "5.${LIBRARY_ABI_REV}")  # not used here
 set(LIBRARY_SOVERSION 1)
-set(LIBRARY_ABI_REV 3.5)
-set(LIBRARY_ABI_VERSION "4.${LIBRARY_ABI_REV}")
 set(LIBRARY_FULL_VERSION "${LIBRARY_SOVERSION}.${LIBRARY_ABI_REV}")
 
 if(POLICY CMP0048)
@@ -155,10 +156,12 @@ if(LIBDATRIE_BUILD_TESTING)
 
   set(TEST_TARGETS
     test_byte_alpha
+    test_byte_list
     test_file
     test_iterator
     test_nonalpha
     test_null_trie
+    test_serialization
     test_store-retrieve
     test_term_state
     test_walk
