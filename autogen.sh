@@ -18,10 +18,10 @@ if [ $DIE -eq 1 ]; then
   exit 1
 fi
 
-autoheader
-${LIBTOOLIZE} --force
-aclocal
-automake --add-missing
-# Use -f so git-version-gen does refresh
-autoconf -f
+mkdir -p m4
 
+aclocal -I m4/
+autoheader --warnings=no-portability
+${LIBTOOLIZE} --force
+autoconf --warnings=no-portability
+automake --add-missing
