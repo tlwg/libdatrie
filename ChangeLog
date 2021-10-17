@@ -1,3 +1,11 @@
+2021-10-17  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Check fread() result in serialization test.
+
+	* tests/test_serialization.c (main):
+	  - Check fread() return value when reading back the serialized
+	    trie file. (Caught by -Wunused-result when building deb.)
+
 2021-08-31  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Fix PAPER_TYPE in Doxyfile.

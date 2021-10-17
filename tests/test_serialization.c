@@ -96,7 +96,10 @@ main (void)
         printf ("Failed to allocate trieFileData.\n");
         goto err_file_reopened;
     }
-    fread (trieFileData, 1, size, f);
+    if (fread (trieFileData, 1, size, f) != size) {
+        printf ("Failed to read back the serialized trie file.\n");
+        goto err_file_data_allocated;
+    }
     if (memcmp (trieSerializedData, trieFileData, size) != 0) {
         printf ("Trie serialized data doesn't match contents of the file.\n");
         goto err_file_data_allocated;
