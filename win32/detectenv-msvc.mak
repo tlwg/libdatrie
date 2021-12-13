@@ -93,13 +93,15 @@ VSVER = 12
 VSVER = 14
 !elseif $(VCVERSION) > 1909 && $(VCVERSION) < 1920
 VSVER = 15
-!elseif $(VCVERSION) > 1919 && $(VCVERSION) < 2000
+!elseif $(VCVERSION) > 1919 && $(VCVERSION) < 1930
 VSVER = 16
+!elseif $(VCVERSION) > 1929 && $(VCVERSION) < 2000
+VSVER = 17
 !else
 VSVER = 0
 !endif
 
-# Visual Studio 2015, 2017 and 2019 link to the vc140 C/C++ runtimes,
+# Visual Studio 2015~2022 link to the vc140 C/C++ runtimes,
 # so we get a vc140.pdb for all these builds.
 !if $(VSVER) < 15
 PDBVER = $(VSVER)
@@ -110,7 +112,7 @@ PDBVER = 14
 !if "$(VSVER)" == "0"
 MSG = ^
 This NMake Makefile set supports Visual Studio^
-9 (2008) through 14 (2015).  Your Visual Studio^
+9 (2008) through 17 (2022).  Your Visual Studio^
 version is not supported.
 !error $(MSG)
 !endif
