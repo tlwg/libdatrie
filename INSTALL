@@ -1,6 +1,11 @@
 Basic Installation
 ==================
 
+libdatrie can be build by Autotools or Meson
+
+Autotools build
+------------------
+
 # Build requirements:
 # - libtool
 # - iconv support (normally from glibc on GNU systems; some systems might
@@ -25,3 +30,22 @@ make install
 # In order to uninstall
 make uninstall
 
+Meson build
+---------------
+
+# Build requirements:
+# - meson 0.53 or better
+# - iconv support
+# - doxygen (optional, for documentation generation)
+#
+# Recommended build dependencies:
+# - CMake for iconv detection
+
+# Add -Ddocs=disabled to disable documentation generation
+meson setup builddir --buildtype release --default-library both --strip --prefix=...
+
+cd builddir
+ninja test
+
+# With elevated permissions if required
+ninja install

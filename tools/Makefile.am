@@ -1,5 +1,7 @@
 AM_CPPFLAGS = -I$(top_srcdir)
 
+EXTRA_DIST = meson.build
+
 bin_PROGRAMS = trietool
 
 trietool_SOURCES = trietool.c
