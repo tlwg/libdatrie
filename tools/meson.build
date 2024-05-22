@@ -11,5 +11,4 @@ trietool = executable(
     include_directories : configuration_inc,
 )
 
-bindir_abs = get_option('prefix') + '/' + get_option('bindir')
-meson.add_install_script(sh, '-c', 'cd @0@ && ln -s trietool trietool-0.2 || true'.format(bindir_abs))
+meson.add_install_script(sh, '-c', 'cd ${MESON_INSTALL_DESTDIR_PREFIX}/@0@ && ln -s trietool trietool-0.2 || true'.format(get_option('bindir')))

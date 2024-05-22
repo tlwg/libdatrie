@@ -34,12 +34,9 @@ Meson build
 ---------------
 
 # Build requirements:
-# - meson 0.53 or better
+# - meson 1.0 or better
 # - iconv support
 # - doxygen (optional, for documentation generation)
-#
-# Recommended build dependencies:
-# - CMake for iconv detection
 
 # Add -Ddocs=disabled to disable documentation generation
 meson setup builddir --buildtype release --default-library both --strip --prefix=...

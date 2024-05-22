@@ -50,7 +50,8 @@ datrie = library(
     install : true,
     link_args : ldflags,
     link_depends : link_depends,
-    version : meson.project_version(),
+    version : libversion,
+    soversion : soversion,
     include_directories : configuration_inc,
 )
 libdatrie_dep = declare_dependency(

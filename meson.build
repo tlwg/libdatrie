@@ -1,30 +1,31 @@
-project('libdatrie', 'c', version: '1.4.0', meson_version : '>=0.53.0')
+project(
+    'libdatrie', 'c', meson_version : '>=1.0.0',
+    version: run_command(files('build-aux/git-version-gen'), check : true).stdout().strip()
+)
 
 fs = import('fs')
 
 sh = find_program('sh')
 compiler = meson.get_compiler('c')
 powershell = find_program('powershell', required : compiler.get_id() == 'msvc')
-cat = find_program('cat')
-deps = []
+deps = [
+    dependency('iconv', required: false)
+]
 
-if fs.exists('VERSION')
-    version = run_command(cat, files('VERSION'), check : true).stdout().strip()
-else
-    version = run_command(files('build-aux/git-version-gen'), check : true).stdout().strip()
-endif
+version = run_command(files('build-aux/git-version-gen'), check : true).stdout().strip()
 meson.add_dist_script(sh, '-c', 'echo "@0@" > "$MESON_DIST_ROOT/VERSION"'.format(version))
 meson.add_dist_script(sh, '-c', 'cd "$MESON_DIST_ROOT" && ./autogen.sh')
+meson.add_dist_script(sh, '-c', 'cd "$MESON_DIST_ROOT" && rm -r autom4te.cache autogen.sh || true')
+
+LT_CURRENT = 5
+LT_REVISION = 0
+LT_AGE = 4
+
+soversion = LT_CURRENT - LT_AGE
+libversion = '@0@.@1@.@2@'.format(soversion, LT_AGE, LT_REVISION)
 
 conf_data = configuration_data()
 conf_data.set_quoted('VERSION', version)
-
-# Detect for iconv
-compiler_has_iconv = compiler.has_function('iconv_open')
-iconv = compiler.find_library('iconv', required : not compiler_has_iconv)
-if iconv.found()
-    deps += iconv
-endif
 
 # Detect for locale_charset
 have_locale_charset = compiler.has_function('locale_charset', dependencies : deps)
@@ -47,7 +48,7 @@ endif
 
 # Detect for version-script support
 ld_has_version_script = compiler.has_link_argument(
-    '-Wl,-version-script,@0@'.format(meson.source_root() / 'build-aux' / 'test.map')
+    '-Wl,-version-script,@0@'.format(meson.global_source_root() / 'build-aux' / 'test.map')
 )
 
 # Generate config.h
@@ -60,5 +61,3 @@ subdir('tests')
 subdir('tools')
 subdir('man')
 subdir('doc')
-
-# FIXME: Dist
