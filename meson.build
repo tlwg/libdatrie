@@ -48,7 +48,7 @@ endif
 
 # Detect for version-script support
 ld_has_version_script = compiler.has_link_argument(
-    '-Wl,-version-script,@0@'.format(meson.global_source_root() / 'build-aux' / 'test.map')
+    '-Wl,-version-script,@0@'.format(meson.project_source_root() / 'build-aux' / 'test.map')
 )
 
 # Generate config.h

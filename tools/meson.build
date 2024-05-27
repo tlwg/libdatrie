@@ -11,4 +11,4 @@ trietool = executable(
     include_directories : configuration_inc,
 )
 
-meson.add_install_script(sh, '-c', 'cd ${MESON_INSTALL_DESTDIR_PREFIX}/@0@ && ln -s trietool trietool-0.2 || true'.format(get_option('bindir')))
+install_symlink('trietool-0.2', pointing_to: 'trietool', install_dir: get_option('bindir))
