@@ -7,13 +7,14 @@ if ld_has_version_script
     ]
 endif
 
-if compiler.get_id() == 'msvc'
+if compiler.get_linker_id() in ['link', 'lld-link']
     link_def = custom_target(
         'link-def',
         input : ['libdatrie.def'],
+        # This use ASCII as some PS version do not have UTF8NoBOM
         command : [powershell, '-Command', '''& {
-            Write-Output "EXPORTS" > @OUTPUT0@
-            Get-Content -Path @INPUT0@ >> @OUTPUT0@
+            Write-Output "EXPORTS" | Out-File -Encoding ascii -FilePath @OUTPUT0@
+            Get-Content -Path @INPUT0@ | Out-File -Append -Encoding ascii -FilePath @OUTPUT0@
         }'''],
         output : 'libdatrie.def',
     )
