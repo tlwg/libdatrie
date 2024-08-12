@@ -59,6 +59,8 @@ libdatrie_dep = declare_dependency(
     include_directories : configuration_inc,
     link_with : datrie
 )
+meson.override_dependency('datrie-0.2', libdatrie_dep)
+meson.override_dependency('libdatrie', libdatrie_dep)
 
 install_headers(
     'alpha-map.h',

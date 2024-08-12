@@ -10,5 +10,6 @@ trietool = executable(
     install : true,
     include_directories : configuration_inc,
 )
+meson.override_find_program('trietool', trietool)
 
 install_symlink('trietool-0.2', pointing_to: 'trietool', install_dir: get_option('bindir'))
