@@ -11,4 +11,4 @@ trietool = executable(
     include_directories : configuration_inc,
 )
 
-install_symlink('trietool-0.2', pointing_to: 'trietool', install_dir: get_option('bindir))
+install_symlink('trietool-0.2', pointing_to: 'trietool', install_dir: get_option('bindir'))
