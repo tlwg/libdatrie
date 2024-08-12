@@ -10,8 +10,8 @@ endif
 doxyfile_data = configuration_data()
 doxyfile_data.set('VERSION', version)
 doxyfile_data.set('PACKAGE', meson.project_name())
-doxyfile_data.set('top_builddir', meson.build_root())
-doxyfile_data.set('top_srcdir', meson.source_root())
+doxyfile_data.set('top_builddir', meson.project_build_root())
+doxyfile_data.set('top_srcdir', meson.project_source_root())
 
 doxyfile = configure_file(
     input : 'Doxyfile.in',
