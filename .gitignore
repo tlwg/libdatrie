@@ -17,3 +17,11 @@ libtool
 ltmain.sh
 Makefile
 stamp-h1
+.deps
+build-aux/compile
+build-aux/test-driver
+*~
+datrie-*.pc
+doc/Doxyfile
+*.o
+

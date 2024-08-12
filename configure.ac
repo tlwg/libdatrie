@@ -126,7 +126,7 @@ fi
 dnl where to install the doxygen-generated HTML doc
 AC_ARG_WITH(html-docdir,
             [AS_HELP_STRING([--with-html-docdir=DIR],
-                            [where to install the doxyten-generated HTML doc [PREFIX/share/doc/datrie/html]])],
+                            [where to install the doxygen-generated HTML doc [PREFIX/share/doc/datrie/html]])],
             [htmldocdir="$withval"], [htmldocdir=\$\{prefix\}/share/doc/datrie/html])
 AC_SUBST(htmldocdir)
 
