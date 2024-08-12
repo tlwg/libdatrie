@@ -5,11 +5,15 @@ endif
 trietool = executable(
     'trietool',
     'trietool.c',
-    dependencies : deps,
-    link_with : datrie,
-    install : true,
-    include_directories : configuration_inc,
+    dependencies: deps,
+    link_with: datrie,
+    install: true,
+    include_directories: configuration_inc,
 )
 meson.override_find_program('trietool', trietool)
 
-install_symlink('trietool-0.2', pointing_to: 'trietool', install_dir: get_option('bindir'))
+install_symlink(
+    'trietool-0.2',
+    pointing_to: 'trietool',
+    install_dir: get_option('bindir'),
+)
