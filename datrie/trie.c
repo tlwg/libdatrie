@@ -427,33 +427,40 @@ Bool
 trie_store (Trie *trie, const AlphaChar *key, TrieData data)
 {
     printf("Entering trie_store function\n");
-    printf("Attempting to store key: ");
-    const AlphaChar *p;
-    for (p = key; *p; p++) {
-        printf("%lc", *p);
-    }
-    printf("\nKey in hex: ");
-    for (p = key; *p; p++) {
-        printf("%04x ", (unsigned int)*p);
-    }
-    printf("\n");
-
-    // Print key bytes
-    printf("Key bytes: ");
+    printf("Address of key: %p\n", (void*)key);
+    
+    printf("Raw key bytes (up to 100 bytes): ");
     const unsigned char *byte_p = (const unsigned char *)key;
-    for (int i = 0; i < 24 && byte_p[i]; i++) {
-        printf("%02x", byte_p[i]);
+    for (int i = 0; i < 100 && byte_p[i]; i++) {
+        printf("%02x ", byte_p[i]);
     }
     printf("\n");
 
-    // Calculate and print key length
     size_t key_length = 0;
-    for (p = key; *p; p++) {
+    for (const AlphaChar *p = key; *p; p++) {
         key_length++;
     }
-    printf("Key length: %zu\n", key_length);
+    printf("Calculated key length: %zu\n", key_length);
 
-    Bool result = trie_store_conditionally (trie, key, data, TRUE);
+    printf("Key content (up to 50 characters): ");
+    for (size_t i = 0; i < key_length && i < 50; i++) {
+        if (key[i] >= 32 && key[i] <= 126) {  // Printable ASCII
+            printf("%c", (char)key[i]);
+        } else {
+            printf("\\u%04x", (unsigned int)key[i]);
+        }
+    }
+    printf("\n");
+
+    printf("Key in hex (up to 50 characters): ");
+    for (size_t i = 0; i < key_length && i < 50; i++) {
+        printf("%04x ", (unsigned int)key[i]);
+    }
+    printf("\n");
+
+    printf("Attempting to store key with data %d\n", (int)data);
+
+    Bool result = trie_store_conditionally(trie, key, data, TRUE);
 
     if (result) {
         printf("Successfully stored key\n");
