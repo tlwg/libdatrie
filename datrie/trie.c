@@ -432,6 +432,10 @@ trie_store (Trie *trie, const AlphaChar *key, TrieData data)
     for (p = key; *p; p++) {
         printf("%lc", *p);
     }
+    printf("\nKey in hex: ");
+    for (p = key; *p; p++) {
+        printf("%04x ", (unsigned int)*p);
+    }
     printf("\n");
 
     Bool result = trie_store_conditionally (trie, key, data, TRUE);
@@ -486,9 +490,9 @@ trie_store_conditionally (Trie            *trie,
     printf("Starting at root node: %d\n", s);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
         TrieIndex tc = alpha_map_char_to_trie (trie->alpha_map, *p);
-        printf("Processing character: %lc, trie char: %d\n", *p, tc);
+        printf("Processing character: %lc (0x%x), trie char: %d\n", *p, (unsigned int)*p, tc);
         if (TRIE_INDEX_MAX == tc) {
-            printf("Invalid character in key\n");
+            printf("Invalid character in key: %lc (0x%x)\n", *p, (unsigned int)*p);
             return FALSE;
         }
         if (!da_walk (trie->da, &s, (TrieChar) tc)) {
