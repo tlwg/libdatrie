@@ -11,6 +11,7 @@ AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR([m4])
 
 # Import additional Autoconf macros
+m4_pattern_allow([AX_COMPARE_VERSION])
 m4_include([m4/ax_compare_version.m4])
 
 AM_INIT_AUTOMAKE(dist-xz no-dist-gzip)
