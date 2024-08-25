@@ -426,7 +426,23 @@ trie_retrieve (const Trie *trie, const AlphaChar *key, TrieData *o_data)
 Bool
 trie_store (Trie *trie, const AlphaChar *key, TrieData data)
 {
-    return trie_store_conditionally (trie, key, data, TRUE);
+    printf("Entering trie_store function\n");
+    printf("Attempting to store key: ");
+    const AlphaChar *p;
+    for (p = key; *p; p++) {
+        printf("%lc", *p);
+    }
+    printf("\n");
+
+    Bool result = trie_store_conditionally (trie, key, data, TRUE);
+
+    if (result) {
+        printf("Successfully stored key\n");
+    } else {
+        printf("Failed to store key\n");
+    }
+
+    return result;
 }
 
 /**
@@ -463,24 +479,34 @@ trie_store_conditionally (Trie            *trie,
     short            suffix_idx;
     const AlphaChar *p, *sep;
 
+    printf("Entering trie_store_conditionally function\n");
+
     /* walk through branches */
     s = da_get_root (trie->da);
+    printf("Starting at root node: %d\n", s);
     for (p = key; !trie_da_is_separate (trie->da, s); p++) {
         TrieIndex tc = alpha_map_char_to_trie (trie->alpha_map, *p);
-        if (TRIE_INDEX_MAX == tc)
+        printf("Processing character: %lc, trie char: %d\n", *p, tc);
+        if (TRIE_INDEX_MAX == tc) {
+            printf("Invalid character in key\n");
             return FALSE;
+        }
         if (!da_walk (trie->da, &s, (TrieChar) tc)) {
+            printf("Unable to walk to next node, branching\n");
             TrieChar *key_str;
             Bool      res;
 
             key_str = alpha_map_char_to_trie_str (trie->alpha_map, p);
-            if (!key_str)
+            if (!key_str) {
+                printf("Failed to convert remaining key to trie string\n");
                 return FALSE;
+            }
             res = trie_branch_in_branch (trie, s, key_str, data);
             free (key_str);
 
             return res;
         }
+        printf("Walked to node: %d\n", s);
         if (0 == *p)
             break;
     }
