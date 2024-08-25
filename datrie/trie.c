@@ -438,6 +438,21 @@ trie_store (Trie *trie, const AlphaChar *key, TrieData data)
     }
     printf("\n");
 
+    // Print key bytes
+    printf("Key bytes: ");
+    const unsigned char *byte_p = (const unsigned char *)key;
+    for (int i = 0; i < 24 && byte_p[i]; i++) {
+        printf("%02x", byte_p[i]);
+    }
+    printf("\n");
+
+    // Calculate and print key length
+    size_t key_length = 0;
+    for (p = key; *p; p++) {
+        key_length++;
+    }
+    printf("Key length: %zu\n", key_length);
+
     Bool result = trie_store_conditionally (trie, key, data, TRUE);
 
     if (result) {
@@ -484,6 +499,11 @@ trie_store_conditionally (Trie            *trie,
     const AlphaChar *p, *sep;
 
     printf("Entering trie_store_conditionally function\n");
+    printf("Key: ");
+    for (p = key; *p; p++) {
+        printf("%lc", *p);
+    }
+    printf("\n");
 
     /* walk through branches */
     s = da_get_root (trie->da);
@@ -505,6 +525,11 @@ trie_store_conditionally (Trie            *trie,
                 printf("Failed to convert remaining key to trie string\n");
                 return FALSE;
             }
+            printf("Remaining key: ");
+            for (TrieChar *q = key_str; *q != TRIE_CHAR_TERM; q++) {
+                printf("%02x ", *q);
+            }
+            printf("\n");
             res = trie_branch_in_branch (trie, s, key_str, data);
             free (key_str);
 
