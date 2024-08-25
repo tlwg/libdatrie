@@ -96,18 +96,27 @@ main (void)
     msg_step ("Preparing trie");
     test_trie = en_trie_new ();
     if (!test_trie) {
-        fprintf (stderr, "Fail to create test trie\n");
+        fprintf (stderr, "Failed to create test trie\n");
         goto err_trie_not_created;
     }
+    printf("Trie created successfully.\n");
 
     /* store */
+    printf("Starting to store keys in the trie...\n");
     for (dict_p = walk_dict; dict_p->key; dict_p++) {
+        printf("Attempting to store key '%ls' with data %d...\n", 
+               (wchar_t *)dict_p->key, dict_p->data);
         if (!trie_store (test_trie, dict_p->key, dict_p->data)) {
             printf ("Failed to add key '%ls', data %d.\n",
                     (wchar_t *)dict_p->key, dict_p->data);
+            printf("Current trie state:\n");
+            // Add a function to print trie state if available
+            // trie_print_state(test_trie);
             goto err_trie_created;
         }
+        printf("Successfully stored key '%ls'\n", (wchar_t *)dict_p->key);
     }
+    printf("All keys stored successfully.\n");
 
     printf (
         "Now the trie structure is supposed to be:\n"
