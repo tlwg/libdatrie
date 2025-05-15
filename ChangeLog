@@ -1,3 +1,13 @@
+2025-05-15  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Fix "make --shuffle=reverse" failure.
+
+	See Debian #1105545 for the report.
+
+	* tools/Makefile.am:
+	  - Make sure $(bindir) exists before installing old program
+	    symlink.
+
 2021-10-17  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Check fread() result in serialization test.
