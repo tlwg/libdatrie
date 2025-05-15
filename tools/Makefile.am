@@ -10,6 +10,7 @@ trietool_LDADD = \
 OLD_PROG_NAME=trietool-0.2
 
 install-data-hook:
+	$(MKDIR_P) $(DESTDIR)$(bindir)
 	rm -f $(DESTDIR)$(bindir)/$(OLD_PROG_NAME)
 	$(LN_S) trietool $(DESTDIR)$(bindir)/$(OLD_PROG_NAME)
 
