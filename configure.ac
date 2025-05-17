@@ -62,13 +62,6 @@ if test $found_iconv = "no"; then
   AC_MSG_ERROR([*** No usable iconv() implementation found])
 fi
 
-case $with_libiconv in
-  gnu|native)
-    ICONV_LIBS="-liconv"
-    ;;
-esac
-AC_SUBST(ICONV_LIBS)
-
 #
 # Checks for locale_charset() and nl_langinfo(CODESET)
 #
@@ -76,6 +69,7 @@ AC_CHECK_LIB(iconv, locale_charset,
              [have_locale_charset=yes], [have_locale_charset=no])
 if test x$have_locale_charset = xyes; then
   AC_DEFINE(HAVE_LOCALE_CHARSET,1,[Have locale_charset()])
+  with_libiconv=yes
 fi
 AC_CACHE_CHECK(
   [for nl_langinfo (CODESET)], datrie_cv_langinfo_codeset,
@@ -95,6 +89,13 @@ then
   AC_MSG_ERROR([*** No locale_charset() nor nl_langinfo(CODESET) found.
 Please consider installing GNU libiconv.])
 fi
+
+case $with_libiconv in
+  gnu|native|yes)
+    ICONV_LIBS="-liconv"
+    ;;
+esac
+AC_SUBST(ICONV_LIBS)
 
 
 # Checks for header files.
