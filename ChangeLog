@@ -1,3 +1,13 @@
+2025-05-24  John Hein  <@jhgit@github.com>
+
+	Fix 'undefined symbol: locale_charset' failure.
+
+	* configure.ac:
+	  - Link with -liconv when locale_charset() is found in libiconv,
+	    which is true since libiconv 1.17.
+
+	Closes: #25.
+
 2025-05-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Fix parallel test failure.
