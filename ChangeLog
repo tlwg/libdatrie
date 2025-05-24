@@ -1,3 +1,15 @@
+2025-05-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Fix parallel test failure.
+
+	* tests/test_file.c:
+	* tests/test_serialization.c:
+	  - Make TRIE_FILENAME unique for each test, to avoid operation
+	    on the same file in parrallel test.
+
+	Thanks @enter-github-username@github.com for the report.
+	Closes: #28.
+
 2025-05-15  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Fix "make --shuffle=reverse" failure.

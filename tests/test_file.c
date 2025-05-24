@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <wchar.h>
 
-#define TRIE_FILENAME "test.tri"
+#define TRIE_FILENAME "test_file.tri"
 
 static Bool
 trie_enum_mark_rec (const AlphaChar *key, TrieData key_data, void *user_data)

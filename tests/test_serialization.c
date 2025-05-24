@@ -31,7 +31,7 @@
 #include <string.h>
 #include <wchar.h>
 
-#define TRIE_FILENAME "test.tri"
+#define TRIE_FILENAME "test_serialization.tri"
 
 int
 main (void)
