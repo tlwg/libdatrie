@@ -1,5 +1,12 @@
 2025-05-25  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Mark UNLIKELY for a malloc failure check.
+
+	* datrie/dstring.c (dstring_new):
+	  - Mark a malloc() result check with UNLIKELY().
+
+2025-05-25  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Add missing #include for the last commit.
 
 	* datrie/trie-string.c:

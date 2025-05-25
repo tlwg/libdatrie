@@ -43,7 +43,7 @@ dstring_new (int char_size, int n_elm)
 
     ds->alloc_size = char_size * n_elm;
     ds->val = malloc (ds->alloc_size);
-    if (!ds->val) {
+    if (UNLIKELY (!ds->val)) {
         free (ds);
         return NULL;
     }
