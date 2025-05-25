@@ -1,3 +1,15 @@
+2025-05-25  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Add checks for malloc() failures.
+
+	* datrie/trie-string.c (trie_char_strdup):
+	* datrie/trie.c (trie_iterator_get_key):
+	  - Check and return NULL on malloc() failures.
+
+	Thanks Peng Wu <@epico@github.com> for the report.
+	Closes: #20.
+
+
 2025-05-24  John Hein  <@jhgit@github.com>
 
 	Fix 'undefined symbol: locale_charset' failure.

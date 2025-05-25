@@ -1086,6 +1086,8 @@ trie_iterator_get_key (const TrieIterator *iter)
 
         alpha_key = (AlphaChar *) malloc (sizeof (AlphaChar)
                                           * (trie_char_strlen (tail_str) + 1));
+        if (UNLIKELY (!alpha_key))
+            return NULL;
         alpha_p = alpha_key;
     } else {
         TrieIndex  tail_idx;
@@ -1103,6 +1105,8 @@ trie_iterator_get_key (const TrieIterator *iter)
                         sizeof (AlphaChar)
                         * (key_len + trie_char_strlen (tail_str) + 1)
                     );
+        if (UNLIKELY (!alpha_key))
+            return NULL;
         alpha_p = alpha_key;
         for (i = key_len; i > 0; i--) {
             *alpha_p++ = alpha_map_trie_to_char (s->trie->alpha_map, *key_p++);
