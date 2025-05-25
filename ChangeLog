@@ -1,5 +1,12 @@
 2025-05-25  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
+	Add missing #include for the last commit.
+
+	* datrie/trie-string.c:
+	  - Include "trie-private.h" for the UNLIKELY() macro.
+
+2025-05-25  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
 	Add checks for malloc() failures.
 
 	* datrie/trie-string.c (trie_char_strdup):

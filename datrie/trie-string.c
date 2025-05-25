@@ -27,6 +27,7 @@
 #include "trie-string.h"
 #include "dstring-private.h"
 #include "triedefs.h"
+#include "trie-private.h"
 
 #include <string.h>
 #include <stdlib.h>
