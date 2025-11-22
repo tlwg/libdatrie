@@ -1,3 +1,12 @@
+2025-11-22  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Update Doxyfile for doxygen 1.9.8.
+
+	* doc/Doxyfile.in:
+	  - Apply 'doxygen -u'.
+	* configure.ac:
+	  - Bump doxygen required version.
+
 2025-05-25  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Mark UNLIKELY for a malloc failure check.
