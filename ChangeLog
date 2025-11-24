@@ -1,3 +1,13 @@
+2025-11-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Check Doxygen version without autoconf-archive.
+
+	* configure.ac:
+	  - Check Doxygen version using AS_VERSION_COMPARE from within
+	    autoconf instead of AX_COMPARE_VERSION from autoconf-archive.
+	* INSTALL:
+	  - Drop autoconf-archive requirement from documentation.
+
 2025-11-22  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Update Doxyfile for doxygen 1.9.8.
