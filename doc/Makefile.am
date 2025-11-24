@@ -1,3 +1,5 @@
+EXTRA_DIST = meson.build
+
 if ENABLE_DOXYGEN_DOC
 
 all-local: doxygen.stamp

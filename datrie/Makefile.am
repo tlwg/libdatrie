@@ -6,7 +6,7 @@ pkginclude_HEADERS =	\
 	alpha-map.h	\
 	trie.h
 
-EXTRA_DIST = libdatrie.map libdatrie.def
+EXTRA_DIST = libdatrie.map libdatrie.def meson.build
 
 AM_CPPFLAGS = -I$(top_srcdir)
 
