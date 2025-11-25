@@ -1,5 +1,20 @@
 libdatrie
 
+0.2.14 (2025-11-25)
+======
+- No more dependency on autoconf-archive when building from Git.
+- Check and link to locale_charset() available in libiconv 1.17.
+  - Issue #25, PR #27, reported and fixed by John Hein.
+- Problem fixes for parallel build.
+  - Debian #1105545, "make --shuffle=reverse", reported by Lucas Nussbaum.
+  - Issue #28, writing to the same file, reported by
+    @enter-github-username@github.com.
+- Catch more malloc() failures caught by Coverity Scan
+  - Issue #20, reported by Peng Wu.
+- Updated build scripts to latest toolchain.
+- Minor documentation fix.
+- Minor error handling improvement in tests.
+
 0.2.13 (2021-01-29)
 ======
 - Fix wrong key listing in byte trie
