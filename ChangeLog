@@ -1,3 +1,9 @@
+2025-11-25  Theppitak Karoonboonyanan  <theppitak@gmail.com>
+
+	Update library versioning
+
+	* configure.ac: Bump library revision to reflect code change.
+
 2025-11-24  Theppitak Karoonboonyanan  <theppitak@gmail.com>
 
 	Check Doxygen version without autoconf-archive.

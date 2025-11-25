@@ -17,7 +17,7 @@ AM_INIT_AUTOMAKE(dist-xz no-dist-gzip)
 # Interfaces added:              CURRENT++  REVISION=0  AGE++
 # Interfaces changed/removed:    CURRENT++  REVISION=0  AGE=0
 LT_CURRENT=5
-LT_REVISION=0
+LT_REVISION=1
 LT_AGE=4
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
