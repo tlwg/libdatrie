@@ -1,0 +1,22 @@
+# NMake Makefile portion for enabling features for Windows builds
+
+# These are the base minimum libraries required for building libdatrie.
+BASE_INCLUDES = /I$(PREFIX)\include
+
+# Adjust as needed to your setup for libiconv and libcharset
+TRIETOOL_DEP_LIBS = iconv.lib charset.lib
+
+# Please do not change anything beneath this line unless maintaining the NMake Makefiles
+# Bare minimum features and sources built into libdatrie on Windows
+
+DATRIE_VERSION = @VERSION@
+DATRIE_LIBS = vs$(PDBVER)\$(CFG)\$(PLAT)\datrie.lib
+LIBDATRIE_BASE_CFLAGS = /I.. /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS
+TRIETOOL_CFLAGS = /Ivs$(PDBVER)\$(CFG)\$(PLAT)\trietool $(LIBDATRIE_BASE_CFLAGS) $(BASE_INCLUDES)
+
+# Disable building trietool.exe if requested
+!if "$(LIB_ONLY)" == "1"
+DATRIE_UTILS =
+!else
+DATRIE_UTILS = vs$(PDBVER)\$(CFG)\$(PLAT)\trietool.exe
+!endif
