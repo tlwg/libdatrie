@@ -5,6 +5,9 @@ SUBDIRS = datrie tools man doc tests
 EXTRA_DIST =	\
 	README.migration		\
 	build-aux/git-version-gen	\
+	build-aux/test.map	\
+	meson.build		\
+	meson_options.txt		\
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig

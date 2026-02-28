@@ -1,0 +1,2 @@
+option('docs', type : 'feature', value : 'auto', description : 'Build docs')
+option('docsdir', type : 'string', value : 'share/doc/datrie', description : 'Where to install the doxygen-generated HTML doc')
