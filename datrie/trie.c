@@ -25,6 +25,7 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 #include "trie.h"
@@ -191,6 +192,7 @@ Trie *
 trie_fread (FILE *file)
 {
     Trie       *trie;
+    TrieIndex   i, base;
 
     trie = (Trie *) malloc (sizeof (Trie));
     if (UNLIKELY (!trie))
@@ -203,9 +205,23 @@ trie_fread (FILE *file)
     if (NULL == (trie->tail = tail_fread (file)))
         goto exit_da_created;
 
+    /* A separate double-array node must refer to an allocated tail block. */
+    if (da_get_num_cells (trie->da) <= da_get_root (trie->da))
+        goto exit_tail_created;
+    for (i = da_get_root (trie->da); i < da_get_num_cells (trie->da); ++i) {
+        if (i != da_get_root (trie->da) && da_get_check (trie->da, i) < 0)
+            continue;  /* Free cells also have negative BASE values. */
+        base = da_get_base (trie->da, i);
+        if (base < 0 &&
+            (base == INT32_MIN || !tail_is_valid_index (trie->tail, -base)))
+            goto exit_tail_created;
+    }
+
     trie->is_dirty = FALSE;
     return trie;
 
+exit_tail_created:
+    tail_free (trie->tail);
 exit_da_created:
     da_free (trie->da);
 exit_alpha_map_created:

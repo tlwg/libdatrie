@@ -325,6 +325,14 @@ tail_get_suffix (const Tail *t, TrieIndex index)
     return LIKELY (index < t->num_tails) ? t->tails[index].suffix : NULL;
 }
 
+Bool
+tail_is_valid_index (const Tail *t, TrieIndex index)
+{
+    return index >= TAIL_START_BLOCKNO &&
+           index - TAIL_START_BLOCKNO < t->num_tails &&
+           t->tails[index - TAIL_START_BLOCKNO].next_free == -1;
+}
+
 /**
  * @brief Set suffix of existing entry
  *

@@ -7,6 +7,7 @@ TESTS = \
 	test_iterator \
 	test_store-retrieve \
 	test_file \
+	test_invalid_tail_ref \
 	test_serialization \
 	test_nonalpha \
 	test_null_trie \
@@ -20,6 +21,7 @@ check_PROGRAMS = \
 	test_iterator \
 	test_store-retrieve \
 	test_file \
+	test_invalid_tail_ref \
 	test_serialization \
 	test_nonalpha \
 	test_null_trie \
@@ -55,6 +57,9 @@ test_file_SOURCES = \
 	utils.c \
 	$(NULL)
 test_file_LDADD = $(top_builddir)/datrie/libdatrie.la
+
+test_invalid_tail_ref_SOURCES = test_invalid_tail_ref.c
+test_invalid_tail_ref_LDADD = $(top_builddir)/datrie/libdatrie.la
 
 test_serialization_SOURCES = \
 	test_serialization.c \

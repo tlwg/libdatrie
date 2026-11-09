@@ -65,6 +65,8 @@ int      da_fwrite (const DArray *d, FILE *file);
 
 TrieIndex  da_get_root (const DArray *d);
 
+TrieIndex  da_get_num_cells (const DArray *d);
+
 
 TrieIndex  da_get_base (const DArray *d, TrieIndex s);
 
