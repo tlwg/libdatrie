@@ -54,6 +54,8 @@ int      tail_fwrite (const Tail *t, FILE *file);
 
 const TrieChar *    tail_get_suffix (const Tail *t, TrieIndex index);
 
+Bool    tail_is_valid_index (const Tail *t, TrieIndex index);
+
 Bool     tail_set_suffix (Tail *t, TrieIndex index, const TrieChar *suffix);
 
 TrieIndex tail_add_suffix (Tail *t, const TrieChar *suffix);

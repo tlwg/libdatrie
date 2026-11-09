@@ -343,6 +343,12 @@ da_get_root (const DArray *d)
     return 2;
 }
 
+TrieIndex
+da_get_num_cells (const DArray *d)
+{
+    return d->num_cells;
+}
+
 
 /**
  * @brief Get BASE cell
